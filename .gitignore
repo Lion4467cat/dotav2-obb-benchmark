@@ -12,3 +12,5 @@ checkpoints/
 *.tar
 *.tar.gz
 .DS_Store
+artifacts/
+.playwright-mcp/
