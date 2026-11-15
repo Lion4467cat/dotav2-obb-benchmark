@@ -86,18 +86,18 @@ def main() -> None:
             "**How to use:** choose a validation example or upload an image, adjust the confidence threshold in Settings, then run inference.",
             elem_classes="step-note",
         )
-        with gr.Accordion("Settings", open=False, elem_classes="settings-accordion"):
+        with gr.Row(equal_height=False):
+            with gr.Column(scale=1, elem_classes="panel"):
+                image = gr.Image(type="numpy", label="Input aerial image", height=390)
+            with gr.Column(scale=1, elem_classes="panel"):
+                output = gr.Image(type="numpy", label="Track B oriented predictions", height=390)
+                status = gr.Markdown("Select an image and run detection.", elem_classes="status")
+        with gr.Accordion("Settings", open=True, elem_classes="settings-accordion"):
             threshold = gr.Slider(
                 0.1, 0.9, value=0.52, step=0.01,
                 label="Minimum confidence", info="Default 0.52 is rounded from the validation F1-optimal threshold 0.5182.",
             )
-        with gr.Row(equal_height=False):
-            with gr.Column(scale=1, elem_classes="panel"):
-                image = gr.Image(type="numpy", label="Input aerial image", height=390)
-                run = gr.Button("Run Track B inference", variant="primary")
-            with gr.Column(scale=1, elem_classes="panel"):
-                output = gr.Image(type="numpy", label="Track B oriented predictions", height=390)
-                status = gr.Markdown("Select an image and run detection.", elem_classes="status")
+        run = gr.Button("Run Track B inference", variant="primary")
         detections = gr.Dataframe(
             headers=["Class", "Confidence", "Angle"],
             datatype=["str", "str", "str"],
