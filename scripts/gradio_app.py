@@ -85,7 +85,7 @@ def main() -> None:
         with gr.Row(equal_height=False):
             with gr.Column(scale=1, elem_classes="panel"):
                 image = gr.Image(type="numpy", label="Input aerial image", height=390)
-                with gr.Accordion("Settings", open=False):
+                with gr.Accordion("Settings", open=True):
                     threshold = gr.Slider(
                         0.1, 0.9, value=0.52, step=0.01,
                         label="Minimum confidence", info="Default 0.52 is rounded from the validation F1-optimal threshold 0.5182.",
