@@ -50,15 +50,24 @@ def main() -> None:
     print("Model ready.")
 
     css = """
-    .gradio-container {max-width: 1480px !important; margin: auto !important;}
-    .hero {padding: 22px 26px; border: 1px solid #dbe3ec; border-radius: 16px;
-           background: linear-gradient(115deg,#f8fafc 0%,#f1f5f9 62%,#fff7ed 100%);}
-    .hero h1 {margin: 0 0 8px; letter-spacing: -.025em;}
-    .hero p {margin: 0; color: #475569; line-height: 1.55;}
-    .panel {border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; background: #fff;}
-    .status {font-weight: 600; color: #334155; background: #f8fafc;
-             border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px;}
-    .step-note {color: #475569; margin: 10px 2px 14px;}
+    .gradio-container {max-width: 1320px !important; margin: auto !important;}
+    .hero {padding: 24px 28px; border: 1px solid #e7d9c8; border-radius: 16px;
+           background: linear-gradient(115deg,#fffaf2 0%,#f8f1e7 66%,#f5e7d8 100%);}
+    .hero h1 {margin: 0 0 8px; letter-spacing: -.025em; color: #29231e !important;}
+    .hero p {margin: 0; color: #51463d !important; line-height: 1.55;}
+    .panel {border: 1px solid #ddd4c9; border-radius: 14px; padding: 14px; background: #faf8f4;}
+    .status, .status p, .status span, .status strong {font-weight: 600; color: #37302a !important;
+             opacity: 1 !important;}
+    .status {background: #f3eee6; border: 1px solid #ddd4c9;
+             border-radius: 10px; padding: 10px 12px;}
+    .step-note {color: #51463d; margin: 10px 2px 14px;}
+    .gradio-container button.primary {background: #a4512b !important; border-color: #a4512b !important;}
+    .gradio-container button.primary:hover {background: #873f22 !important; border-color: #873f22 !important;}
+    .gradio-container table, .gradio-container th, .gradio-container td {border-color: #d9d0c6 !important;}
+    .gradio-container thead, .gradio-container th,
+    .gradio-container [role="columnheader"] {background: #eee6dc !important; color: #37302a !important;}
+    .gradio-container tbody tr:nth-child(even) {background: #f6f2ec !important;}
+    .examples {margin-top: 8px;}
     footer {display:none !important;}
     """
     with gr.Blocks(title="DOTA v2.0 · Track B detector") as demo:
@@ -104,7 +113,7 @@ def main() -> None:
         run.click(_run, inputs=[image, threshold], outputs=[output, detections, status])
     demo.launch(
         server_name="127.0.0.1", server_port=args.port, share=args.share,
-        css=css, theme=gr.themes.Soft(),
+        css=css, theme=gr.themes.Soft(primary_hue="orange", secondary_hue="stone", neutral_hue="stone"),
     )
 
 
