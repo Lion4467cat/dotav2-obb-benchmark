@@ -61,9 +61,10 @@ def main() -> None:
     .status {background: #f3eee6; border: 1px solid #ddd4c9;
              border-radius: 10px; padding: 10px 12px;}
     .step-note {color: #51463d; margin: 10px 2px 14px;}
-    .settings-title {margin: 16px 2px 0;}
-    .settings-title, .settings-title h3, .settings-title p {color: #f2e6d7 !important;}
-    .settings-title h3 {margin-bottom: 2px;}
+    .settings-accordion {margin: 16px 0; border: 1px solid #a4512b !important;
+                         border-radius: 10px !important; background: #292521 !important;}
+    .settings-accordion button, .settings-accordion [data-testid="accordion-header"],
+    .settings-accordion span {color: #f2e6d7 !important;}
     .gradio-container button.primary {background: #a4512b !important; border-color: #a4512b !important;}
     .gradio-container button.primary:hover {background: #873f22 !important; border-color: #873f22 !important;}
     .gradio-container table, .gradio-container th, .gradio-container td {border-color: #d9d0c6 !important;}
@@ -85,11 +86,11 @@ def main() -> None:
             "**How to use:** choose a validation example or upload an image, adjust the confidence threshold in Settings, then run inference.",
             elem_classes="step-note",
         )
-        gr.Markdown("### Settings", elem_classes="settings-title")
-        threshold = gr.Slider(
-            0.1, 0.9, value=0.52, step=0.01,
-            label="Minimum confidence", info="Default 0.52 is rounded from the validation F1-optimal threshold 0.5182.",
-        )
+        with gr.Accordion("Settings", open=False, elem_classes="settings-accordion"):
+            threshold = gr.Slider(
+                0.1, 0.9, value=0.52, step=0.01,
+                label="Minimum confidence", info="Default 0.52 is rounded from the validation F1-optimal threshold 0.5182.",
+            )
         with gr.Row(equal_height=False):
             with gr.Column(scale=1, elem_classes="panel"):
                 image = gr.Image(type="numpy", label="Input aerial image", height=390)
