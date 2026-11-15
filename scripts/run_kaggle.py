@@ -126,6 +126,8 @@ def patch_rotate_iou2d_calculator(repo_dir: Path) -> None:
 def main() -> None:
     log("=== Starting Kaggle DOTA v2.0 Track B Pipeline ===")
 
+    os.environ.setdefault("MPLBACKEND", "Agg")
+
     # 1. Hardware & Environment Check
     log("Step 1/6: Verifying GPUs...")
     run_cmd(["nvidia-smi"], check=False)
