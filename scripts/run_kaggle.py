@@ -65,6 +65,7 @@ def patch_gaussian_dist_loss(repo_dir: Path, venv_dir: Path) -> None:
 
     helper = (
         "\ndef _det_2x2(m: torch.Tensor) -> torch.Tensor:\n"
+        "    m = m.float()\n"
         "    return (m[..., 0, 0] * m[..., 1, 1] - m[..., 0, 1] * m[..., 1, 0]).clamp(min=1e-7)\n\n"
     )
 
@@ -82,6 +83,44 @@ def patch_gaussian_dist_loss(repo_dir: Path, venv_dir: Path) -> None:
 
     target_file.write_text(text, encoding="utf-8")
     log(f"Successfully patched {target_file} with analytical 2x2 determinant (top-level)!")
+
+
+def patch_rotate_iou2d_calculator(repo_dir: Path) -> None:
+    """Chunk mmrotate's rotated-IoU calculator to avoid CUDA OOM on heavy patches.
+
+    Splits the (gt x priors) overlap computation into 64-row chunks so the
+    large temporary tensors (rb/lt/wh) never materialize for thousands of GT
+    boxes at once. Mathematically identical results, runs fully on GPU.
+    """
+    target_file = repo_dir / "mmrotate" / "mmrotate" / "models" / "task_modules" / "assigners" / "rotate_iou2d_calculator.py"
+    if not target_file.is_file():
+        log(f"Notice: {target_file} not found for patching.")
+        return
+
+    text = target_file.read_text(encoding="utf-8")
+    if "_chunked_bbox_overlaps" in text:
+        log(f"rotate_iou2d_calculator.py already patched: {target_file}")
+        return
+
+    for call in (
+        "overlaps = bbox_overlaps(bboxes1, bboxes2, mode, is_aligned)",
+        "return bbox_overlaps(bboxes1, bboxes2, mode, is_aligned)",
+    ):
+        chunked = call.replace("bbox_overlaps", "_chunked_bbox_overlaps")
+        text = text.replace(call, chunked)
+
+    helper = (
+        "\n\ndef _chunked_bbox_overlaps(bboxes1, bboxes2, mode, is_aligned=False, chunk_size=64):\n"
+        "    import torch as _t\n"
+        "    if is_aligned or bboxes1.shape[0] <= chunk_size:\n"
+        "        return _orig_bbox_overlaps(bboxes1, bboxes2, mode, is_aligned)\n"
+        "    out = [_orig_bbox_overlaps(bboxes1[i:i + chunk_size], bboxes2, mode, is_aligned) for i in range(0, bboxes1.shape[0], chunk_size)]\n"
+        "    return _t.cat(out, dim=0)\n"
+        "\n_orig_bbox_overlaps = bbox_overlaps\n"
+    )
+    text = text.rstrip("\n") + helper
+    target_file.write_text(text, encoding="utf-8")
+    log(f"Successfully patched {target_file} with chunked GPU rbox overlaps!")
 
 
 def main() -> None:
@@ -136,6 +175,9 @@ def main() -> None:
 
     # Patch GaussianDistLoss with analytical 2x2 determinant to avoid cuSOLVER error
     patch_gaussian_dist_loss(repo_dir, venv_dir)
+
+    # Patch rotated-IoU calculator with chunked GPU overlaps to avoid CUDA OOM
+    patch_rotate_iou2d_calculator(repo_dir)
 
     # 3. Checkpoint Staging (epoch_16.pth from Google Drive)
     log("Step 3/6: Staging Track B Epoch 16 checkpoint...")
