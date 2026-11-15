@@ -83,6 +83,7 @@ def render_detections(
     image_rgb: np.ndarray,
     data_sample,
     score_thr: float = 0.3,
+    show_labels: bool = True,
 ) -> tuple[np.ndarray, list[dict]]:
     """Draw le90 boxes + class/score labels onto an RGB image. Returns (annotated_rgb, detections)."""
     import cv2
@@ -107,6 +108,8 @@ def render_detections(
         cv2.polylines(img_bgr, [pts.reshape(-1, 1, 2)], True, color_bgr, thick)
         name = DOTA_V2_CLASSES[cls]
         detections.append({"class": name, "score": float(scores[j]), "angle_rad": float(bboxes[j][4])})
+        if not show_labels:
+            continue
         x, y = int(pts[:, 0].min()), int(pts[:, 1].min())
         text = f"{name[:10]} {scores[j]:.2f}"
         (tw, th), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 2)
@@ -119,6 +122,7 @@ def predict(
     image: np.ndarray,
     score_thr: float = 0.3,
     model=None,
+    show_labels: bool = True,
 ):
     """Run Track B inference on one image.
 
@@ -144,5 +148,5 @@ def predict(
     inst = data_sample.pred_instances
     mask = inst.scores.cpu().numpy() >= 0.0
     num = int(mask.sum())
-    annotated, detections = render_detections(rgb, data_sample, score_thr=score_thr)
+    annotated, detections = render_detections(rgb, data_sample, score_thr=score_thr, show_labels=show_labels)
     return {"annotated": annotated, "detections": detections, "num_detections": num}
