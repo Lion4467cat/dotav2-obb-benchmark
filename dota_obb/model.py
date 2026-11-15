@@ -103,7 +103,9 @@ def render_detections(
             continue
         cls = int(labels[j])
         color = DOTA_V2_PALETTE[cls]
-        color_bgr = (0, 80, 255)  # bright red — visible on dark aerial imagery
+        # Use the stable per-class palette in BGR order so dense multi-class
+        # aerial overlays remain distinguishable in the UI and report figures.
+        color_bgr = tuple(int(channel) for channel in color[::-1])
         pts = _rbox_corners(bboxes[j])
         cv2.polylines(img_bgr, [pts.reshape(-1, 1, 2)], True, color_bgr, thick)
         name = DOTA_V2_CLASSES[cls]

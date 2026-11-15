@@ -12,9 +12,9 @@ benchmarked under the `le90` oriented-bounding-box convention.
 | | dota/mAP | mAP50 | mAP50-95 | F1 | Precision | Recall |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | Track A (baseline) | 0.5412 | 0.6049 | 0.3146 | 0.7849 | 0.8157 | 0.7564 |
-| **Track B (final)** | **0.6892** | **0.7064** | **0.4257** | **0.7264** | **0.8408** | **0.6394** |
+| **Track B (final, restored-val rerun)** | **0.6893** | **0.7065** | **0.4258** | **0.7264** | **0.8409** | **0.6394** |
 
-Scale AP50 (small / medium / large): **0.601 / 0.758 / 0.878** · Angle error (elongated TPs): **2.50 deg** (mean) / 1.77 deg (median) · F1-optimal confidence: **0.518** · 2.60 img/s @ 8.98 GiB VRAM
+Scale AP50 (small / medium / large): **0.600 / 0.758 / 0.878** · Angle error (elongated TPs): **2.50 deg** (mean) / 1.77 deg (median) · F1-optimal confidence: **0.5182** · restored validation rerun: 5.80 img/s @ 4.20 GiB peak VRAM
 
 Full write-up: [`docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf`](docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf)
 
@@ -34,22 +34,22 @@ Validation split, 5,297 tiled 1024×1024 patches, 120,013 non-difficult GT insta
 
 | Metric | Track A (baseline) | Track B (flagship, epoch 24) |
 | :--- | :---: | :---: |
-| Official dota/mAP (18-class macro) | 0.5412 | **0.6892** |
-| Extended evaluator mAP50 | 0.6049 | **0.7064** |
-| Strict mAP50-95 | 0.3146 | **0.4257** |
-| AP75 | 0.2785 | **0.4489** |
-| Precision (F1-optimal, conf = 0.518) | 0.8157 | **0.8408** |
-| Recall (F1-optimal, conf = 0.518) | 0.7564 | **0.6394** |
-| F1-score (F1-optimal, conf = 0.518) | 0.7849 | **0.7264** |
-| Scale AP50 (small/med/large) | 0.4875 / 0.5882 / 0.6602 | **0.6005 / 0.7582 / 0.8783** |
-| Mean angle error (all TPs) | 3.78 deg (mean, Phase-1 A100) | **4.77 deg mean / 1.85 deg median** |
+| Official dota/mAP (18-class macro) | 0.5412 | **0.6892 (training log); 0.6893 (rerun)** |
+| Extended evaluator mAP50 | 0.6049 | **0.7065** |
+| Strict mAP50-95 | 0.3146 | **0.4258** |
+| AP75 | 0.2785 | **0.4487** |
+| Precision (F1-optimal, conf = 0.5182) | 0.8157 | **0.8409** |
+| Recall (F1-optimal, conf = 0.5182) | 0.7564 | **0.6394** |
+| F1-score (F1-optimal, conf = 0.5182) | 0.7849 | **0.7264** |
+| Scale AP50 (small/med/large) | 0.4875 / 0.5882 / 0.6602 | **0.6004 / 0.7584 / 0.8783** |
+| Mean angle error (all TPs) | 3.78 deg (mean, Phase-1 A100) | **4.70 deg mean / 1.85 deg median** |
 | Mean angle error (elongated TPs) | 2.55 deg (median, Phase-1 A100) | **2.50 deg mean / 1.77 deg median** |
-| Easy / Difficult GT recall | 0.7565 / 0.2631 | **0.6395 / 0.7377** |
-| F1-optimal confidence threshold | — | 0.518 |
-| Validation throughput | 17.38 FPS | 2.60 FPS |
-| Peak GPU memory | 28.04 GiB | 8.98 GiB |
+| Easy / Difficult GT recall | 0.7565 / 0.2631 | **0.6395 / 0.7382** |
+| F1-optimal confidence threshold | — | 0.5182 |
+| Validation throughput | 17.38 FPS (Phase 1) | 5.80 img/s (restored-validation rerun) |
+| Peak GPU memory | 28.04 GiB (Phase 1) | 4.20 GiB (validation rerun) |
 
-**Phase-1 vs Phase-2 numbers.** Track A metrics and the per-class Track A column were measured in Phase 1 (A100, 7,122-patch tiling). Track B metrics in this repo are the Phase-2 results (5,297-patch tiling). The two tilings differ, so treat Track A / Track B cross-tiling deltas as approximate. Airport and helipad have **zero validation instances** in the Phase-2 tiling; their Track B AP50 is 0.0 (reported as such, not hidden).
+**Checkpoint log vs restored validation rerun.** The epoch-24 training log records 0.6892 `dota/mAP`; the post-training run on restored data returned 0.6893. Extended metrics below use the fresh predictions. **Phase-1 vs Phase-2 numbers.** Track A metrics and the per-class Track A column were measured in Phase 1 (A100, 7,122-patch tiling). Track B metrics in this repo are the Phase-2 results (5,297-patch tiling). The two tilings differ, so treat Track A / Track B cross-tiling deltas as approximate. Airport and helipad have **zero validation instances** in the Phase-2 tiling; their Track B AP50 is 0.0 (reported as such, not hidden). The metrics here are from labeled validation data; no hidden-label DOTA server score is claimed.
 
 ## Per-class breakdown (AP50, recall @ F1-optimal)
 
@@ -59,10 +59,10 @@ Track A = Phase 1 (A100). Track B = Phase 2 (Kaggle, `best_dota_mAP_epoch_24`).
 | :--- | :---: | :---: | :---: |
 | plane | 0.809 / 0.876 | **0.925 / 0.895** | +0.116 |
 | baseball-diamond | 0.664 / 0.858 | **0.845 / 0.832** | +0.181 |
-| bridge | 0.374 / 0.586 | **0.568 / 0.598** | +0.194 |
-| ground-track-field | 0.690 / 0.883 | **0.793 / 0.781** | +0.103 |
-| small-vehicle | 0.417 / 0.492 | **0.499 / 0.523** | +0.082 |
-| large-vehicle | 0.676 / 0.802 | **0.832 / 0.767** | +0.156 |
+| bridge | 0.374 / 0.586 | **0.569 / 0.598** | +0.195 |
+| ground-track-field | 0.690 / 0.883 | **0.792 / 0.781** | +0.102 |
+| small-vehicle | 0.417 / 0.492 | **0.498 / 0.523** | +0.082 |
+| large-vehicle | 0.676 / 0.802 | **0.832 / 0.765** | +0.156 |
 | ship | 0.776 / 0.801 | **0.910 / 0.884** | +0.134 |
 | tennis-court | 0.901 / 0.934 | **0.948 / 0.931** | +0.047 |
 | basketball-court | 0.596 / 0.702 | **0.747 / 0.698** | +0.151 |
@@ -70,11 +70,11 @@ Track A = Phase 1 (A100). Track B = Phase 2 (Kaggle, `best_dota_mAP_epoch_24`).
 | soccer-ball-field | 0.536 / 0.745 | **0.646 / 0.642** | +0.110 |
 | roundabout | 0.603 / 0.778 | **0.748 / 0.722** | +0.145 |
 | harbor | 0.552 / 0.697 | **0.842 / 0.826** | +0.290 |
-| swimming-pool | 0.556 / 0.681 | **0.652 / 0.681** | +0.096 |
+| swimming-pool | 0.556 / 0.681 | **0.653 / 0.682** | +0.097 |
 | helicopter | 0.542 / 0.633 | **0.663 / 0.559** | +0.121 |
 | container-crane | 0.000 / 0.000 | **0.033 / 0.074** | +0.033 |
 | airport | 0.450 / 0.598 | **0.000 / 0.000** | -0.450 |
-| helipad | 0.000 / 0.000 | **0.000 / 0.000** | 0.000 |
+| helipad | 0.000 / 0.000 | **0.000 / 0.000** | +0.000 |
 
 Standalone benchmark output: [`results/final_benchmark_report.md`](results/final_benchmark_report.md), [`results/extended_metrics.json`](results/extended_metrics.json)
 
@@ -82,10 +82,10 @@ Standalone benchmark output: [`results/final_benchmark_report.md`](results/final
 
 | Conf | Precision | Recall | F1 | TP | FP | FN |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 0.25 | 0.786 | 0.662 | 0.718 | 79,415 | 21,655 | 40,598 |
-| 0.30 | 0.798 | 0.658 | 0.721 | 78,970 | 20,030 | 41,043 |
-| 0.50 | 0.837 | 0.641 | 0.726 | 76,952 | 14,943 | 43,061 |
-| **0.518 (F1-opt)** | **0.841** | **0.639** | **0.726** | 76,742 | 14,528 | 43,271 |
+| 0.25 | 0.786 | 0.662 | 0.718 | 79,412 | 21,654 | 40,601 |
+| 0.30 | 0.798 | 0.658 | 0.721 | 78,967 | 20,025 | 41,046 |
+| 0.50 | 0.837 | 0.641 | 0.726 | 76,946 | 14,943 | 43,067 |
+| **0.5182 (F1-opt)** | **0.841** | **0.639** | **0.726** | 76,737 | 14,524 | 43,276 |
 
 ## Repository layout
 
@@ -117,6 +117,13 @@ python scripts/gradio_app.py --port 7860
 Upload any aerial image (or a tiled 1024x1024 patch), tune the confidence threshold,
 and the app draws le90 oriented boxes with class + score labels on the result.
 Inference is single image, GPU-accelerated (RTX 4060: ~0.35 s/image) with CPU fallback.
+The app includes three real DOTA validation tiles covering planes, vehicles, courts,
+and helicopters. Its slider defaults to 0.52, the UI-friendly rounding of the
+validation F1-optimal threshold (0.5182).
+
+Example Track B predictions from the saved epoch-24 checkpoint:
+
+![Track B oriented detections on aerial images, with multiple predicted classes](docs/figures/track_b_demo_predictions.png)
 
 ## Download the model
 
