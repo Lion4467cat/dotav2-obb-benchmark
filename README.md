@@ -132,9 +132,11 @@ validation F1-optimal threshold (0.5182).
 
 This live Track B run selects a real validation tile, opens **Settings**, and shows
 the checkpoint's predictions: 112 detections across three classes at confidence
-0.52. Use the player below, or download the [MP4 from this repository](docs/demo/live_track_b_demo.mp4).
+0.52. Click the preview to open the playable video, or [download the MP4 from this repository](docs/demo/live_track_b_demo.mp4).
 
-![](https://github.com/user-attachments/assets/3fbe5d80-5f6d-4750-9ed3-69e58ebc5a4d)
+[![Click to play the live Track B demo](docs/figures/track_b_demo_predictions.png)](https://github.com/user-attachments/assets/3fbe5d80-5f6d-4750-9ed3-69e58ebc5a4d)
+
+[▶ Play the recorded demo in your browser](https://github.com/user-attachments/assets/3fbe5d80-5f6d-4750-9ed3-69e58ebc5a4d)
 
 Example Track B predictions from the saved epoch-24 checkpoint:
 
