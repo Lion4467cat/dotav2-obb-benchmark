@@ -5,6 +5,13 @@ detection on the full 18-class **DOTA v2.0** dataset using the OpenMMLab
 **MMRotate** framework. Two Faster R-CNN tracks were built, trained and
 benchmarked under the `le90` oriented-bounding-box convention.
 
+## Dataset access and license
+
+This repository contains the preparation and evaluation code, not the DOTA
+image archives. Obtain DOTA v2.0 from the [official DOTA dataset page](https://captain-whu.github.io/DOTA/dataset.html)
+and follow its academic-use terms and the image-source terms. Local archives,
+tiles, and annotations are intentionally excluded from GitHub.
+
 ## Results at a glance
 
 **Track B (flagship), epoch 24 — best checkpoint `best_dota_mAP_epoch_24.pth`**

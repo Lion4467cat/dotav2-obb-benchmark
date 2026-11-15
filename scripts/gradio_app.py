@@ -51,30 +51,36 @@ def main() -> None:
 
     css = """
     .gradio-container {max-width: 1480px !important; margin: auto !important;}
-    .hero {padding: 20px 24px; border: 1px solid #dbe3ec; border-radius: 16px;
-           background: linear-gradient(115deg,#f8fbff 0%,#f3f7fb 60%,#fff7ed 100%);}
+    .hero {padding: 22px 26px; border: 1px solid #dbe3ec; border-radius: 16px;
+           background: linear-gradient(115deg,#f8fafc 0%,#f1f5f9 62%,#fff7ed 100%);}
     .hero h1 {margin: 0 0 8px; letter-spacing: -.025em;}
     .hero p {margin: 0; color: #475569; line-height: 1.55;}
-    .panel {border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px;}
-    .status {font-weight: 600; color: #334155;}
+    .panel {border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; background: #fff;}
+    .status {font-weight: 600; color: #334155; background: #f8fafc;
+             border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px;}
+    .step-note {color: #475569; margin: 10px 2px 14px;}
     footer {display:none !important;}
     """
-    with gr.Blocks(title="DOTA v2.0 · Track B detector", css=css, theme=gr.themes.Soft()) as demo:
+    with gr.Blocks(title="DOTA v2.0 · Track B detector") as demo:
         gr.Markdown(
             """<div class='hero'>
             <h1>DOTA v2.0 · Oriented object detection</h1>
-            <p>Track B · Oriented R-CNN with ConvNeXt-Small and PAFPN · Epoch 24 checkpoint<br>
-            Upload an aerial image to inspect class, confidence, and rotated-box predictions.</p>
+            <p>Track B · Oriented R-CNN · ConvNeXt-Small + PAFPN · Epoch 24 checkpoint<br>
+            Inspect oriented detections and confidence scores on an aerial image.</p>
             </div>"""
+        )
+        gr.Markdown(
+            "**How to use:** upload an image or choose a validation example, set the confidence threshold, then run inference.",
+            elem_classes="step-note",
         )
         with gr.Row(equal_height=False):
             with gr.Column(scale=1, elem_classes="panel"):
                 image = gr.Image(type="numpy", label="Input aerial image", height=390)
                 threshold = gr.Slider(
                     0.1, 0.9, value=0.52, step=0.01,
-                    label="Minimum confidence", info="Default is rounded to 0.52 from the validation F1-optimal threshold (0.5182).",
+                    label="Minimum confidence", info="Default 0.52 is rounded from the validation F1-optimal threshold 0.5182.",
                 )
-                run = gr.Button("Run detection", variant="primary")
+                run = gr.Button("Run Track B inference", variant="primary")
             with gr.Column(scale=1, elem_classes="panel"):
                 output = gr.Image(type="numpy", label="Track B oriented predictions", height=390)
                 status = gr.Markdown("Select an image and run detection.", elem_classes="status")
@@ -88,13 +94,18 @@ def main() -> None:
             str(REPO_ROOT / "docs" / "demo" / "validation_court_vehicles.png"),
             str(REPO_ROOT / "docs" / "demo" / "validation_helicopter_vehicles.png"),
         ]
-        gr.Examples(examples=examples, inputs=image, label="Try an aerial example")
+        gr.Examples(
+            examples=examples, inputs=image, label="Validation examples",
+            examples_per_page=3, cache_examples=False,
+        )
         gr.Markdown(
             "Predictions are qualitative. Benchmark scores in the report were measured on the separate DOTA validation split."
         )
         run.click(_run, inputs=[image, threshold], outputs=[output, detections, status])
-        image.change(_run, inputs=[image, threshold], outputs=[output, detections, status], queue=True)
-    demo.launch(server_name="0.0.0.0", server_port=args.port, share=args.share)
+    demo.launch(
+        server_name="127.0.0.1", server_port=args.port, share=args.share,
+        css=css, theme=gr.themes.Soft(),
+    )
 
 
 if __name__ == "__main__":
