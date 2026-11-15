@@ -72,7 +72,6 @@ def main() -> None:
     .gradio-container [role="columnheader"] {background: #eee6dc !important; color: #37302a !important;}
     .gradio-container tbody tr:nth-child(even) {background: #f6f2ec !important;}
     .examples {margin-top: 8px;}
-    footer {display:none !important;}
     """
     with gr.Blocks(title="DOTA v2.0 · Track B detector") as demo:
         gr.Markdown(
@@ -83,7 +82,7 @@ def main() -> None:
             </div>"""
         )
         gr.Markdown(
-            "**How to use:** choose a validation example or upload an image, adjust the confidence threshold in Settings, then run inference.",
+            "**How to use:** choose a validation example or upload an image, adjust the confidence threshold in Detection settings, then run inference.",
             elem_classes="step-note",
         )
         with gr.Row(equal_height=False):
@@ -92,7 +91,7 @@ def main() -> None:
             with gr.Column(scale=1, elem_classes="panel"):
                 output = gr.Image(type="numpy", label="Track B oriented predictions", height=390)
                 status = gr.Markdown("Select an image and run detection.", elem_classes="status")
-        with gr.Accordion("Settings", open=True, elem_classes="settings-accordion"):
+        with gr.Accordion("Detection settings", open=True, elem_classes="settings-accordion"):
             threshold = gr.Slider(
                 0.1, 0.9, value=0.52, step=0.01,
                 label="Minimum confidence", info="Default 0.52 is rounded from the validation F1-optimal threshold 0.5182.",
