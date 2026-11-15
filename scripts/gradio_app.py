@@ -62,7 +62,8 @@ def main() -> None:
              border-radius: 10px; padding: 10px 12px;}
     .step-note {color: #51463d; margin: 10px 2px 14px;}
     .settings-title {margin: 16px 2px 0;}
-    .settings-title h3 {color: #29231e !important; margin-bottom: 2px;}
+    .settings-title, .settings-title h3, .settings-title p {color: #f2e6d7 !important;}
+    .settings-title h3 {margin-bottom: 2px;}
     .gradio-container button.primary {background: #a4512b !important; border-color: #a4512b !important;}
     .gradio-container button.primary:hover {background: #873f22 !important; border-color: #873f22 !important;}
     .gradio-container table, .gradio-container th, .gradio-container td {border-color: #d9d0c6 !important;}
