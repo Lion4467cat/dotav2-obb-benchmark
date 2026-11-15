@@ -99,6 +99,49 @@ artifacts/                  (gitignored) model checkpoints, kept local only
 SPEC_PLAN.md                design rationale
 ```
 
+## Local inference UI (Track B)
+
+Lightweight Gradio UI that runs the published Track B model on your machine:
+
+```bash
+uv pip install -e ".[ui]"          # or: uv pip install -e . && uv pip install gradio
+python scripts/gradio_app.py       # http://127.0.0.1:7860
+```
+
+or with the full local inference stack (torch 2.0.1+cu118, mmcv 2.0.1, mmdet 3.1.0, mmrotate dev-1.x):
+
+```bash
+python scripts/gradio_app.py --port 7860
+```
+
+Upload any aerial image (or a tiled 1024x1024 patch), tune the confidence threshold,
+and the app draws le90 oriented boxes with class + score labels on the result.
+Inference is single image, GPU-accelerated (RTX 4060: ~0.35 s/image) with CPU fallback.
+
+## Download the model
+
+Pretrained weights are attached to the [`v1.0.0` release](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.0.0):
+
+| Asset | Size | Contents |
+| :--- | :--- | :--- |
+| `best_dota_mAP_epoch_24.pth` | 294 MB | best checkpoint (weights only) — what the UI loads by default |
+| `epoch_24.pth` | 856 MB | full checkpoint with optimizer/scheduler state (resume-ready) |
+| `epoch_16.pth` | 809 MB | Phase-1 epoch 16 checkpoint (resume anchor for Phase-2 continuation) |
+
+Programmatic download (cached under `~/.cache/dota_obb/`):
+
+```bash
+python -m dota_obb.download
+```
+
+or use the package directly:
+
+```python
+from dota_obb import load_model, predict
+model = load_model()                       # auto-downloads if not local
+result = predict(image_bgr, score_thr=0.3) # detections + annotated image
+```
+
 ## Running
 
 ### Local (CPU only; GPUs are not required for checks)
