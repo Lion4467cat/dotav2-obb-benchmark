@@ -1,0 +1,1411 @@
+2026/11/15 22:16:50 - mmengine - INFO - 
+------------------------------------------------------------
+System environment:
+    sys.platform: linux
+    Python: 3.11.16 (main, Sep  1 2026, 14:18:37) [Clang 22.1.3 ]
+    CUDA available: True
+    numpy_random_seed: 829366476
+    GPU 0: NVIDIA GeForce RTX 4060 Laptop GPU
+    CUDA_HOME: /opt/cuda
+    NVCC: Cuda compilation tools, release 13.4, V13.4.92
+    GCC: cc (GCC) 16.2.1 20260810
+    PyTorch: 2.0.1+cu118
+    PyTorch compiling details: PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+    TorchVision: 0.15.2+cu118
+    OpenCV: 5.0.0
+    MMEngine: 0.9.1
+
+Runtime environment:
+    cudnn_benchmark: False
+    mp_cfg: {'mp_start_method': 'fork', 'opencv_num_threads': 0}
+    dist_cfg: {'backend': 'nccl'}
+    seed: 829366476
+    Distributed launcher: none
+    Distributed training: False
+    GPU number: 1
+------------------------------------------------------------
+
+2026/11/15 22:16:51 - mmengine - INFO - Config:
+DOTA_V2_CLASSES = (
+    'plane',
+    'baseball-diamond',
+    'bridge',
+    'ground-track-field',
+    'small-vehicle',
+    'large-vehicle',
+    'ship',
+    'tennis-court',
+    'basketball-court',
+    'storage-tank',
+    'soccer-ball-field',
+    'roundabout',
+    'harbor',
+    'swimming-pool',
+    'helicopter',
+    'container-crane',
+    'airport',
+    'helipad',
+)
+DOTA_V2_PALETTE = [
+    (
+        165,
+        42,
+        42,
+    ),
+    (
+        189,
+        183,
+        107,
+    ),
+    (
+        0,
+        255,
+        0,
+    ),
+    (
+        255,
+        0,
+        0,
+    ),
+    (
+        138,
+        43,
+        226,
+    ),
+    (
+        255,
+        128,
+        0,
+    ),
+    (
+        255,
+        0,
+        255,
+    ),
+    (
+        0,
+        255,
+        255,
+    ),
+    (
+        255,
+        193,
+        193,
+    ),
+    (
+        0,
+        51,
+        153,
+    ),
+    (
+        255,
+        250,
+        205,
+    ),
+    (
+        0,
+        139,
+        139,
+    ),
+    (
+        255,
+        255,
+        0,
+    ),
+    (
+        147,
+        116,
+        116,
+    ),
+    (
+        0,
+        0,
+        255,
+    ),
+    (
+        100,
+        149,
+        237,
+    ),
+    (
+        34,
+        139,
+        34,
+    ),
+    (
+        255,
+        20,
+        147,
+    ),
+]
+angle_version = 'le90'
+backend_args = None
+convnext_s_ckpt = 'https://download.openmmlab.com/mmclassification/v0/convnext/convnext-small_3rdparty_32xb128_in1k_20220124-d39b5192.pth'
+custom_imports = dict(
+    allow_failed_imports=False, imports=[
+        'mmpretrain.models',
+    ])
+data_root = '/content/data/split_ss_dotav2/'
+dataset_type = 'DOTADataset'
+default_hooks = dict(
+    checkpoint=dict(
+        interval=1,
+        max_keep_ckpts=3,
+        rule='greater',
+        save_best='dota/mAP',
+        type='CheckpointHook'),
+    logger=dict(interval=50, type='LoggerHook'),
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    timer=dict(type='IterTimerHook'),
+    visualization=dict(type='mmdet.DetVisualizationHook'))
+default_scope = 'mmrotate'
+env_cfg = dict(
+    cudnn_benchmark=False,
+    dist_cfg=dict(backend='nccl'),
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0))
+launcher = 'none'
+load_from = 'artifacts/checkpoints/best_dota_mAP_epoch_24.pth'
+log_level = 'INFO'
+log_processor = dict(by_epoch=True, type='LogProcessor', window_size=50)
+max_epochs = 24
+metainfo = dict(
+    classes=(
+        'plane',
+        'baseball-diamond',
+        'bridge',
+        'ground-track-field',
+        'small-vehicle',
+        'large-vehicle',
+        'ship',
+        'tennis-court',
+        'basketball-court',
+        'storage-tank',
+        'soccer-ball-field',
+        'roundabout',
+        'harbor',
+        'swimming-pool',
+        'helicopter',
+        'container-crane',
+        'airport',
+        'helipad',
+    ),
+    palette=[
+        (
+            165,
+            42,
+            42,
+        ),
+        (
+            189,
+            183,
+            107,
+        ),
+        (
+            0,
+            255,
+            0,
+        ),
+        (
+            255,
+            0,
+            0,
+        ),
+        (
+            138,
+            43,
+            226,
+        ),
+        (
+            255,
+            128,
+            0,
+        ),
+        (
+            255,
+            0,
+            255,
+        ),
+        (
+            0,
+            255,
+            255,
+        ),
+        (
+            255,
+            193,
+            193,
+        ),
+        (
+            0,
+            51,
+            153,
+        ),
+        (
+            255,
+            250,
+            205,
+        ),
+        (
+            0,
+            139,
+            139,
+        ),
+        (
+            255,
+            255,
+            0,
+        ),
+        (
+            147,
+            116,
+            116,
+        ),
+        (
+            0,
+            0,
+            255,
+        ),
+        (
+            100,
+            149,
+            237,
+        ),
+        (
+            34,
+            139,
+            34,
+        ),
+        (
+            255,
+            20,
+            147,
+        ),
+    ])
+model = dict(
+    backbone=dict(
+        arch='small',
+        drop_path_rate=0.4,
+        gap_before_final_norm=False,
+        init_cfg=None,
+        layer_scale_init_value=1.0,
+        out_indices=(
+            0,
+            1,
+            2,
+            3,
+        ),
+        type='mmpretrain.ConvNeXt'),
+    data_preprocessor=dict(
+        bgr_to_rgb=True,
+        boxtype2tensor=False,
+        mean=[
+            123.675,
+            116.28,
+            103.53,
+        ],
+        pad_size_divisor=32,
+        std=[
+            58.395,
+            57.12,
+            57.375,
+        ],
+        type='mmdet.DetDataPreprocessor'),
+    neck=dict(
+        in_channels=[
+            96,
+            192,
+            384,
+            768,
+        ],
+        num_outs=5,
+        out_channels=256,
+        type='mmdet.PAFPN'),
+    roi_head=dict(
+        bbox_head=dict(
+            bbox_coder=dict(
+                angle_version='le90',
+                edge_swap=True,
+                norm_factor=None,
+                proj_xy=True,
+                target_means=(
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                ),
+                target_stds=(
+                    0.1,
+                    0.1,
+                    0.2,
+                    0.2,
+                    0.1,
+                ),
+                type='DeltaXYWHTRBBoxCoder'),
+            cls_predictor_cfg=dict(type='mmdet.Linear'),
+            fc_out_channels=1024,
+            in_channels=256,
+            loss_bbox=dict(
+                fun='log1p',
+                loss_type='kld',
+                loss_weight=5.0,
+                sqrt=False,
+                tau=1.0,
+                type='GDLoss'),
+            loss_cls=dict(
+                loss_weight=1.0,
+                type='mmdet.CrossEntropyLoss',
+                use_sigmoid=False),
+            num_classes=18,
+            predict_box_type='rbox',
+            reg_class_agnostic=True,
+            reg_decoded_bbox=True,
+            reg_predictor_cfg=dict(type='mmdet.Linear'),
+            roi_feat_size=7,
+            type='mmdet.Shared2FCBBoxHead'),
+        bbox_roi_extractor=dict(
+            featmap_strides=[
+                4,
+                8,
+                16,
+                32,
+            ],
+            out_channels=256,
+            roi_layer=dict(
+                clockwise=True,
+                out_size=7,
+                sample_num=2,
+                type='RoIAlignRotated'),
+            type='RotatedSingleRoIExtractor'),
+        type='mmdet.StandardRoIHead'),
+    rpn_head=dict(
+        anchor_generator=dict(
+            ratios=[
+                0.5,
+                1.0,
+                2.0,
+            ],
+            scales=[
+                8,
+            ],
+            strides=[
+                4,
+                8,
+                16,
+                32,
+                64,
+            ],
+            type='mmdet.AnchorGenerator',
+            use_box_type=True),
+        bbox_coder=dict(
+            angle_version='le90',
+            target_means=[
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+            ],
+            target_stds=[
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                0.5,
+                0.5,
+            ],
+            type='MidpointOffsetCoder'),
+        feat_channels=256,
+        in_channels=256,
+        loss_bbox=dict(
+            beta=0.1111111111111111,
+            loss_weight=1.0,
+            type='mmdet.SmoothL1Loss'),
+        loss_cls=dict(
+            loss_weight=1.0, type='mmdet.CrossEntropyLoss', use_sigmoid=True),
+        type='OrientedRPNHead'),
+    test_cfg=dict(
+        rcnn=dict(
+            max_per_img=2000,
+            min_bbox_size=0,
+            nms=dict(iou_threshold=0.1, type='nms_rotated'),
+            nms_pre=2000,
+            score_thr=0.05),
+        rpn=dict(
+            max_per_img=2000,
+            min_bbox_size=0,
+            nms=dict(iou_threshold=0.8, type='nms'),
+            nms_pre=2000)),
+    train_cfg=dict(
+        rcnn=dict(
+            assigner=dict(
+                ignore_iof_thr=-1,
+                iou_calculator=dict(type='RBboxOverlaps2D'),
+                match_low_quality=False,
+                min_pos_iou=0.5,
+                neg_iou_thr=0.5,
+                pos_iou_thr=0.5,
+                type='mmdet.MaxIoUAssigner'),
+            debug=False,
+            pos_weight=-1,
+            sampler=dict(
+                add_gt_as_proposals=True,
+                neg_pos_ub=-1,
+                num=512,
+                pos_fraction=0.25,
+                type='mmdet.RandomSampler')),
+        rpn=dict(
+            allowed_border=0,
+            assigner=dict(
+                ignore_iof_thr=-1,
+                iou_calculator=dict(type='RBbox2HBboxOverlaps2D'),
+                match_low_quality=True,
+                min_pos_iou=0.3,
+                neg_iou_thr=0.3,
+                pos_iou_thr=0.7,
+                type='mmdet.MaxIoUAssigner'),
+            debug=False,
+            pos_weight=-1,
+            sampler=dict(
+                add_gt_as_proposals=False,
+                neg_pos_ub=-1,
+                num=256,
+                pos_fraction=0.5,
+                type='mmdet.RandomSampler')),
+        rpn_proposal=dict(
+            max_per_img=2000,
+            min_bbox_size=0,
+            nms=dict(iou_threshold=0.8, type='nms'),
+            nms_pre=2000)),
+    type='mmdet.FasterRCNN')
+optim_wrapper = dict(
+    accumulative_counts=1,
+    clip_grad=dict(max_norm=35, norm_type=2),
+    optimizer=dict(
+        betas=(
+            0.9,
+            0.999,
+        ), lr=0.0001, type='AdamW', weight_decay=0.05),
+    type='OptimWrapper')
+param_scheduler = [
+    dict(
+        begin=0, by_epoch=False, end=500, start_factor=0.001, type='LinearLR'),
+    dict(
+        T_max=24,
+        begin=0,
+        by_epoch=True,
+        end=24,
+        eta_min=1e-06,
+        type='CosineAnnealingLR'),
+]
+raw_train_dataset = dict(
+    ann_file='train/annfiles/',
+    data_prefix=dict(img_path='train/images/'),
+    data_root='/content/data/split_ss_dotav2/',
+    filter_cfg=dict(filter_empty_gt=True),
+    metainfo=dict(
+        classes=(
+            'plane',
+            'baseball-diamond',
+            'bridge',
+            'ground-track-field',
+            'small-vehicle',
+            'large-vehicle',
+            'ship',
+            'tennis-court',
+            'basketball-court',
+            'storage-tank',
+            'soccer-ball-field',
+            'roundabout',
+            'harbor',
+            'swimming-pool',
+            'helicopter',
+            'container-crane',
+            'airport',
+            'helipad',
+        ),
+        palette=[
+            (
+                165,
+                42,
+                42,
+            ),
+            (
+                189,
+                183,
+                107,
+            ),
+            (
+                0,
+                255,
+                0,
+            ),
+            (
+                255,
+                0,
+                0,
+            ),
+            (
+                138,
+                43,
+                226,
+            ),
+            (
+                255,
+                128,
+                0,
+            ),
+            (
+                255,
+                0,
+                255,
+            ),
+            (
+                0,
+                255,
+                255,
+            ),
+            (
+                255,
+                193,
+                193,
+            ),
+            (
+                0,
+                51,
+                153,
+            ),
+            (
+                255,
+                250,
+                205,
+            ),
+            (
+                0,
+                139,
+                139,
+            ),
+            (
+                255,
+                255,
+                0,
+            ),
+            (
+                147,
+                116,
+                116,
+            ),
+            (
+                0,
+                0,
+                255,
+            ),
+            (
+                100,
+                149,
+                237,
+            ),
+            (
+                34,
+                139,
+                34,
+            ),
+            (
+                255,
+                20,
+                147,
+            ),
+        ]),
+    pipeline=[
+        dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+        dict(box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+        dict(box_type_mapping=dict(gt_bboxes='rbox'), type='ConvertBoxType'),
+        dict(keep_ratio=True, scale=(
+            1024,
+            1024,
+        ), type='mmdet.Resize'),
+        dict(
+            direction=[
+                'horizontal',
+                'vertical',
+                'diagonal',
+            ],
+            prob=0.75,
+            type='mmdet.RandomFlip'),
+        dict(
+            angle_range=180,
+            prob=0.5,
+            rect_obj_labels=[
+                9,
+                11,
+            ],
+            type='RandomRotate'),
+        dict(type='mmdet.PackDetInputs'),
+    ],
+    type='DOTADataset')
+resume = False
+test_cfg = dict(type='TestLoop')
+test_dataloader = dict(
+    batch_size=1,
+    dataset=dict(
+        ann_file='val/annfiles/',
+        data_prefix=dict(img_path='val/images/'),
+        data_root='/home/tinkerer/Desktop/ADA/.task-data/split_ss_dotav2/',
+        metainfo=dict(
+            classes=(
+                'plane',
+                'baseball-diamond',
+                'bridge',
+                'ground-track-field',
+                'small-vehicle',
+                'large-vehicle',
+                'ship',
+                'tennis-court',
+                'basketball-court',
+                'storage-tank',
+                'soccer-ball-field',
+                'roundabout',
+                'harbor',
+                'swimming-pool',
+                'helicopter',
+                'container-crane',
+                'airport',
+                'helipad',
+            ),
+            palette=[
+                (
+                    165,
+                    42,
+                    42,
+                ),
+                (
+                    189,
+                    183,
+                    107,
+                ),
+                (
+                    0,
+                    255,
+                    0,
+                ),
+                (
+                    255,
+                    0,
+                    0,
+                ),
+                (
+                    138,
+                    43,
+                    226,
+                ),
+                (
+                    255,
+                    128,
+                    0,
+                ),
+                (
+                    255,
+                    0,
+                    255,
+                ),
+                (
+                    0,
+                    255,
+                    255,
+                ),
+                (
+                    255,
+                    193,
+                    193,
+                ),
+                (
+                    0,
+                    51,
+                    153,
+                ),
+                (
+                    255,
+                    250,
+                    205,
+                ),
+                (
+                    0,
+                    139,
+                    139,
+                ),
+                (
+                    255,
+                    255,
+                    0,
+                ),
+                (
+                    147,
+                    116,
+                    116,
+                ),
+                (
+                    0,
+                    0,
+                    255,
+                ),
+                (
+                    100,
+                    149,
+                    237,
+                ),
+                (
+                    34,
+                    139,
+                    34,
+                ),
+                (
+                    255,
+                    20,
+                    147,
+                ),
+            ]),
+        pipeline=[
+            dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+            dict(keep_ratio=True, scale=(
+                1024,
+                1024,
+            ), type='mmdet.Resize'),
+            dict(
+                box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+            dict(
+                box_type_mapping=dict(gt_bboxes='rbox'),
+                type='ConvertBoxType'),
+            dict(
+                meta_keys=(
+                    'img_id',
+                    'img_path',
+                    'ori_shape',
+                    'img_shape',
+                    'scale_factor',
+                ),
+                type='mmdet.PackDetInputs'),
+        ],
+        test_mode=True,
+        type='DOTADataset'),
+    drop_last=False,
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(shuffle=False, type='DefaultSampler'))
+test_evaluator = dict(metric='mAP', type='DOTAMetric')
+test_pipeline = [
+    dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+    dict(keep_ratio=True, scale=(
+        1024,
+        1024,
+    ), type='mmdet.Resize'),
+    dict(
+        meta_keys=(
+            'img_id',
+            'img_path',
+            'ori_shape',
+            'img_shape',
+            'scale_factor',
+        ),
+        type='mmdet.PackDetInputs'),
+]
+train_cfg = dict(max_epochs=24, type='EpochBasedTrainLoop', val_interval=2)
+train_dataloader = dict(
+    batch_sampler=None,
+    batch_size=4,
+    dataset=dict(
+        dataset=dict(
+            ann_file='train/annfiles/',
+            data_prefix=dict(img_path='train/images/'),
+            data_root='/content/data/split_ss_dotav2/',
+            filter_cfg=dict(filter_empty_gt=True),
+            metainfo=dict(
+                classes=(
+                    'plane',
+                    'baseball-diamond',
+                    'bridge',
+                    'ground-track-field',
+                    'small-vehicle',
+                    'large-vehicle',
+                    'ship',
+                    'tennis-court',
+                    'basketball-court',
+                    'storage-tank',
+                    'soccer-ball-field',
+                    'roundabout',
+                    'harbor',
+                    'swimming-pool',
+                    'helicopter',
+                    'container-crane',
+                    'airport',
+                    'helipad',
+                ),
+                palette=[
+                    (
+                        165,
+                        42,
+                        42,
+                    ),
+                    (
+                        189,
+                        183,
+                        107,
+                    ),
+                    (
+                        0,
+                        255,
+                        0,
+                    ),
+                    (
+                        255,
+                        0,
+                        0,
+                    ),
+                    (
+                        138,
+                        43,
+                        226,
+                    ),
+                    (
+                        255,
+                        128,
+                        0,
+                    ),
+                    (
+                        255,
+                        0,
+                        255,
+                    ),
+                    (
+                        0,
+                        255,
+                        255,
+                    ),
+                    (
+                        255,
+                        193,
+                        193,
+                    ),
+                    (
+                        0,
+                        51,
+                        153,
+                    ),
+                    (
+                        255,
+                        250,
+                        205,
+                    ),
+                    (
+                        0,
+                        139,
+                        139,
+                    ),
+                    (
+                        255,
+                        255,
+                        0,
+                    ),
+                    (
+                        147,
+                        116,
+                        116,
+                    ),
+                    (
+                        0,
+                        0,
+                        255,
+                    ),
+                    (
+                        100,
+                        149,
+                        237,
+                    ),
+                    (
+                        34,
+                        139,
+                        34,
+                    ),
+                    (
+                        255,
+                        20,
+                        147,
+                    ),
+                ]),
+            pipeline=[
+                dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+                dict(
+                    box_type='qbox',
+                    type='mmdet.LoadAnnotations',
+                    with_bbox=True),
+                dict(
+                    box_type_mapping=dict(gt_bboxes='rbox'),
+                    type='ConvertBoxType'),
+                dict(
+                    keep_ratio=True, scale=(
+                        1024,
+                        1024,
+                    ), type='mmdet.Resize'),
+                dict(
+                    direction=[
+                        'horizontal',
+                        'vertical',
+                        'diagonal',
+                    ],
+                    prob=0.75,
+                    type='mmdet.RandomFlip'),
+                dict(
+                    angle_range=180,
+                    prob=0.5,
+                    rect_obj_labels=[
+                        9,
+                        11,
+                    ],
+                    type='RandomRotate'),
+                dict(type='mmdet.PackDetInputs'),
+            ],
+            type='DOTADataset'),
+        oversample_thr=0.001,
+        type='mmdet.ClassBalancedDataset'),
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(shuffle=True, type='DefaultSampler'))
+train_pipeline = [
+    dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+    dict(box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+    dict(box_type_mapping=dict(gt_bboxes='rbox'), type='ConvertBoxType'),
+    dict(keep_ratio=True, scale=(
+        1024,
+        1024,
+    ), type='mmdet.Resize'),
+    dict(
+        direction=[
+            'horizontal',
+            'vertical',
+            'diagonal',
+        ],
+        prob=0.75,
+        type='mmdet.RandomFlip'),
+    dict(
+        angle_range=180,
+        prob=0.5,
+        rect_obj_labels=[
+            9,
+            11,
+        ],
+        type='RandomRotate'),
+    dict(type='mmdet.PackDetInputs'),
+]
+val_cfg = dict(type='ValLoop')
+val_dataloader = dict(
+    batch_size=1,
+    dataset=dict(
+        ann_file='val/annfiles/',
+        data_prefix=dict(img_path='val/images/'),
+        data_root='/home/tinkerer/Desktop/ADA/.task-data/split_ss_dotav2/',
+        metainfo=dict(
+            classes=(
+                'plane',
+                'baseball-diamond',
+                'bridge',
+                'ground-track-field',
+                'small-vehicle',
+                'large-vehicle',
+                'ship',
+                'tennis-court',
+                'basketball-court',
+                'storage-tank',
+                'soccer-ball-field',
+                'roundabout',
+                'harbor',
+                'swimming-pool',
+                'helicopter',
+                'container-crane',
+                'airport',
+                'helipad',
+            ),
+            palette=[
+                (
+                    165,
+                    42,
+                    42,
+                ),
+                (
+                    189,
+                    183,
+                    107,
+                ),
+                (
+                    0,
+                    255,
+                    0,
+                ),
+                (
+                    255,
+                    0,
+                    0,
+                ),
+                (
+                    138,
+                    43,
+                    226,
+                ),
+                (
+                    255,
+                    128,
+                    0,
+                ),
+                (
+                    255,
+                    0,
+                    255,
+                ),
+                (
+                    0,
+                    255,
+                    255,
+                ),
+                (
+                    255,
+                    193,
+                    193,
+                ),
+                (
+                    0,
+                    51,
+                    153,
+                ),
+                (
+                    255,
+                    250,
+                    205,
+                ),
+                (
+                    0,
+                    139,
+                    139,
+                ),
+                (
+                    255,
+                    255,
+                    0,
+                ),
+                (
+                    147,
+                    116,
+                    116,
+                ),
+                (
+                    0,
+                    0,
+                    255,
+                ),
+                (
+                    100,
+                    149,
+                    237,
+                ),
+                (
+                    34,
+                    139,
+                    34,
+                ),
+                (
+                    255,
+                    20,
+                    147,
+                ),
+            ]),
+        pipeline=[
+            dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+            dict(keep_ratio=True, scale=(
+                1024,
+                1024,
+            ), type='mmdet.Resize'),
+            dict(
+                box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+            dict(
+                box_type_mapping=dict(gt_bboxes='rbox'),
+                type='ConvertBoxType'),
+            dict(
+                meta_keys=(
+                    'img_id',
+                    'img_path',
+                    'ori_shape',
+                    'img_shape',
+                    'scale_factor',
+                ),
+                type='mmdet.PackDetInputs'),
+        ],
+        test_mode=True,
+        type='DOTADataset'),
+    drop_last=False,
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(shuffle=False, type='DefaultSampler'))
+val_evaluator = dict(metric='mAP', type='DOTAMetric')
+val_pipeline = [
+    dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+    dict(keep_ratio=True, scale=(
+        1024,
+        1024,
+    ), type='mmdet.Resize'),
+    dict(box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+    dict(box_type_mapping=dict(gt_bboxes='rbox'), type='ConvertBoxType'),
+    dict(
+        meta_keys=(
+            'img_id',
+            'img_path',
+            'ori_shape',
+            'img_shape',
+            'scale_factor',
+        ),
+        type='mmdet.PackDetInputs'),
+]
+vis_backends = [
+    dict(type='LocalVisBackend'),
+]
+visualizer = dict(
+    name='visualizer',
+    type='RotLocalVisualizer',
+    vis_backends=[
+        dict(type='LocalVisBackend'),
+    ])
+work_dir = '.task-data/trackb_validation_work'
+
+2026/11/15 22:16:53 - mmengine - INFO - Distributed training is not used, all SyncBatchNorm (SyncBN) layers in the model will be automatically reverted to BatchNormXd layers if they are used.
+2026/11/15 22:16:53 - mmengine - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+before_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DistSamplerSeedHook                
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) IterTimerHook                      
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_val_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_val_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DetVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_val_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_test_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_test_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_test_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DetVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_run:
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+2026/11/15 22:16:54 - mmengine - WARNING - The prefix is not set in metric class DumpResults.
+2026/11/15 22:16:55 - mmengine - INFO - Load checkpoint from artifacts/checkpoints/best_dota_mAP_epoch_24.pth
+2026/11/15 22:17:05 - mmengine - INFO - Epoch(test) [  50/5297]    eta: 0:16:24  time: 0.1876  data_time: 0.0041  memory: 587  
+2026/11/15 22:17:13 - mmengine - INFO - Epoch(test) [ 100/5297]    eta: 0:15:12  time: 0.1636  data_time: 0.0021  memory: 587  
+2026/11/15 22:17:21 - mmengine - INFO - Epoch(test) [ 150/5297]    eta: 0:14:41  time: 0.1626  data_time: 0.0013  memory: 587  
+2026/11/15 22:17:29 - mmengine - INFO - Epoch(test) [ 200/5297]    eta: 0:14:21  time: 0.1625  data_time: 0.0015  memory: 587  
+2026/11/15 22:17:37 - mmengine - INFO - Epoch(test) [ 250/5297]    eta: 0:14:10  time: 0.1660  data_time: 0.0014  memory: 587  
+2026/11/15 22:17:46 - mmengine - INFO - Epoch(test) [ 300/5297]    eta: 0:14:00  time: 0.1664  data_time: 0.0017  memory: 587  
+2026/11/15 22:17:54 - mmengine - INFO - Epoch(test) [ 350/5297]    eta: 0:13:52  time: 0.1692  data_time: 0.0016  memory: 587  
+2026/11/15 22:18:02 - mmengine - INFO - Epoch(test) [ 400/5297]    eta: 0:13:42  time: 0.1655  data_time: 0.0016  memory: 587  
+2026/11/15 22:18:11 - mmengine - INFO - Epoch(test) [ 450/5297]    eta: 0:13:34  time: 0.1698  data_time: 0.0016  memory: 587  
+2026/11/15 22:18:19 - mmengine - INFO - Epoch(test) [ 500/5297]    eta: 0:13:25  time: 0.1659  data_time: 0.0016  memory: 587  
+2026/11/15 22:18:27 - mmengine - INFO - Epoch(test) [ 550/5297]    eta: 0:13:15  time: 0.1643  data_time: 0.0014  memory: 587  
+2026/11/15 22:18:36 - mmengine - INFO - Epoch(test) [ 600/5297]    eta: 0:13:05  time: 0.1639  data_time: 0.0014  memory: 587  
+2026/11/15 22:18:44 - mmengine - INFO - Epoch(test) [ 650/5297]    eta: 0:12:57  time: 0.1670  data_time: 0.0012  memory: 587  
+2026/11/15 22:18:52 - mmengine - INFO - Epoch(test) [ 700/5297]    eta: 0:12:46  time: 0.1615  data_time: 0.0015  memory: 587  
+2026/11/15 22:19:00 - mmengine - INFO - Epoch(test) [ 750/5297]    eta: 0:12:37  time: 0.1644  data_time: 0.0017  memory: 587  
+2026/11/15 22:19:09 - mmengine - INFO - Epoch(test) [ 800/5297]    eta: 0:12:29  time: 0.1650  data_time: 0.0015  memory: 587  
+2026/11/15 22:19:17 - mmengine - INFO - Epoch(test) [ 850/5297]    eta: 0:12:20  time: 0.1659  data_time: 0.0013  memory: 587  
+2026/11/15 22:19:25 - mmengine - INFO - Epoch(test) [ 900/5297]    eta: 0:12:12  time: 0.1683  data_time: 0.0016  memory: 587  
+2026/11/15 22:19:34 - mmengine - INFO - Epoch(test) [ 950/5297]    eta: 0:12:04  time: 0.1682  data_time: 0.0018  memory: 587  
+2026/11/15 22:19:42 - mmengine - INFO - Epoch(test) [1000/5297]    eta: 0:11:55  time: 0.1642  data_time: 0.0017  memory: 587  
+2026/11/15 22:19:50 - mmengine - INFO - Epoch(test) [1050/5297]    eta: 0:11:47  time: 0.1668  data_time: 0.0016  memory: 587  
+2026/11/15 22:19:58 - mmengine - INFO - Epoch(test) [1100/5297]    eta: 0:11:38  time: 0.1645  data_time: 0.0013  memory: 587  
+2026/11/15 22:20:07 - mmengine - INFO - Epoch(test) [1150/5297]    eta: 0:11:30  time: 0.1653  data_time: 0.0016  memory: 587  
+2026/11/15 22:20:15 - mmengine - INFO - Epoch(test) [1200/5297]    eta: 0:11:22  time: 0.1674  data_time: 0.0017  memory: 587  
+2026/11/15 22:20:23 - mmengine - INFO - Epoch(test) [1250/5297]    eta: 0:11:13  time: 0.1667  data_time: 0.0016  memory: 587  
+2026/11/15 22:20:32 - mmengine - INFO - Epoch(test) [1300/5297]    eta: 0:11:05  time: 0.1676  data_time: 0.0015  memory: 587  
+2026/11/15 22:20:40 - mmengine - INFO - Epoch(test) [1350/5297]    eta: 0:10:57  time: 0.1677  data_time: 0.0016  memory: 587  
+2026/11/15 22:20:48 - mmengine - INFO - Epoch(test) [1400/5297]    eta: 0:10:48  time: 0.1652  data_time: 0.0016  memory: 587  
+2026/11/15 22:20:57 - mmengine - INFO - Epoch(test) [1450/5297]    eta: 0:10:40  time: 0.1638  data_time: 0.0015  memory: 587  
+2026/11/15 22:21:05 - mmengine - INFO - Epoch(test) [1500/5297]    eta: 0:10:32  time: 0.1683  data_time: 0.0013  memory: 587  
+2026/11/15 22:21:13 - mmengine - INFO - Epoch(test) [1550/5297]    eta: 0:10:24  time: 0.1676  data_time: 0.0014  memory: 587  
+2026/11/15 22:21:22 - mmengine - INFO - Epoch(test) [1600/5297]    eta: 0:10:15  time: 0.1671  data_time: 0.0014  memory: 587  
+2026/11/15 22:21:30 - mmengine - INFO - Epoch(test) [1650/5297]    eta: 0:10:07  time: 0.1694  data_time: 0.0014  memory: 587  
+2026/11/15 22:21:39 - mmengine - INFO - Epoch(test) [1700/5297]    eta: 0:10:00  time: 0.1726  data_time: 0.0014  memory: 587  
+2026/11/15 22:21:47 - mmengine - INFO - Epoch(test) [1750/5297]    eta: 0:09:51  time: 0.1693  data_time: 0.0015  memory: 587  
+2026/11/15 22:21:56 - mmengine - INFO - Epoch(test) [1800/5297]    eta: 0:09:43  time: 0.1679  data_time: 0.0015  memory: 587  
+2026/11/15 22:22:04 - mmengine - INFO - Epoch(test) [1850/5297]    eta: 0:09:35  time: 0.1715  data_time: 0.0013  memory: 587  
+2026/11/15 22:22:13 - mmengine - INFO - Epoch(test) [1900/5297]    eta: 0:09:28  time: 0.1758  data_time: 0.0013  memory: 587  
+2026/11/15 22:22:22 - mmengine - INFO - Epoch(test) [1950/5297]    eta: 0:09:20  time: 0.1714  data_time: 0.0013  memory: 587  
+2026/11/15 22:22:30 - mmengine - INFO - Epoch(test) [2000/5297]    eta: 0:09:11  time: 0.1672  data_time: 0.0014  memory: 587  
+2026/11/15 22:22:38 - mmengine - INFO - Epoch(test) [2050/5297]    eta: 0:09:03  time: 0.1655  data_time: 0.0014  memory: 587  
+2026/11/15 22:22:47 - mmengine - INFO - Epoch(test) [2100/5297]    eta: 0:08:54  time: 0.1668  data_time: 0.0016  memory: 587  
+2026/11/15 22:22:55 - mmengine - INFO - Epoch(test) [2150/5297]    eta: 0:08:46  time: 0.1699  data_time: 0.0016  memory: 587  
+2026/11/15 22:23:04 - mmengine - INFO - Epoch(test) [2200/5297]    eta: 0:08:38  time: 0.1702  data_time: 0.0016  memory: 587  
+2026/11/15 22:23:12 - mmengine - INFO - Epoch(test) [2250/5297]    eta: 0:08:30  time: 0.1692  data_time: 0.0017  memory: 587  
+2026/11/15 22:23:20 - mmengine - INFO - Epoch(test) [2300/5297]    eta: 0:08:21  time: 0.1664  data_time: 0.0013  memory: 587  
+2026/11/15 22:23:29 - mmengine - INFO - Epoch(test) [2350/5297]    eta: 0:08:13  time: 0.1699  data_time: 0.0016  memory: 587  
+2026/11/15 22:23:37 - mmengine - INFO - Epoch(test) [2400/5297]    eta: 0:08:05  time: 0.1672  data_time: 0.0014  memory: 587  
+2026/11/15 22:23:46 - mmengine - INFO - Epoch(test) [2450/5297]    eta: 0:07:57  time: 0.1701  data_time: 0.0015  memory: 587  
+2026/11/15 22:23:54 - mmengine - INFO - Epoch(test) [2500/5297]    eta: 0:07:48  time: 0.1709  data_time: 0.0017  memory: 587  
+2026/11/15 22:24:03 - mmengine - INFO - Epoch(test) [2550/5297]    eta: 0:07:40  time: 0.1694  data_time: 0.0018  memory: 587  
+2026/11/15 22:24:11 - mmengine - INFO - Epoch(test) [2600/5297]    eta: 0:07:32  time: 0.1671  data_time: 0.0014  memory: 587  
+2026/11/15 22:24:19 - mmengine - INFO - Epoch(test) [2650/5297]    eta: 0:07:23  time: 0.1650  data_time: 0.0017  memory: 587  
+2026/11/15 22:24:28 - mmengine - INFO - Epoch(test) [2700/5297]    eta: 0:07:15  time: 0.1683  data_time: 0.0016  memory: 587  
+2026/11/15 22:24:36 - mmengine - INFO - Epoch(test) [2750/5297]    eta: 0:07:06  time: 0.1656  data_time: 0.0016  memory: 587  
+2026/11/15 22:24:45 - mmengine - INFO - Epoch(test) [2800/5297]    eta: 0:06:58  time: 0.1690  data_time: 0.0016  memory: 587  
+2026/11/15 22:24:53 - mmengine - INFO - Epoch(test) [2850/5297]    eta: 0:06:49  time: 0.1644  data_time: 0.0015  memory: 587  
+2026/11/15 22:25:01 - mmengine - INFO - Epoch(test) [2900/5297]    eta: 0:06:41  time: 0.1664  data_time: 0.0014  memory: 587  
+2026/11/15 22:25:09 - mmengine - INFO - Epoch(test) [2950/5297]    eta: 0:06:33  time: 0.1660  data_time: 0.0017  memory: 587  
+2026/11/15 22:25:18 - mmengine - INFO - Epoch(test) [3000/5297]    eta: 0:06:24  time: 0.1664  data_time: 0.0016  memory: 587  
+2026/11/15 22:25:26 - mmengine - INFO - Epoch(test) [3050/5297]    eta: 0:06:16  time: 0.1677  data_time: 0.0016  memory: 587  
+2026/11/15 22:25:34 - mmengine - INFO - Epoch(test) [3100/5297]    eta: 0:06:07  time: 0.1661  data_time: 0.0015  memory: 587  
+2026/11/15 22:25:43 - mmengine - INFO - Epoch(test) [3150/5297]    eta: 0:05:59  time: 0.1659  data_time: 0.0018  memory: 587  
+2026/11/15 22:25:51 - mmengine - INFO - Epoch(test) [3200/5297]    eta: 0:05:51  time: 0.1667  data_time: 0.0015  memory: 587  
+2026/11/15 22:26:00 - mmengine - INFO - Epoch(test) [3250/5297]    eta: 0:05:42  time: 0.1744  data_time: 0.0017  memory: 587  
+2026/11/15 22:26:08 - mmengine - INFO - Epoch(test) [3300/5297]    eta: 0:05:34  time: 0.1738  data_time: 0.0016  memory: 587  
+2026/11/15 22:26:17 - mmengine - INFO - Epoch(test) [3350/5297]    eta: 0:05:26  time: 0.1715  data_time: 0.0016  memory: 587  
+2026/11/15 22:26:25 - mmengine - INFO - Epoch(test) [3400/5297]    eta: 0:05:18  time: 0.1683  data_time: 0.0016  memory: 587  
+2026/11/15 22:26:34 - mmengine - INFO - Epoch(test) [3450/5297]    eta: 0:05:09  time: 0.1680  data_time: 0.0016  memory: 587  
+2026/11/15 22:26:43 - mmengine - INFO - Epoch(test) [3500/5297]    eta: 0:05:01  time: 0.1729  data_time: 0.0015  memory: 587  
+2026/11/15 22:26:51 - mmengine - INFO - Epoch(test) [3550/5297]    eta: 0:04:53  time: 0.1685  data_time: 0.0014  memory: 587  
+2026/11/15 22:26:59 - mmengine - INFO - Epoch(test) [3600/5297]    eta: 0:04:44  time: 0.1674  data_time: 0.0016  memory: 587  
+2026/11/15 22:27:08 - mmengine - INFO - Epoch(test) [3650/5297]    eta: 0:04:36  time: 0.1718  data_time: 0.0017  memory: 587  
+2026/11/15 22:27:16 - mmengine - INFO - Epoch(test) [3700/5297]    eta: 0:04:28  time: 0.1701  data_time: 0.0017  memory: 587  
+2026/11/15 22:27:25 - mmengine - INFO - Epoch(test) [3750/5297]    eta: 0:04:19  time: 0.1643  data_time: 0.0016  memory: 587  
+2026/11/15 22:27:33 - mmengine - INFO - Epoch(test) [3800/5297]    eta: 0:04:11  time: 0.1695  data_time: 0.0017  memory: 587  
+2026/11/15 22:27:41 - mmengine - INFO - Epoch(test) [3850/5297]    eta: 0:04:02  time: 0.1673  data_time: 0.0017  memory: 587  
+2026/11/15 22:27:50 - mmengine - INFO - Epoch(test) [3900/5297]    eta: 0:03:54  time: 0.1702  data_time: 0.0018  memory: 587  
+2026/11/15 22:27:58 - mmengine - INFO - Epoch(test) [3950/5297]    eta: 0:03:46  time: 0.1671  data_time: 0.0015  memory: 587  
+2026/11/15 22:28:07 - mmengine - INFO - Epoch(test) [4000/5297]    eta: 0:03:37  time: 0.1698  data_time: 0.0014  memory: 587  
+2026/11/15 22:28:15 - mmengine - INFO - Epoch(test) [4050/5297]    eta: 0:03:29  time: 0.1692  data_time: 0.0015  memory: 587  
+2026/11/15 22:28:24 - mmengine - INFO - Epoch(test) [4100/5297]    eta: 0:03:20  time: 0.1674  data_time: 0.0017  memory: 587  
+2026/11/15 22:28:32 - mmengine - INFO - Epoch(test) [4150/5297]    eta: 0:03:12  time: 0.1696  data_time: 0.0014  memory: 587  
+2026/11/15 22:28:41 - mmengine - INFO - Epoch(test) [4200/5297]    eta: 0:03:04  time: 0.1695  data_time: 0.0015  memory: 587  
+2026/11/15 22:28:49 - mmengine - INFO - Epoch(test) [4250/5297]    eta: 0:02:55  time: 0.1683  data_time: 0.0017  memory: 587  
+2026/11/15 22:28:57 - mmengine - INFO - Epoch(test) [4300/5297]    eta: 0:02:47  time: 0.1692  data_time: 0.0015  memory: 587  
+2026/11/15 22:29:06 - mmengine - INFO - Epoch(test) [4350/5297]    eta: 0:02:39  time: 0.1718  data_time: 0.0016  memory: 587  
+2026/11/15 22:29:14 - mmengine - INFO - Epoch(test) [4400/5297]    eta: 0:02:30  time: 0.1672  data_time: 0.0015  memory: 587  
+2026/11/15 22:29:23 - mmengine - INFO - Epoch(test) [4450/5297]    eta: 0:02:22  time: 0.1709  data_time: 0.0014  memory: 587  
+2026/11/15 22:29:31 - mmengine - INFO - Epoch(test) [4500/5297]    eta: 0:02:13  time: 0.1679  data_time: 0.0016  memory: 587  
+2026/11/15 22:29:40 - mmengine - INFO - Epoch(test) [4550/5297]    eta: 0:02:05  time: 0.1678  data_time: 0.0017  memory: 587  
+2026/11/15 22:29:48 - mmengine - INFO - Epoch(test) [4600/5297]    eta: 0:01:57  time: 0.1645  data_time: 0.0016  memory: 587  
+2026/11/15 22:29:56 - mmengine - INFO - Epoch(test) [4650/5297]    eta: 0:01:48  time: 0.1676  data_time: 0.0015  memory: 587  
+2026/11/15 22:30:05 - mmengine - INFO - Epoch(test) [4700/5297]    eta: 0:01:40  time: 0.1709  data_time: 0.0017  memory: 587  
+2026/11/15 22:30:13 - mmengine - INFO - Epoch(test) [4750/5297]    eta: 0:01:31  time: 0.1657  data_time: 0.0016  memory: 587  
+2026/11/15 22:30:22 - mmengine - INFO - Epoch(test) [4800/5297]    eta: 0:01:23  time: 0.1694  data_time: 0.0016  memory: 587  
+2026/11/15 22:30:30 - mmengine - INFO - Epoch(test) [4850/5297]    eta: 0:01:15  time: 0.1660  data_time: 0.0015  memory: 587  
+2026/11/15 22:30:39 - mmengine - INFO - Epoch(test) [4900/5297]    eta: 0:01:06  time: 0.1719  data_time: 0.0016  memory: 587  
+2026/11/15 22:30:47 - mmengine - INFO - Epoch(test) [4950/5297]    eta: 0:00:58  time: 0.1685  data_time: 0.0015  memory: 587  
+2026/11/15 22:30:55 - mmengine - INFO - Epoch(test) [5000/5297]    eta: 0:00:49  time: 0.1683  data_time: 0.0015  memory: 587  
+2026/11/15 22:31:04 - mmengine - INFO - Epoch(test) [5050/5297]    eta: 0:00:41  time: 0.1676  data_time: 0.0016  memory: 587  
+2026/11/15 22:31:12 - mmengine - INFO - Epoch(test) [5100/5297]    eta: 0:00:33  time: 0.1684  data_time: 0.0016  memory: 587  
+2026/11/15 22:31:21 - mmengine - INFO - Epoch(test) [5150/5297]    eta: 0:00:24  time: 0.1727  data_time: 0.0014  memory: 587  
+2026/11/15 22:31:29 - mmengine - INFO - Epoch(test) [5200/5297]    eta: 0:00:16  time: 0.1721  data_time: 0.0018  memory: 587  
+2026/11/15 22:31:38 - mmengine - INFO - Epoch(test) [5250/5297]    eta: 0:00:07  time: 0.1666  data_time: 0.0016  memory: 587  
+2026/11/15 22:31:47 - mmengine - INFO - 
+---------------iou_thr: 0.5---------------
+2026/11/15 22:31:57 - mmengine - INFO - 
++--------------------+-------+-------+--------+-------+
+| class              | gts   | dets  | recall | ap    |
++--------------------+-------+-------+--------+-------+
+| plane              | 4478  | 5074  | 0.942  | 0.901 |
+| baseball-diamond   | 354   | 558   | 0.918  | 0.833 |
+| bridge             | 790   | 2021  | 0.739  | 0.561 |
+| ground-track-field | 214   | 537   | 0.897  | 0.751 |
+| small-vehicle      | 73508 | 58596 | 0.547  | 0.504 |
+| large-vehicle      | 10284 | 16367 | 0.885  | 0.785 |
+| ship               | 21784 | 23703 | 0.918  | 0.899 |
+| tennis-court       | 1515  | 1664  | 0.950  | 0.908 |
+| basketball-court   | 287   | 425   | 0.836  | 0.742 |
+| storage-tank       | 4819  | 4106  | 0.672  | 0.625 |
+| soccer-ball-field  | 243   | 481   | 0.786  | 0.647 |
+| roundabout         | 287   | 443   | 0.822  | 0.738 |
+| harbor             | 4185  | 5732  | 0.889  | 0.778 |
+| swimming-pool      | 997   | 1552  | 0.765  | 0.637 |
+| helicopter         | 128   | 301   | 0.820  | 0.675 |
+| container-crane    | 28    | 53    | 0.107  | 0.044 |
+| airport            | 0     | 0     | 0.000  | 0.000 |
+| helipad            | 0     | 2     | 0.000  | 0.000 |
++--------------------+-------+-------+--------+-------+
+| mAP                |       |       |        | 0.689 |
++--------------------+-------+-------+--------+-------+
+2026/11/15 22:31:58 - mmengine - INFO - Results has been saved to .task-data/trackb_validation_preds.pkl.
+2026/11/15 22:31:58 - mmengine - INFO - Epoch(test) [5297/5297]    dota/mAP: 0.6893  dota/AP50: 0.6890  data_time: 0.0016  time: 0.1681

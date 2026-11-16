@@ -15,13 +15,14 @@ tiles, and annotations are intentionally excluded from GitHub.
 ## Results at a glance
 
 **Track B (flagship), epoch 24 — best checkpoint `best_dota_mAP_epoch_24.pth`**
+Official DOTA v2.0 val split (593 images, 7,122 patches, 18 classes).
 
-| | dota/mAP | mAP50 | mAP50-95 | F1 | Precision | Recall |
+| | dota/mAP (mmengine) | mAP50 (ext, d0) | mAP50-95 | F1 | Precision | Recall |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | Track A (baseline) | 0.5412 | 0.6049 | 0.3146 | 0.7849 | 0.8157 | 0.7564 |
-| **Track B (final, restored-val rerun)** | **0.6893** | **0.7065** | **0.4258** | **0.7264** | **0.8409** | **0.6394** |
+| **Track B (official val)** | **0.6352** | **0.6968** | **0.4175** | **0.8502** | **0.8711** | **0.8302** |
 
-Scale AP50 (small / medium / large): **0.600 / 0.758 / 0.878** · Angle error (elongated TPs): **2.50 deg** (mean) / 1.77 deg (median) · F1-optimal confidence: **0.5182** · restored validation rerun: 5.80 img/s @ 4.20 GiB peak VRAM
+Scale AP50 (small / medium / large): **0.609 / 0.684 / 0.814** · Angle error (elongated TPs): **2.05 deg** (mean) / 1.45 deg (median) · F1-optimal confidence: **0.8279** · validation: 5.70 img/s @ 4.20 GiB peak VRAM · 49.0 M params
 
 Full write-up: [`docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf`](docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf)
 
@@ -32,67 +33,84 @@ Training was run in two phases:
 
 | Phase | Hardware | What happened |
 | :--- | :--- | :--- |
-| 1 | NVIDIA A100-SXM4-80GB (Colab) | Track A (12 ep) + Track B epochs 1–16; Track B reached 0.6883 dota/mAP |
-| 2 | 2× NVIDIA Tesla T4 (Kaggle, 12h sessions) | Track B epochs 17–24, resumed from the saved epoch-16 checkpoint; final evaluation |
+| 1 | NVIDIA A100-SXM4-80GB (Colab) | Track A (12 ep) + Track B epochs 1–16; official val data (HuggingFace) |
+| 2 | 2× NVIDIA Tesla T4 (Kaggle, 12h sessions) | Track B epochs 17–24, resumed from epoch-16 checkpoint |
+| Eval | local GPU | Official-val re-evaluation of `best_dota_mAP_epoch_24.pth` — no retraining (see [Data source correction](#data-source-correction)) |
 
-## Final results (Phase-2 Kaggle evaluation)
+## Final results (official val evaluation)
 
-Validation split, 5,297 tiled 1024×1024 patches, 120,013 non-difficult GT instances.
+Official DOTA v2.0 val split, 593 images → 7,122 tiled 1024×1024 patches,
+81,048 instances (69,542 non-difficult, 70,561 difficult). Track A = Phase 1
+(A100, same tiling). Track B = official val re-evaluation of
+`best_dota_mAP_epoch_24.pth` (no retraining).
 
 | Metric | Track A (baseline) | Track B (flagship, epoch 24) |
 | :--- | :---: | :---: |
-| Official dota/mAP (18-class macro) | 0.5412 | **0.6892 (training log); 0.6893 (rerun)** |
-| Extended evaluator mAP50 | 0.6049 | **0.7065** |
-| Strict mAP50-95 | 0.3146 | **0.4258** |
-| AP75 | 0.2785 | **0.4487** |
-| Precision (F1-optimal, conf = 0.5182) | 0.8157 | **0.8409** |
-| Recall (F1-optimal, conf = 0.5182) | 0.7564 | **0.6394** |
-| F1-score (F1-optimal, conf = 0.5182) | 0.7849 | **0.7264** |
-| Scale AP50 (small/med/large) | 0.4875 / 0.5882 / 0.6602 | **0.6004 / 0.7584 / 0.8783** |
-| Mean angle error (all TPs) | 3.78 deg (mean, Phase-1 A100) | **4.70 deg mean / 1.85 deg median** |
-| Mean angle error (elongated TPs) | 2.55 deg (median, Phase-1 A100) | **2.50 deg mean / 1.77 deg median** |
-| Easy / Difficult GT recall | 0.7565 / 0.2631 | **0.6395 / 0.7382** |
-| F1-optimal confidence threshold | — | 0.5182 |
-| Validation throughput | 17.38 FPS (Phase 1) | 5.80 img/s (restored-validation rerun) |
-| Peak GPU memory | 28.04 GiB (Phase 1) | 4.20 GiB (validation rerun) |
+| Official dota/mAP (mmengine, 18-class macro, diff-included) | 0.5412 | **0.6352** |
+| Extended evaluator mAP50 (non-difficult GT) | 0.6049 | **0.6968** |
+| Strict mAP50-95 | 0.3146 | **0.4175** |
+| AP75 | 0.2785 | **0.4347** |
+| Precision (F1-optimal, conf = 0.8279) | 0.8157 | **0.8711** |
+| Recall (F1-optimal, conf = 0.8279) | 0.7564 | **0.8302** |
+| F1-score (F1-optimal, conf = 0.8279) | 0.7849 | **0.8502** |
+| Scale AP50 (small/med/large) | 0.4875 / 0.5882 / 0.6602 | **0.6089 / 0.6844 / 0.8135** |
+| Mean angle error (all TPs) | 3.78 deg | **4.83 deg mean / 1.56 deg median** |
+| Mean angle error (elongated TPs) | 2.55 deg | **2.05 deg mean / 1.45 deg median** |
+| Easy / Difficult GT recall | 0.7565 / 0.2631 | **0.8303 / 0.299** |
+| F1-optimal confidence threshold | — | 0.8279 |
+| Validation throughput | 17.38 FPS (Phase 1) | 5.70 img/s |
+| Peak GPU memory | 28.04 GiB (Phase 1) | 4.20 GiB |
 
-**Checkpoint log vs restored validation rerun.** The epoch-24 training log records 0.6892 `dota/mAP`; the post-training run on restored data returned 0.6893. Extended metrics below use the fresh predictions. **Phase-1 vs Phase-2 numbers.** Track A metrics and the per-class Track A column were measured in Phase 1 (A100, 7,122-patch tiling). Track B metrics in this repo are the Phase-2 results (5,297-patch tiling). The two tilings differ, so treat Track A / Track B cross-tiling deltas as approximate. Airport and helipad have **zero validation instances** in the Phase-2 tiling; their Track B AP50 is 0.0 (reported as such, not hidden). The metrics here are from labeled validation data; no hidden-label DOTA server score is claimed.
+**Two mAP conventions.** mmengine `DOTAMetric` reports `dota/mAP: 0.6352`
+(18-class macro, IoU 0.5, `diff_thr=100` — includes difficult GT). The extended
+evaluator reports `mAP50: 0.6968` on non-difficult GT only. Both conventions
+were used in Phase 1; the extended d0-only number is the apples-to-apples
+comparison vs Track A. **Difficult recall** (0.299) is measured against 70,561
+officially-difficult instances — genuinely tiny, occluded, or ambiguous boxes.
+The metrics here are from labeled validation data; no hidden-label DOTA server
+score is claimed.
 
 ## Per-class breakdown (AP50, recall @ F1-optimal)
 
-Track A = Phase 1 (A100). Track B = Phase 2 (Kaggle, `best_dota_mAP_epoch_24`).
+Track A = Phase 1 (official val, A100). Track B = official val, `best_dota_mAP_epoch_24`.
+Extended evaluator, non-difficult GT. #GT = non-difficult occurrences.
 
-| Class | Track A (AP / Recall) | Track B (AP / Recall) | ΔAP |
-| :--- | :---: | :---: | :---: |
-| plane | 0.809 / 0.876 | **0.925 / 0.895** | +0.116 |
-| baseball-diamond | 0.664 / 0.858 | **0.845 / 0.832** | +0.181 |
-| bridge | 0.374 / 0.586 | **0.569 / 0.598** | +0.195 |
-| ground-track-field | 0.690 / 0.883 | **0.792 / 0.781** | +0.102 |
-| small-vehicle | 0.417 / 0.492 | **0.498 / 0.523** | +0.082 |
-| large-vehicle | 0.676 / 0.802 | **0.832 / 0.765** | +0.156 |
-| ship | 0.776 / 0.801 | **0.910 / 0.884** | +0.134 |
-| tennis-court | 0.901 / 0.934 | **0.948 / 0.931** | +0.047 |
-| basketball-court | 0.596 / 0.702 | **0.747 / 0.698** | +0.151 |
-| storage-tank | 0.600 / 0.638 | **0.653 / 0.637** | +0.053 |
-| soccer-ball-field | 0.536 / 0.745 | **0.646 / 0.642** | +0.110 |
-| roundabout | 0.603 / 0.778 | **0.748 / 0.722** | +0.145 |
-| harbor | 0.552 / 0.697 | **0.842 / 0.826** | +0.290 |
-| swimming-pool | 0.556 / 0.681 | **0.653 / 0.682** | +0.097 |
-| helicopter | 0.542 / 0.633 | **0.663 / 0.559** | +0.121 |
-| container-crane | 0.000 / 0.000 | **0.033 / 0.074** | +0.033 |
-| airport | 0.450 / 0.598 | **0.000 / 0.000** | -0.450 |
-| helipad | 0.000 / 0.000 | **0.000 / 0.000** | +0.000 |
+| Class | #GT | Track A (AP / Recall) | Track B (AP / Recall) | ΔAP |
+| :--- | :---: | :---: | :---: | :---: |
+| plane | 3,976 | 0.809 / 0.876 | **0.936 / 0.908** | +0.127 |
+| baseball-diamond | 357 | 0.664 / 0.858 | **0.757 / 0.840** | +0.093 |
+| bridge | 745 | 0.374 / 0.586 | **0.557 / 0.579** | +0.183 |
+| ground-track-field | 192 | 0.690 / 0.883 | **0.798 / 0.755** | +0.108 |
+| small-vehicle | 21,258 | 0.417 / 0.492 | **0.822 / 0.810** | +0.405 |
+| large-vehicle | 9,118 | 0.676 / 0.802 | **0.869 / 0.803** | +0.193 |
+| ship | 23,075 | 0.776 / 0.801 | **0.911 / 0.889** | +0.135 |
+| tennis-court | 1,414 | 0.901 / 0.934 | **0.957 / 0.926** | +0.056 |
+| basketball-court | 242 | 0.596 / 0.702 | **0.762 / 0.731** | +0.166 |
+| storage-tank | 3,273 | 0.600 / 0.638 | **0.829 / 0.801** | +0.229 |
+| soccer-ball-field | 103 | 0.536 / 0.745 | **0.672 / 0.641** | +0.136 |
+| roundabout | 278 | 0.603 / 0.778 | **0.763 / 0.763** | +0.160 |
+| harbor | 4,102 | 0.552 / 0.697 | **0.803 / 0.783** | +0.251 |
+| swimming-pool | 1,195 | 0.556 / 0.681 | **0.669 / 0.679** | +0.113 |
+| helicopter | 116 | 0.542 / 0.633 | **0.669 / 0.569** | +0.127 |
+| container-crane | 27 | 0.000 / 0.000 | **0.032 / 0.074** | +0.032 |
+| airport | 67 | 0.450 / 0.598 | **0.488 / 0.582** | +0.038 |
+| helipad | 4 | 0.000 / 0.000 | **0.250 / 0.500** | +0.250 |
+
+**Low-support classes.** Container-crane (27 GT), airport (67), and helipad (4)
+have very few instances; their AP should be interpreted cautiously.
 
 Standalone benchmark output: [`results/final_benchmark_report.md`](results/final_benchmark_report.md), [`results/extended_metrics.json`](results/extended_metrics.json)
 
 ## Precision / Recall / F1 at fixed confidence thresholds
 
+Track B, official val, extended evaluator (non-difficult GT):
+
 | Conf | Precision | Recall | F1 | TP | FP | FN |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 0.25 | 0.786 | 0.662 | 0.718 | 79,412 | 21,654 | 40,601 |
-| 0.30 | 0.798 | 0.658 | 0.721 | 78,967 | 20,025 | 41,046 |
-| 0.50 | 0.837 | 0.641 | 0.726 | 76,946 | 14,943 | 43,067 |
-| **0.5182 (F1-opt)** | **0.841** | **0.639** | **0.726** | 76,737 | 14,524 | 43,276 |
+| 0.25 | 0.722 | 0.893 | 0.798 | 62,067 | 23,892 | 7,475 |
+| 0.30 | 0.737 | 0.889 | 0.806 | 61,846 | 22,089 | 7,696 |
+| 0.50 | 0.787 | 0.877 | 0.829 | 60,954 | 16,510 | 8,588 |
+| **0.8279 (F1-opt)** | **0.871** | **0.830** | **0.850** | 57,736 | 8,546 | 11,806 |
 
 ## Repository layout
 
@@ -125,8 +143,8 @@ Upload any aerial image (or a tiled 1024x1024 patch), tune the confidence thresh
 and the app draws le90 oriented boxes with class + score labels on the result.
 Inference is single image, GPU-accelerated (RTX 4060: ~0.35 s/image) with CPU fallback.
 The app includes three real DOTA validation tiles covering planes, vehicles, courts,
-and helicopters. Its slider defaults to 0.52, the UI-friendly rounding of the
-validation F1-optimal threshold (0.5182).
+and helicopters. Its slider defaults to 0.52, a UI-friendly confidence threshold
+for interactive visualization (the validation F1-optimal threshold is 0.8279).
 
 ### Live demo video
 
@@ -196,10 +214,13 @@ uv run pytest
 
 ## Results & artifacts
 
-- `results/final_benchmark_report.md` — Track A vs Track B scorecard, per-class AP50.
-- `results/extended_metrics.json` — full machine-readable metrics (per-class AP50/AP75/mAP50-95,
-  micro PRF at multiple confidence thresholds, scale-bucketed AP, angle errors, FPS, VRAM).
-- `results/logs/` — mmengine logs for Phase 2 (`2026-11-15_track_b_final_epochs_17-24.log`).
+- `results/final_benchmark_report.md` — Track A vs Track B scorecard, per-class AP50, data source correction.
+- `results/extended_metrics.json` — full machine-readable metrics (official val, 7,122 patches):
+  per-class AP50/AP75/mAP50-95, micro PRF at multiple confidence thresholds, scale-bucketed AP,
+  angle errors, difficulty recall, FPS, VRAM.
+- `results/logs/` — mmengine logs for Phase 2 training (`2026-11-15_track_b_final_epochs_17-24.log`)
+  and the official-val re-evaluation (`2026-11-15_track_b_restored_validation_rerun.log`).
+- `results/task1_submission/` — DOTA Task 1 test-dev submission files (18 `Task1_<class>.txt` + zip).
 
 **Model checkpoints** (~850 MB each) are intentionally excluded from this repo
 (`artifacts/checkpoints/`, gitignored) and are available on request. The Phase-1
@@ -209,17 +230,38 @@ Phase-2 `epoch_19` resume checkpoint lives in the private Kaggle dataset
 
 ## Known limitations / caveats
 
-- Airport and helipad received 0 annotations in the Phase-2 validation tiling
-  (0 ground-truth instances); their AP50 is reported as 0.0.
-- Track A metrics are Phase-1 numbers (different validation tiling); deltas across
-  phases are approximate. Official `dota/mAP` uses the difficult-instance-excluded
-  18-class macro mean from MMRotate.
+- Official `dota/mAP` uses the difficult-instance-included 18-class macro mean
+  from MMRotate (`diff_thr=100`); the extended evaluator's `mAP50` is computed
+  on non-difficult GT only. Both conventions are reported.
+- Container-crane (27 GT), airport (67), and helipad (4) have very few val
+  instances; their AP should be interpreted cautiously. Airport's AP75 of 0.005
+  suggests large polygons may fail the >=70% IoF tiling rule — multi-scale tiling
+  would likely help.
+- Track A metrics are Phase-1 numbers (same 7,122-patch official tiling, A100);
+  Track B metrics are the official-val re-evaluation (same tiling, local GPU).
 - `epoch_20.pth` was pruned on Kaggle by the `max_keep_ckpts=3` checkpoint hook
   before it could be archived. Its validation result (0.6879 dota/mAP) is recorded
   in the logs. All other epoch checkpoints (16–24) and `best_dota_mAP_epoch_24.pth`
   are preserved locally under `artifacts/checkpoints/`.
 - Kaggle interactive sessions are idle-terminated and have a 12-hour limit; this is
   why the pipeline is built around deterministic re-provisioning and per-epoch resume.
+
+## Data source correction
+
+The Phase-2 Kaggle evaluation (`scripts/run_kaggle.py`) used `--source ultralytics`,
+fetching `DOTAv2.zip` from the yolov5 v1.0 GitHub release. That archive is **not
+official DOTA v2.0**: it ships only 458 of the 593 official val images with 16-class
+YOLO labels (no airport/helipad) and stripped difficulty flags. Phase 1 was
+unaffected because the Colab notebook used `DATA_SOURCE = 'huggingface'`
+(isaaccorley/dota — official v2.0, 593 val images).
+
+The official-val re-evaluation was performed by re-staging the official val split
+(593 images, original-format annotations with difficulty flags intact), re-tiling
+with the same 1024/200 recipe (7,122 patches), and running Track B's saved
+checkpoint as a pure evaluation pass. No retraining was performed. The tiling
+method was correct throughout — only the data source was wrong. Phase-2 numbers
+are retained in the [report appendix](results/final_benchmark_report.md#appendix-phase-2-superseded)
+for traceability.
 
 ## Acknowledgements
 

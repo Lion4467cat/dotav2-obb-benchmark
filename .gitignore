@@ -16,3 +16,4 @@ checkpoints/
 artifacts/
 .playwright-mcp/
 mmrotate
+graphify-out/
