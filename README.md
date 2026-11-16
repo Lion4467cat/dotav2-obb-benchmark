@@ -160,7 +160,7 @@ Example Track B predictions from the saved epoch-24 checkpoint:
 
 ## Download the model
 
-Pretrained weights are attached to the [`v1.0.0` release](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.0.0):
+Pretrained weights are attached to the [`v1.0.0` release](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.0.0) (weights unchanged since — [`v1.1.0`](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.1.0) marks the official-val evaluation correction with the same checkpoint):
 
 | Asset | Size | Contents |
 | :--- | :--- | :--- |
