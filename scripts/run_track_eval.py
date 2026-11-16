@@ -42,8 +42,11 @@ def count_model_params_m(config_path: Path) -> float | None:
     """Instantiate MMRotate config via mmengine to count parameters in millions."""
     try:
         from mmengine.config import Config
-        from mmengine.registry import MODELS
+        from mmengine.registry import MODELS, init_default_scope
 
+        import mmrotate  # noqa: F401  (registers MMRotate modules)
+
+        init_default_scope("mmrotate")
         cfg = Config.fromfile(str(config_path))
         model = MODELS.build(cfg.model)
         total_params = sum(p.numel() for p in model.parameters())

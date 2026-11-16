@@ -20,7 +20,7 @@ def build_notebook(out_path: Path) -> None:
             "- **Track B (Flagship)**: Context-Aware Oriented Faster R-CNN (`ConvNeXt-S + PAFPN + Oriented RPN + KLD Loss + ClassBalancedDataset`, `2x`)\n\n"
             "Before running:\n"
             "1. Go to **Runtime -> Change runtime type** -> select **A100 GPU** (or **L4**) + **High-RAM**.\n"
-            "2. Review **Step 2** (`DATA_SOURCE = 'ultralytics'` downloads `DOTAv2.zip` automatically and caches it on Drive).\n"
+            "2. Review **Step 2** (`DATA_SOURCE = 'huggingface'` downloads the official 18-class DOTA v2.0 archives and caches them on Drive; `'ultralytics'` is a legacy non-official source).\n"
             "3. Click **Runtime -> Run all**.\n"
         ),
         nbf.v4.new_code_cell(
@@ -49,7 +49,7 @@ def build_notebook(out_path: Path) -> None:
             "RUN_FLAGSHIP_TRACK_B = True\n"
         ),
         nbf.v4.new_markdown_cell(
-            "**Analysis (Step 2):** Confirm `DATA_SOURCE` (`'ultralytics'` caches `DOTAv2.zip` in `WORK_ROOT/raw_archives`), and use `SMOKE_TEST_LIMIT = 50` if running an initial pipeline check before full training."
+            "**Analysis (Step 2):** Confirm `DATA_SOURCE` (`'huggingface'` caches the official archives under `WORK_ROOT/raw_archives`), and use `SMOKE_TEST_LIMIT = 50` if running an initial pipeline check before full training."
         ),
         nbf.v4.new_code_cell(
             "# Step 3: Clone/Update Repo & Provision Python 3.11 + MMRotate (dev-1.x) via uv\n"

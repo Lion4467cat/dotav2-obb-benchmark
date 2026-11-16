@@ -22,7 +22,7 @@ Official DOTA v2.0 val split (593 images, 7,122 patches, 18 classes).
 | Track A (baseline) | 0.5412 | 0.6049 | 0.3146 | 0.7849 | 0.8157 | 0.7564 |
 | **Track B (official val)** | **0.6352** | **0.6968** | **0.4175** | **0.8502** | **0.8711** | **0.8302** |
 
-Scale AP50 (small / medium / large): **0.609 / 0.684 / 0.814** · Angle error (elongated TPs): **2.05 deg** (mean) / 1.45 deg (median) · F1-optimal confidence: **0.8279** · validation: 5.70 img/s @ 4.20 GiB peak VRAM · 49.0 M params
+Scale AP50 (small / medium / large): **0.609 / 0.684 / 0.814** · Angle error (elongated TPs): **2.05 deg** (mean) / 1.45 deg (median) · F1-optimal confidence: **0.8279** · validation: 5.70 img/s @ 4.20 GiB peak VRAM · 70.2 M parameters
 
 Full write-up: [`docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf`](docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf)
 
@@ -53,9 +53,9 @@ Official DOTA v2.0 val split, 593 images → 7,122 tiled 1024×1024 patches,
 | Precision (F1-optimal, conf = 0.8279) | 0.8157 | **0.8711** |
 | Recall (F1-optimal, conf = 0.8279) | 0.7564 | **0.8302** |
 | F1-score (F1-optimal, conf = 0.8279) | 0.7849 | **0.8502** |
-| Scale AP50 (small/med/large) | 0.4875 / 0.5882 / 0.6602 | **0.6089 / 0.6844 / 0.8135** |
-| Mean angle error (all TPs) | 3.78 deg | **4.83 deg mean / 1.56 deg median** |
-| Mean angle error (elongated TPs) | 2.55 deg | **2.05 deg mean / 1.45 deg median** |
+| Scale AP50 (small/med/large) | 0.4874 / 0.5881 / 0.6602 | **0.6089 / 0.6844 / 0.8135** |
+| Mean angle error (all TPs) | 6.42 deg mean / 2.62 deg median | **4.83 deg mean / 1.56 deg median** |
+| Mean angle error (elongated TPs) | 3.78 deg mean / 2.55 deg median | **2.05 deg mean / 1.45 deg median** |
 | Easy / Difficult GT recall | 0.7565 / 0.2631 | **0.8303 / 0.299** |
 | F1-optimal confidence threshold | — | 0.8279 |
 | Validation throughput | 17.38 FPS (Phase 1) | 5.70 img/s |
@@ -77,23 +77,23 @@ Extended evaluator, non-difficult GT. #GT = non-difficult occurrences.
 
 | Class | #GT | Track A (AP / Recall) | Track B (AP / Recall) | ΔAP |
 | :--- | :---: | :---: | :---: | :---: |
-| plane | 3,976 | 0.809 / 0.876 | **0.936 / 0.908** | +0.127 |
-| baseball-diamond | 357 | 0.664 / 0.858 | **0.757 / 0.840** | +0.093 |
-| bridge | 745 | 0.374 / 0.586 | **0.557 / 0.579** | +0.183 |
-| ground-track-field | 192 | 0.690 / 0.883 | **0.798 / 0.755** | +0.108 |
-| small-vehicle | 21,258 | 0.417 / 0.492 | **0.822 / 0.810** | +0.405 |
-| large-vehicle | 9,118 | 0.676 / 0.802 | **0.869 / 0.803** | +0.193 |
-| ship | 23,075 | 0.776 / 0.801 | **0.911 / 0.889** | +0.135 |
-| tennis-court | 1,414 | 0.901 / 0.934 | **0.957 / 0.926** | +0.056 |
-| basketball-court | 242 | 0.596 / 0.702 | **0.762 / 0.731** | +0.166 |
-| storage-tank | 3,273 | 0.600 / 0.638 | **0.829 / 0.801** | +0.229 |
-| soccer-ball-field | 103 | 0.536 / 0.745 | **0.672 / 0.641** | +0.136 |
-| roundabout | 278 | 0.603 / 0.778 | **0.763 / 0.763** | +0.160 |
-| harbor | 4,102 | 0.552 / 0.697 | **0.803 / 0.783** | +0.251 |
-| swimming-pool | 1,195 | 0.556 / 0.681 | **0.669 / 0.679** | +0.113 |
-| helicopter | 116 | 0.542 / 0.633 | **0.669 / 0.569** | +0.127 |
+| plane | 3,976 | 0.907 / 0.858 | **0.936 / 0.908** | +0.029 |
+| baseball-diamond | 357 | 0.698 / 0.661 | **0.757 / 0.840** | +0.058 |
+| bridge | 745 | 0.390 / 0.467 | **0.557 / 0.579** | +0.167 |
+| ground-track-field | 192 | 0.729 / 0.714 | **0.798 / 0.755** | +0.070 |
+| small-vehicle | 21,258 | 0.765 / 0.763 | **0.822 / 0.810** | +0.057 |
+| large-vehicle | 9,118 | 0.730 / 0.719 | **0.869 / 0.802** | +0.139 |
+| ship | 23,075 | 0.824 / 0.802 | **0.911 / 0.889** | +0.087 |
+| tennis-court | 1,414 | 0.939 / 0.898 | **0.957 / 0.926** | +0.018 |
+| basketball-court | 242 | 0.607 / 0.612 | **0.762 / 0.731** | +0.155 |
+| storage-tank | 3,273 | 0.808 / 0.754 | **0.829 / 0.801** | +0.020 |
+| soccer-ball-field | 103 | 0.552 / 0.447 | **0.672 / 0.641** | +0.120 |
+| roundabout | 278 | 0.712 / 0.705 | **0.763 / 0.763** | +0.050 |
+| harbor | 4,102 | 0.607 / 0.638 | **0.803 / 0.783** | +0.196 |
+| swimming-pool | 1,195 | 0.637 / 0.589 | **0.669 / 0.679** | +0.032 |
+| helicopter | 116 | 0.535 / 0.552 | **0.668 / 0.569** | +0.134 |
 | container-crane | 27 | 0.000 / 0.000 | **0.032 / 0.074** | +0.032 |
-| airport | 67 | 0.450 / 0.598 | **0.488 / 0.582** | +0.038 |
+| airport | 67 | 0.449 / 0.448 | **0.488 / 0.582** | +0.038 |
 | helipad | 4 | 0.000 / 0.000 | **0.250 / 0.500** | +0.250 |
 
 **Low-support classes.** Container-crane (27 GT), airport (67), and helipad (4)
@@ -115,29 +115,33 @@ Track B, official val, extended evaluator (non-difficult GT):
 ## Repository layout
 
 ```
-configs/                    MMRotate config files (tracks A & B) + DOTA v2 class list
+configs/                    MMRotate configs (Track A / Track B) + canonical DOTA v2 classes
 scripts/                    data download/tiling, training launcher, evaluation, metrics
+dota_obb/                   installable inference package (load_model / predict / download)
 tests/                      pytest suite (uv run pytest)
-results/                    final benchmark report + extended metrics + training logs
-docs/                       internship report (PDF + DOCX)
+results/                    benchmark report + extended metrics + training logs + Task 1 files
+docs/                       internship report (PDF + DOCX), figures, demo media
+colab_runner.ipynb          Colab pipeline notebook (generated by scripts/build_colab_notebook.py)
 artifacts/                  (gitignored) model checkpoints, kept local only
 SPEC_PLAN.md                design rationale
+CHANGELOG.md                release / fix history
 ```
 
 ## Local inference UI (Track B)
 
-Lightweight Gradio UI that runs the published Track B model on your machine:
+Lightweight Gradio UI that runs the published Track B model on your machine.
+Inference needs the OpenMMLab stack (torch 2.0.1+cu118, mmcv 2.0.1, mmdet 3.1.0,
+mmrotate dev-1.x); `scripts/setup_colab.sh` provisions exactly that environment
+and also works on a local Linux machine:
 
 ```bash
-uv pip install -e ".[ui]"          # or: uv pip install -e . && uv pip install gradio
-python scripts/gradio_app.py       # http://127.0.0.1:7860
+bash scripts/setup_colab.sh "$PWD" "$HOME/mmrotate_venv"
+"$HOME/mmrotate_venv/bin/python" -m pip install -e ".[ui]"   # adds gradio
+"$HOME/mmrotate_venv/bin/python" scripts/gradio_app.py       # http://127.0.0.1:7860
 ```
 
-or with the full local inference stack (torch 2.0.1+cu118, mmcv 2.0.1, mmdet 3.1.0, mmrotate dev-1.x):
-
-```bash
-python scripts/gradio_app.py --port 7860
-```
+The package reads its config from the checkout, so install it editable
+(`-e`) from this repository rather than from a wheel.
 
 Upload any aerial image (or a tiled 1024x1024 patch), tune the confidence threshold,
 and the app draws le90 oriented boxes with class + score labels on the result.
@@ -160,13 +164,29 @@ Example Track B predictions from the saved epoch-24 checkpoint:
 
 ## Download the model
 
-Pretrained weights are attached to the [`v1.0.0` release](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.0.0) (weights unchanged since — [`v1.1.0`](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.1.0) marks the official-val evaluation correction with the same checkpoint):
+Pretrained weights are attached to the [`v1.0.0` release](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.0.0)
+and have not changed since. [`v1.1.0`](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.1.0)
+records the official-val evaluation correction, and
+[`v1.2.0`](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.2.0)
+records the repository audit (no weight changes).
 
-| Asset | Size | Contents |
-| :--- | :--- | :--- |
-| `best_dota_mAP_epoch_24.pth` | 294 MB | best checkpoint (weights only) — what the UI loads by default |
-| `epoch_24.pth` | 856 MB | full checkpoint with optimizer/scheduler state (resume-ready) |
-| `epoch_16.pth` | 809 MB | Phase-1 epoch 16 checkpoint (resume anchor for Phase-2 continuation) |
+| Asset | Size | SHA-256 | Contents |
+| :--- | :--- | :--- | :--- |
+| `best_dota_mAP_epoch_24.pth` | 294 MB | `0737ab2d…cc9198` | **Recommended** — best checkpoint (weights only), loaded by the UI |
+| `epoch_24.pth` | 856 MB | `880d4bcc…66aafc` | Resume-only — full checkpoint with optimizer/scheduler state |
+| `epoch_16.pth` | 849 MB | `997c5228…f4ff10ed` | Phase-1 anchor — resume point for the Phase-2 continuation |
+
+Full digests: `0737ab2d034abd883684e7c4bfa551754bab89f645cea9d49aa66f8705cc9198`,
+`880d4bcc865abdab58f90b46360a24cbced2e646102cfedbe98888bed166aafc`,
+`997c52283a66bdf419b58ed7bf4916c210c28ad153adf0963ad80d54f4ff10ed`.
+`dota_obb.download` verifies the flagship checkpoint against the first digest.
+
+| Checkpoint status | |
+| :--- | :--- |
+| `best_dota_mAP_epoch_24.pth` | Recommended for inference and reporting |
+| `epoch_24.pth` | Resume-only; not a reporting artifact |
+| `epoch_16.pth` | Phase-1 resume anchor; superseded by the epoch-24 weights |
+| `epoch_20.pth` | Deprecated — pruned on Kaggle, never archived (see limitations) |
 
 Programmatic download (cached under `~/.cache/dota_obb/`):
 
@@ -222,11 +242,10 @@ uv run pytest
   and the official-val re-evaluation (`2026-11-15_track_b_restored_validation_rerun.log`).
 - `results/task1_submission/` — DOTA Task 1 test-dev submission files (18 `Task1_<class>.txt` + zip).
 
-**Model checkpoints** (~850 MB each) are intentionally excluded from this repo
-(`artifacts/checkpoints/`, gitignored) and are available on request. The Phase-1
-epoch-16 checkpoint lives on the project Google Drive (`epoch_16.pth`) and the
-Phase-2 `epoch_19` resume checkpoint lives in the private Kaggle dataset
-`ssgokulaswamy/ada-trackb-epoch19`.
+**Model checkpoints** (~850 MB each) are excluded from this repo
+(`artifacts/checkpoints/`, gitignored); the three published assets above are the
+canonical copies. The Phase-2 `epoch_19` resume checkpoint also exists in the
+private Kaggle dataset `ssgokulaswamy/ada-trackb-epoch19`.
 
 ## Known limitations / caveats
 
@@ -237,8 +256,10 @@ Phase-2 `epoch_19` resume checkpoint lives in the private Kaggle dataset
   instances; their AP should be interpreted cautiously. Airport's AP75 of 0.005
   suggests large polygons may fail the >=70% IoF tiling rule — multi-scale tiling
   would likely help.
-- Track A metrics are Phase-1 numbers (same 7,122-patch official tiling, A100);
-  Track B metrics are the official-val re-evaluation (same tiling, local GPU).
+- Track A metrics were re-evaluated with its epoch-10 best checkpoint on the
+  identical 7,122-patch official tiling; the aggregates reproduce the Phase-1
+  numbers (mAP50 0.6049, mAP50-95 0.3146). Track B metrics are the official-val
+  re-evaluation of `best_dota_mAP_epoch_24.pth` on the same tiling.
 - `epoch_20.pth` was pruned on Kaggle by the `max_keep_ckpts=3` checkpoint hook
   before it could be archived. Its validation result (0.6879 dota/mAP) is recorded
   in the logs. All other epoch checkpoints (16–24) and `best_dota_mAP_epoch_24.pth`

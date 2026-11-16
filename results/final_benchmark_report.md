@@ -41,17 +41,17 @@ against Track A's 0.6049.
 | Recall @ conf=0.30 | — | 0.8893 |
 | Precision @ conf=0.50 | — | 0.7869 |
 | Recall @ conf=0.50 | — | 0.8765 |
-| Scale AP50: Small (< 32^2 px^2) | 0.4875 | 0.6089 |
-| Scale AP50: Medium (32^2..96^2) | 0.5882 | 0.6844 |
+| Scale AP50: Small (< 32^2 px^2) | 0.4874 | 0.6089 |
+| Scale AP50: Medium (32^2..96^2) | 0.5881 | 0.6844 |
 | Scale AP50: Large (> 96^2 px^2) | 0.6602 | 0.8135 |
 | Class-Agnostic Localization AP50 | — | 0.8765 |
 | Classification Confusion Gap | — | 0.1797 |
-| Mean Angle Error - All TPs | 3.78 deg | 4.83 deg |
-| Mean Angle Error - Elongated (AR>=1.5) | 2.55 deg | 2.05 deg |
+| Mean Angle Error - All TPs | 6.42 deg | 4.83 deg |
+| Mean Angle Error - Elongated (AR>=1.5) | 3.78 deg | 2.05 deg |
 | Easy GT Recall (difficult=0) | 0.7565 | 0.8303 |
 | Difficult GT Recall (difficult=1) | 0.2631 | 0.299 |
 | Validation Throughput | 17.38 FPS (Phase 1) | 5.70 img/s |
-| Model Parameters | — | 49.0 M |
+| Model Parameters | 41.37 M | 70.24 M |
 | Peak GPU Memory | 28.04 GiB (Phase 1) | 4.20 GiB |
 
 **Difficult recall.** Official DOTA v2.0 val contains 70,561 difficult instances
@@ -62,28 +62,28 @@ difficulty flags had been stripped — it was not comparable.
 
 ## Per-Class AP@0.5 Breakdown
 
-Track A = Phase 1 (official val, A100). Track B = official val, `best_dota_mAP_epoch_24`.
+Track A = epoch-10 checkpoint re-evaluated on the official val tiling. Track B = official val, `best_dota_mAP_epoch_24`.
 Extended evaluator (non-difficult GT). GT counts are non-difficult occurrences.
 
 | Class | #GT (d0) | Track A AP50 | Track B AP50 | Delta AP50 | Track B AP50-95 | Track B AP75 |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| `plane` | 3,976 | 0.809 | **0.936** | +0.127 | 0.650 | 0.810 |
-| `baseball-diamond` | 357 | 0.664 | **0.757** | +0.093 | 0.427 | 0.424 |
-| `bridge` | 745 | 0.374 | **0.557** | +0.183 | 0.233 | 0.138 |
-| `ground-track-field` | 192 | 0.690 | **0.798** | +0.108 | 0.553 | 0.663 |
-| `small-vehicle` | 21,258 | 0.417 | **0.822** | +0.405 | 0.431 | 0.391 |
-| `large-vehicle` | 9,118 | 0.676 | **0.869** | +0.193 | 0.552 | 0.651 |
-| `ship` | 23,075 | 0.776 | **0.911** | +0.135 | 0.570 | 0.692 |
-| `tennis-court` | 1,414 | 0.901 | **0.957** | +0.056 | 0.823 | 0.924 |
-| `basketball-court` | 242 | 0.596 | **0.762** | +0.166 | 0.560 | 0.665 |
-| `storage-tank` | 3,273 | 0.600 | **0.829** | +0.229 | 0.549 | 0.653 |
-| `soccer-ball-field` | 103 | 0.536 | **0.672** | +0.136 | 0.484 | 0.596 |
-| `roundabout` | 278 | 0.603 | **0.763** | +0.160 | 0.461 | 0.492 |
-| `harbor` | 4,102 | 0.552 | **0.803** | +0.251 | 0.399 | 0.369 |
-| `swimming-pool` | 1,195 | 0.556 | **0.669** | +0.113 | 0.263 | 0.121 |
-| `helicopter` | 116 | 0.542 | **0.669** | +0.127 | 0.271 | 0.167 |
+| `plane` | 3,976 | 0.907 | **0.936** | +0.029 | 0.650 | 0.810 |
+| `baseball-diamond` | 357 | 0.698 | **0.757** | +0.058 | 0.427 | 0.424 |
+| `bridge` | 745 | 0.390 | **0.557** | +0.167 | 0.233 | 0.138 |
+| `ground-track-field` | 192 | 0.729 | **0.798** | +0.070 | 0.553 | 0.663 |
+| `small-vehicle` | 21,258 | 0.765 | **0.822** | +0.057 | 0.431 | 0.391 |
+| `large-vehicle` | 9,118 | 0.730 | **0.869** | +0.139 | 0.552 | 0.651 |
+| `ship` | 23,075 | 0.824 | **0.911** | +0.087 | 0.570 | 0.692 |
+| `tennis-court` | 1,414 | 0.939 | **0.957** | +0.018 | 0.823 | 0.924 |
+| `basketball-court` | 242 | 0.607 | **0.762** | +0.155 | 0.560 | 0.665 |
+| `storage-tank` | 3,273 | 0.808 | **0.829** | +0.020 | 0.549 | 0.653 |
+| `soccer-ball-field` | 103 | 0.552 | **0.672** | +0.120 | 0.484 | 0.596 |
+| `roundabout` | 278 | 0.712 | **0.763** | +0.050 | 0.461 | 0.492 |
+| `harbor` | 4,102 | 0.607 | **0.803** | +0.196 | 0.399 | 0.369 |
+| `swimming-pool` | 1,195 | 0.637 | **0.669** | +0.032 | 0.263 | 0.121 |
+| `helicopter` | 116 | 0.535 | **0.669** | +0.134 | 0.271 | 0.167 |
 | `container-crane` | 27 | 0.000 | **0.032** | +0.032 | 0.007 | 0.000 |
-| `airport` | 67 | 0.450 | **0.488** | +0.038 | 0.139 | 0.005 |
+| `airport` | 67 | 0.449 | **0.488** | +0.038 | 0.139 | 0.005 |
 | `helipad` | 4 | 0.000 | **0.250** | +0.250 | 0.144 | 0.063 |
 
 **mmengine per-class AP** (includes difficult GT, `diff_thr=100`):

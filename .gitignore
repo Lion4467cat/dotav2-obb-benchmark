@@ -15,5 +15,6 @@ checkpoints/
 .DS_Store
 artifacts/
 .playwright-mcp/
+docs/*backup*
 mmrotate
 graphify-out/

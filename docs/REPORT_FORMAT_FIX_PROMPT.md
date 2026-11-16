@@ -1,5 +1,10 @@
 # PROMPT — Fix formatting faults in ADA internship report DOCX
 
+> **Status: historical.** This is a one-off working prompt used on 2026-11-16 for
+> the formatting pass. It is superseded by §15.1 of the report and by
+> `CHANGELOG.md`; numbers quoted below (e.g. the retired "0.417" Track A
+> small-vehicle AP50) are outdated. Do not execute it again.
+
 Copy everything below this line as the prompt.
 
 ---

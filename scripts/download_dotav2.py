@@ -432,32 +432,28 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> None:
-    args = parse_args()
-    cache_dir: Path = args.cache_dir
-    out_dir: Path = args.out_dir
+HUGGINGFACE_ARCHIVES = {
+    "train_images": Path("train") / "dotav2.0_images_train.tar.gz",
+    "train_ann": Path("train") / "dotav2.0_annotations_train.tar.gz",
+    "val_images": Path("val") / "dotav2.0_images_val.tar.gz",
+    "val_ann": Path("val") / "dotav2.0_annotations_val.tar.gz",
+}
 
-    if args.source == "huggingface":
+
+def _download_for_source(
+    source: str, cache_dir: Path, args: argparse.Namespace
+) -> None:
+    """Fetch the raw archives that belong to exactly one data source.
+
+    Each source is mutually exclusive: mixing archives in one cache directory
+    would stage a blend of official and non-official data (the Phase-2 defect).
+    """
+    if source == "huggingface":
+        for key, rel in HUGGINGFACE_ARCHIVES.items():
+            download_url(HUGGINGFACE_DOTAV2_URLS[key], cache_dir / rel)
+    elif source == "ultralytics":
         download_url(ULTRALYTICS_DOTAV2_URL, cache_dir / "DOTAv2.zip")
-        download_url(
-            HUGGINGFACE_DOTAV2_URLS["train_images"],
-            cache_dir / "train" / "dotav2.0_images_train.tar.gz",
-        )
-        download_url(
-            HUGGINGFACE_DOTAV2_URLS["train_ann"],
-            cache_dir / "train" / "dotav2.0_annotations_train.tar.gz",
-        )
-        download_url(
-            HUGGINGFACE_DOTAV2_URLS["val_images"],
-            cache_dir / "val" / "dotav2.0_images_val.tar.gz",
-        )
-        download_url(
-            HUGGINGFACE_DOTAV2_URLS["val_ann"],
-            cache_dir / "val" / "dotav2.0_annotations_val.tar.gz",
-        )
-    elif args.source == "ultralytics":
-        download_url(ULTRALYTICS_DOTAV2_URL, cache_dir / "DOTAv2.zip")
-    elif args.source == "gdrive":
+    elif source == "gdrive":
         download_gdrive_folder(OFFICIAL_GDRIVE_FOLDERS["train_images"], cache_dir / "train")
         download_gdrive_folder(OFFICIAL_GDRIVE_FOLDERS["val_images"], cache_dir / "val")
         if args.v2_train_ann:
@@ -468,10 +464,20 @@ def main() -> None:
             download_gdrive_file(
                 args.v2_extra_images, cache_dir / "train" / "dota_v2_extra_images.zip"
             )
-    elif args.source == "kaggle":
+    elif source == "kaggle":
         if not args.kaggle_dataset:
             raise ValueError("--kaggle-dataset is required when --source kaggle")
         download_kaggle_dataset(args.kaggle_dataset, cache_dir)
+    elif source != "local":
+        raise ValueError(f"Unsupported source: {source}")
+
+
+def main() -> None:
+    args = parse_args()
+    cache_dir: Path = args.cache_dir
+    out_dir: Path = args.out_dir
+
+    _download_for_source(args.source, cache_dir, args)
 
     if not args.skip_extract:
         extract_dir = out_dir / "_extracted"

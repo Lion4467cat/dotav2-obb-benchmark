@@ -215,3 +215,53 @@ def test_extended_metrics_suite_and_report_integration(tmp_path: Path) -> None:
     )
     assert "Reference Target (User Provided)" in md
     assert "Mean Angle Error - Elongated" in md
+
+
+# --- regression tests for the 2026-11-16 audit ---
+
+
+def test_download_sources_are_exclusive(monkeypatch, tmp_path: Path) -> None:
+    """HuggingFace download must never fetch the non-official DOTAv2.zip."""
+    import argparse
+
+    from scripts import download_dotav2 as dl
+
+    calls: list[str] = []
+    monkeypatch.setattr(dl, "download_url", lambda url, dest: calls.append(url))
+    args = argparse.Namespace(
+        v2_train_ann="", v2_val_ann="", v2_extra_images="", kaggle_dataset=""
+    )
+
+    dl._download_for_source("huggingface", tmp_path, args)
+    assert len(calls) == 4
+    assert all("huggingface.co" in url for url in calls)
+    assert dl.ULTRALYTICS_DOTAV2_URL not in calls
+
+    calls.clear()
+    dl._download_for_source("ultralytics", tmp_path, args)
+    assert calls == [dl.ULTRALYTICS_DOTAV2_URL]
+
+
+def test_package_version_matches_pyproject() -> None:
+    import tomllib
+
+    meta = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    tree = ast.parse((ROOT / "dota_obb" / "__init__.py").read_text(encoding="utf-8"))
+    version = next(
+        ast.literal_eval(node.value)
+        for node in tree.body
+        if isinstance(node, ast.Assign)
+        and getattr(node.targets[0], "id", "") == "__version__"
+    )
+    assert meta["project"]["version"] == version
+
+
+def test_readme_track_a_per_class_mean_matches_headline() -> None:
+    """The per-class Track A column must average to the headline extended mAP50."""
+    import re
+
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+    rows = re.findall(r"^\| ([a-z-]+) \| [\d,]+ \| ([\d.]+) / ([\d.]+) \|", text, re.MULTILINE)
+    assert len(rows) == 18, rows
+    mean_ap = sum(float(row[1]) for row in rows) / 18
+    assert abs(mean_ap - 0.6049) < 0.002, mean_ap

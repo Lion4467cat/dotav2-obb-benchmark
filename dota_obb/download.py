@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
-import sys
 import urllib.request
-from pathlib import Path
 
-from .model import DEFAULT_CKPT_URL, CACHE_DIR, DEFAULT_CKPT
+from .model import (
+    CACHE_DIR,
+    DEFAULT_CKPT,
+    DEFAULT_CKPT_SHA256,
+    DEFAULT_CKPT_URL,
+    sha256_file,
+)
 
 
 def main() -> None:
@@ -17,7 +21,13 @@ def main() -> None:
         return
     print(f"Downloading {DEFAULT_CKPT_URL} -> {dst}")
     urllib.request.urlretrieve(DEFAULT_CKPT_URL, dst)
-    print(f"Done: {dst} ({dst.stat().st_size / 1024 / 1024:.1f} MB)")
+    actual = sha256_file(dst)
+    if actual != DEFAULT_CKPT_SHA256:
+        dst.unlink()
+        raise SystemExit(
+            f"Checksum mismatch: expected {DEFAULT_CKPT_SHA256}, got {actual}"
+        )
+    print(f"Done: {dst} ({dst.stat().st_size / 1024 / 1024:.1f} MiB, sha256 verified)")
 
 
 if __name__ == "__main__":

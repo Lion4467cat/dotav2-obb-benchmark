@@ -10,7 +10,6 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
-import sys
 import time
 from pathlib import Path
 
@@ -41,7 +40,7 @@ def run_cmd(cmd: list[str], cwd: Path | None = None, env: dict[str, str] | None 
     return p.returncode
 
 
-def patch_gaussian_dist_loss(repo_dir: Path, venv_dir: Path) -> None:
+def patch_gaussian_dist_loss(repo_dir: Path) -> None:
     """Patch mmrotate's gaussian_dist_loss.py to use analytical 2x2 determinant.
 
     Avoids cuSOLVER CUSOLVER_STATUS_INTERNAL_ERROR and cuBLAS Lu_factor errors.
@@ -51,6 +50,7 @@ def patch_gaussian_dist_loss(repo_dir: Path, venv_dir: Path) -> None:
         subprocess.run(
             ["git", "-C", str(mmrotate_git), "checkout", "--", "mmrotate/models/losses/gaussian_dist_loss.py"],
             capture_output=True,
+            check=False,
         )
 
     target_file = repo_dir / "mmrotate" / "mmrotate" / "models" / "losses" / "gaussian_dist_loss.py"
@@ -149,7 +149,7 @@ def main() -> None:
         try:
             old_data_dir.symlink_to(tmp_data_dir)
             log("Created symlink /kaggle/working/data -> /tmp/data")
-        except Exception as e:
+        except OSError as e:
             log(f"Notice: /kaggle/working/data symlink: {e}")
 
     # Ensure /content/data links directly to /tmp/data
@@ -163,7 +163,7 @@ def main() -> None:
     try:
         content_data.symlink_to(tmp_data_dir)
         log("Created symlink /content/data -> /tmp/data")
-    except Exception as e:
+    except OSError as e:
         log(f"Notice: /content/data symlink: {e}")
 
     # 2. Environment Provisioning
@@ -176,7 +176,7 @@ def main() -> None:
         run_cmd([str(venv_py), "-m", "pip", "install", "-q", "mmpretrain>=1.0.0rc8"])
 
     # Patch GaussianDistLoss with analytical 2x2 determinant to avoid cuSOLVER error
-    patch_gaussian_dist_loss(repo_dir, venv_dir)
+    patch_gaussian_dist_loss(repo_dir)
 
     # Patch rotated-IoU calculator with chunked GPU overlaps to avoid CUDA OOM
     patch_rotate_iou2d_calculator(repo_dir)
@@ -218,11 +218,11 @@ def main() -> None:
         cache_dir = Path("/tmp/data/raw_archives")
         cache_dir.mkdir(parents=True, exist_ok=True)
 
-        log("Downloading DOTA v2.0 via Ultralytics release...")
+        log("Downloading official DOTA v2.0 (HuggingFace: isaaccorley/dota)...")
         run_cmd([
             str(venv_py),
             str(repo_dir / "scripts" / "download_dotav2.py"),
-            "--source", "ultralytics",
+            "--source", "huggingface",
             "--cache-dir", str(cache_dir),
             "--out-dir", str(raw_dir),
         ])

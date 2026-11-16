@@ -8,6 +8,7 @@ Usage:
 
 from __future__ import annotations
 
+import hashlib
 import math
 import os
 import urllib.request
@@ -23,6 +24,8 @@ CACHE_DIR = Path(os.environ.get("DOTA_OBB_CACHE", Path.home() / ".cache" / "dota
 DEFAULT_CKPT_URL = (
     "https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/download/v1.0.0/best_dota_mAP_epoch_24.pth"
 )
+# SHA-256 of the v1.0.0 release asset (verified against the GitHub release digest).
+DEFAULT_CKPT_SHA256 = "0737ab2d034abd883684e7c4bfa551754bab89f645cea9d49aa66f8705cc9198"
 
 DOTA_V2_CLASSES = (
     "plane", "baseball-diamond", "bridge", "ground-track-field", "small-vehicle",
@@ -40,6 +43,14 @@ DOTA_V2_PALETTE = [
 _model = None
 
 
+def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(chunk_size), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def _ensure_checkpoint(checkpoint_path: str | Path | None) -> Path:
     if checkpoint_path is not None:
         path = Path(checkpoint_path)
@@ -53,6 +64,12 @@ def _ensure_checkpoint(checkpoint_path: str | Path | None) -> Path:
     if not cached.is_file():
         print(f"Downloading model weights to {cached} ...")
         urllib.request.urlretrieve(DEFAULT_CKPT_URL, cached)
+        actual = sha256_file(cached)
+        if actual != DEFAULT_CKPT_SHA256:
+            cached.unlink()
+            raise RuntimeError(
+                f"Checkpoint checksum mismatch: expected {DEFAULT_CKPT_SHA256}, got {actual}"
+            )
     return cached
 
 
@@ -147,8 +164,5 @@ def predict(
     data_sample = inference_detector(model, bgr)
     if isinstance(data_sample, (list, tuple)):
         data_sample = data_sample[0]
-    inst = data_sample.pred_instances
-    mask = inst.scores.cpu().numpy() >= 0.0
-    num = int(mask.sum())
     annotated, detections = render_detections(rgb, data_sample, score_thr=score_thr, show_labels=show_labels)
-    return {"annotated": annotated, "detections": detections, "num_detections": num}
+    return {"annotated": annotated, "detections": detections, "num_detections": len(detections)}

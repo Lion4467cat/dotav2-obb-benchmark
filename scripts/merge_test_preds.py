@@ -11,6 +11,7 @@ import argparse
 import math
 import pickle
 import re
+import sys
 import zipfile
 from collections import defaultdict
 from pathlib import Path
@@ -19,12 +20,11 @@ import numpy as np
 import torch
 from PIL import Image
 
-DOTA_V2_CLASSES = (
-    "plane", "baseball-diamond", "bridge", "ground-track-field", "small-vehicle",
-    "large-vehicle", "ship", "tennis-court", "basketball-court", "storage-tank",
-    "soccer-ball-field", "roundabout", "harbor", "swimming-pool", "helicopter",
-    "container-crane", "airport", "helipad",
-)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from configs.dota_v2_classes import DOTA_V2_CLASSES
 
 TILE_RE = re.compile(r"^(?P<img_id>.+)__(?P<size>\d+)__(?P<x>\d+)___(?P<y>\d+)$")
 
@@ -79,11 +79,12 @@ def main() -> None:
 
     from mmcv.ops import nms_rotated
 
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
     per_class: dict[int, list[str]] = {i: [] for i in range(len(DOTA_V2_CLASSES))}
     n_after_nms = 0
     for (img_id, cls), dets in grouped.items():
-        boxes = torch.tensor([d[1:] for d in dets], dtype=torch.float32, device="cuda:0")
-        scores = torch.tensor([d[0] for d in dets], dtype=torch.float32, device="cuda:0")
+        boxes = torch.tensor([d[1:] for d in dets], dtype=torch.float32, device=device)
+        scores = torch.tensor([d[0] for d in dets], dtype=torch.float32, device=device)
         if len(dets) == 1:
             keep = [0]
         else:

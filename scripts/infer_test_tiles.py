@@ -27,9 +27,11 @@ def main() -> None:
     parser.add_argument("--score-thr", type=float, default=0.05)
     args = parser.parse_args()
 
+    import torch
     from mmdet.apis import inference_detector, init_detector
 
-    model = init_detector(args.config, args.checkpoint, device="cuda:0")
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    model = init_detector(args.config, args.checkpoint, device=device)
     tiles = sorted(Path(args.tiles_dir).glob(TILE_GLOB))
     print(f"[infer] {len(tiles)} tiles")
 
@@ -51,12 +53,12 @@ def main() -> None:
             scores = inst.scores.cpu().numpy().astype(np.float32)
             keep = scores >= args.score_thr
             results.append(
-                dict(
-                    tile=path.stem,
-                    scores=scores[keep],
-                    labels=inst.labels.cpu().numpy()[keep].astype(np.int64),
-                    bboxes=inst.bboxes.cpu().numpy().astype(np.float32)[keep],
-                )
+                {
+                    "tile": path.stem,
+                    "scores": scores[keep],
+                    "labels": inst.labels.cpu().numpy()[keep].astype(np.int64),
+                    "bboxes": inst.bboxes.cpu().numpy().astype(np.float32)[keep],
+                }
             )
         done = start + len(batch_paths)
         if done % 400 < args.batch_size:
