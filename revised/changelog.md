@@ -150,3 +150,16 @@ These appear highlighted in the body and again on the last page of the report.
 - Remaining white space at the foot of a page occurs where a full-height figure starts a new page
   (Figures 1, 2 and 8). No page is blank.
 - Table captions sit above their tables and figure captions below their figures, consistently.
+
+---
+
+## 2026-11-18 — Epoch-24 rebuild (official retrain complete)
+
+The revised document was rebuilt twice from the same source `build_report.py`, once against the
+epoch-22 evaluation and again against the epoch-24 evaluation (official retrain; epochs 23–24
+completed in a resumed Kaggle 2×T4 run). The figures and tables now report the epoch-24 official
+results: dota/mAP **0.6535**, mAP50 **0.7127**, AP75 **0.4664**, mAP50-95 **0.4320**, F1 **0.8511**
+(F1-optimal confidence **0.834**). Narrative edits: the report now states the full 24-epoch budget
+completed, that the epoch-24 checkpoint used for all figures is `epoch_24.pth` (no best/-last
+selection, see the best-score inheritance note), and that the Phase-2 superseded numbers live in
+the benchmark-report appendix. Page map: 30 pages, 75/75 resolved, 0 mismatches.

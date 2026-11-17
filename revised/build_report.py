@@ -321,7 +321,7 @@ FIG_CAPTIONS = [
     "Figure 5. Headline validation metrics for both tracks on the official tiling.",
     "Figure 6. Per-class AP50 for both tracks, sorted by gain.",
     "Figure 7. Track B AP50 per class against class support.",
-    "Figure 8. Track B predictions on two validation tiles at the F1-optimal threshold of 0.8039.",
+    "Figure 8. Track B predictions on two validation tiles at the F1-optimal threshold of 0.834.",
     "Figure 9. Validation examples for plane, baseball-diamond, bridge, ground-track-field, small-vehicle and large-vehicle.",
     "Figure 10. Validation examples for ship, tennis-court, basketball-court, storage-tank, soccer-ball-field and roundabout",
     "Figure 11. Validation examples for harbor, swimming-pool, helicopter, container-crane, airport and helipad",
@@ -448,8 +448,8 @@ def abstract(doc):
             "Track B is an Oriented R-CNN system with a ConvNeXt-Small backbone, PAFPN, Gaussian KLD "
             "regression and class-balanced sampling. Both are evaluated on the official validation split "
             "with a project evaluator that reports precision, recall, F1, AP50, AP50-95, scale-stratified "
-            "AP and orientation error. On the same 7,122 validation patches, Track B reaches 0.7015 mAP50 "
-            "and 0.8524 F1, against 0.6049 and 0.7849 for Track A. The comparison is a same-tiling "
+            "AP and orientation error. On the same 7,122 validation patches, Track B reaches 0.7127 mAP50 "
+            "and 0.8511 F1, against 0.6049 and 0.7849 for Track A. The comparison is a same-tiling "
             "evaluation rather than a one-factor experiment, because the tracks differ in backbone, neck, "
             "loss, optimizer, schedule, sampling and augmentation.")
     para(doc, text)
@@ -554,7 +554,7 @@ def body_sections_a(doc):
         ("IoF threshold for keeping a polygon", "0.70"),
         ("Patch coverage threshold", "0.60"),
         ("Official validation tiling", "7,122 patches (Track A and Track B evaluation)"),
-        ("Official retrain validation tiling", "7,122 patches (Track B retrained on official 18-class data to epoch 22)"),
+        ("Official retrain validation tiling", "7,122 patches (Track B retrained on official 18-class data to epoch 24)"),
         ("Non-difficult / difficult annotations", "69,542 / 70,561"),
         ("Classes", "18, including airport (67) and helipad (4) in the official tiling"),
     ], [2.6, 3.6], size=9.5, align_center_from=2)
@@ -566,13 +566,14 @@ def body_sections_a(doc):
         "18 classes). An initial Kaggle continuation for Track B had used a non-official convenience archive "
         "(458 validation images, 16 classes). To ensure complete data integrity, Track B was retrained from "
         "epoch 16 using the official 18-class DOTA v2.0 dataset on Kaggle with 2 × Tesla T4 GPUs. Training "
-        "proceeded through epoch 22, at which point the 12-hour session limit was reached.",
-        "All Track B results in this report are evaluated from the official epoch_22.pth checkpoint on "
+        "proceeded through epoch 22, at which point the 12-hour session limit was reached; a resumed Kaggle run then "
+        "completed epochs 23 and 24, with validation at epoch 24.",
+        "All Track B results in this report are evaluated from the official epoch_24.pth checkpoint on "
         "the identical 7,122-patch official validation tiling. Airport and helipad were present as positive "
         "training examples throughout, and all difficulty flags were preserved. Both tracks are thus trained "
         "and evaluated on official DOTA v2.0 data.",
     ])
-    author_note(doc, "official retrain confirmed: epochs 17–22 trained on the official 18-class DOTA v2.0 dataset up to the 12-hour session limit")
+    author_note(doc, "official retrain confirmed: epochs 17–22 trained on the official 18-class DOTA v2.0 dataset; epochs 23–24 were completed in the resumed Kaggle run")
 
     h2(doc, "3.5  Class support")
     para(doc, "Class support is highly uneven. Ship (23,075) and small-vehicle (21,258) dominate, while "
@@ -616,7 +617,7 @@ def body_sections_a(doc):
         ("Regression loss", "Rotated-box smooth-L1", "Gaussian KLD (log1p)"),
         ("Sampling / augmentation", "DOTADataset; H/V/diagonal flips", "ClassBalancedDataset (oversample_thr 1e-3); flips; RandomRotate p=0.5, 180°"),
         ("Optimizer / schedule", "SGD, lr 0.005, multi-step at epochs 8 and 11", "AdamW, lr 1e-4, cosine annealing, T_max 24, eta_min 1e-6"),
-        ("Epochs", "12", "22 (1–16 A100 stage; 17–22 Kaggle official retrain)"),
+        ("Epochs", "12", "24 (1–16 A100 stage; 17–24 Kaggle official retrain: 17–22 then 23–24 resumed)"),
         ("Hardware", "1 × A100-SXM4-80GB", "1 × A100-SXM4-80GB, then 2 × Tesla T4"),
     ], [1.55, 2.2, 2.45], size=9, align_center_from=2)
     caption(doc, "Table 3. Track A and Track B configuration.")
@@ -624,7 +625,7 @@ def body_sections_a(doc):
     h2(doc, "4.4  Software and reproducibility")
     para(doc, "Table 4 records the environment and the settings needed to reproduce the evaluation. The "
               "inference cut-off is a score threshold of 0.05, rotated NMS at IoU 0.7 and at most 2,000 "
-              "detections per patch; this is the setting that produces the 129,046 predictions reported in "
+              "detections per patch; this is the setting that produces the 136,612 predictions reported in "
               "Section 6.5.")
     table(doc, ["Setting", "Value"], [
         ("Python", "3.11"),
@@ -635,7 +636,7 @@ def body_sections_a(doc):
         ("Evaluation batch", "8"),
         ("Inference score threshold / NMS / max detections", "0.05 / rotated NMS IoU 0.7 / 2,000 per patch"),
         ("Precision policy", "Track B full precision for KLD (half-precision determinant limitation)"),
-        ("Checkpoint used", "epoch_22.pth (Track B official retrain); best_dota_mAP_epoch_10.pth (Track A)"),
+        ("Checkpoint used", "epoch_24.pth (Track B official retrain); best_dota_mAP_epoch_10.pth (Track A)"),
     ], [2.5, 3.7], size=9, align_center_from=2)
     caption(doc, "Table 4. Software environment and reproducibility settings.")
     author_note(doc, "add the public repository URL and checkpoint location, and the random seeds if they were recorded")
@@ -651,16 +652,18 @@ def body_sections_b(doc):
               "tracks.")
     figure(doc, "training_setup.png", 6.2,
            "Figure 4. Run stages. Track A was trained for 12 epochs in the A100 stage. Track B was "
-           "trained for epochs 1–16 in the A100 stage and epochs 17–22 in the Kaggle continuation on official data. "
+           "trained for epochs 1–16 in the A100 stage and epochs 17–24 in the Kaggle continuation on official data "
+           "(17–22 in the first run, 23–24 in the resumed run). "
            "Both saved checkpoints were then evaluated on the official tiling.")
     for lead, text in (
         ("Stage 1, A100.", " Track A was trained for 12 epochs and Track B for epochs 1–16, both on "
          "one A100-SXM4-80GB device with a batch of four images per device."),
         ("Stage 2, Kaggle continuation.", " Track B resumed at epoch 17 and ran to epoch 22 on two "
-         "Tesla T4 devices using official 18-class annotations until the 12-hour session limit was reached. "
+         "Tesla T4 devices using official 18-class annotations until the 12-hour session limit was reached; "
+         "a further Kaggle run then resumed from epoch_22.pth and completed epochs 23 and 24 with validation at epoch 24. "
          "A batch of one image per device with four-step gradient accumulation reproduced the effective batch of the A100 stage."),
         ("Stage 3, official tiling evaluation.", " The saved epoch-10 checkpoint of Track A and the "
-         "saved epoch-22 checkpoint of Track B were evaluated on the 7,122-patch official validation "
+         "saved epoch-24 checkpoint of Track B were evaluated on the 7,122-patch official validation "
          "tiling with identical inference settings."),
     ):
         bullet(doc, text, lead=lead)
@@ -677,12 +680,11 @@ def body_sections_b(doc):
 
     h2(doc, "5.3  Checkpoint selection")
     para(doc, "Checkpoints were selected by validation mAP, not by the epoch count. Track A's best "
-              "checkpoint is epoch 10 of 12. Track B uses epoch 22, the final epoch reached before the "
-              "12-hour compute session limit was reached, which means the schedule ended before the validation curve flattened. "
-              "Track B is therefore budget-limited rather than converged, and the 22-epoch result "
-              "should be read as a lower bound on what this configuration can reach.")
+              "checkpoint is epoch 10 of 12. Track B uses epoch 24, the final epoch of the 24-epoch budget; the full "
+              "schedule completed, with a validation dota/mAP of 0.6535 at epoch 24 on the official tiling. "
+              "The epoch-24 result is the complete schedule rather than a truncated one.")
     para(doc, "The earlier continuation run using a non-official archive had reported 0.6892 dota/mAP "
-              "on 16 classes. The official retrain on all 18 classes reaches 0.7015 mAP50 in Table 5 "
+              "on 16 classes. The official retrain on all 18 classes reaches 0.7127 mAP50 in Table 5 "
               "under the project evaluator on the official 7,122-patch validation tiling.")
 
     h2(doc, "5.4  Engineering issues and fixes")
@@ -702,7 +704,7 @@ def body_sections_b(doc):
          "init_default_scope(\"mmrotate\") before constructing any model."),
         ("Data source.", " An initial continuation used a convenience archive rather than the "
          "official release; this was identified and corrected by retraining Track B on the official "
-         "18-class DOTA v2.0 dataset to epoch 22, as described in Section 3.4."),
+         "18-class DOTA v2.0 dataset through epoch 24, as described in Section 3.4."),
     ):
         bullet(doc, text, lead=lead)
 
@@ -750,12 +752,12 @@ def body_sections_b(doc):
     h2(doc, "6.5  Prediction set")
     para(doc, "All metrics are computed from one prediction set per track, produced at a score "
               "cut-off of 0.05 with rotated non-maximum suppression at IoU 0.7 and at most 2,000 "
-              "detections per patch. Track A produced 180,555 predictions and Track B 129,046. At "
+              "detections per patch. Track A produced 180,555 predictions and Track B 136,612. At "
               "the F1-optimal threshold, the true positives plus false negatives sum to 69,542 for "
               "both tracks, which is the non-difficult ground-truth total of the official tiling; "
               "this identity is the main consistency check on the evaluator. At that threshold Track A "
               "records 52,597 true positives, 11,882 false positives and 16,945 false negatives, and "
-              "Track B records 57,809 true positives, 8,293 false positives and 11,733 false negatives.")
+              "Track B records 57,961 true positives, 8,707 false positives and 11,581 false negatives.")
 
     h2(doc, "6.6  Selection protocol")
     para(doc, "Two quantities were chosen on the same validation split that is reported here: the "
@@ -777,7 +779,7 @@ def body_sections_b(doc):
     map95_a = A_full.get("map50_95", MEAN_A95)
     map95_b = B_full.get("map50_95", MEAN_B95)
     ap75_a = A_full.get("ap75", 0.2785)
-    ap75_b = B_full.get("ap75", 0.4553)
+    ap75_b = B_full.get("ap75", 0.4664)
     agn_a = A_full.get("class_agnostic_ap50", 0.7985)
     agn_b = B_full.get("class_agnostic_ap50", 0.8765)
     gap_a = A_full.get("classification_gap_ap50", 0.1936)
@@ -793,8 +795,8 @@ def body_sections_b(doc):
         ("Class-agnostic AP50", f4(agn_a), f4(agn_b)),
         ("Classification gap (AP50 − class-agnostic AP50)", f4(gap_a), f4(gap_b)),
         ("Macro F1 (mean of 18 class F1 scores)", f4(macro_a.get("f1", 0.6285)), f4(macro_b.get("f1", 0.7254))),
-        ("Micro F1 at the F1-optimal threshold", f4(f1_a.get("f1", 0.7849)), f4(f1_b.get("f1", 0.8524))),
-        ("F1-optimal threshold", f4(f1_a.get("conf_threshold", 0.8103)), f4(f1_b.get("conf_threshold", 0.8039))),
+        ("Micro F1 at the F1-optimal threshold", f4(f1_a.get("f1", 0.7849)), f4(f1_b.get("f1", 0.8511))),
+        ("F1-optimal threshold", f4(f1_a.get("conf_threshold", 0.8103)), f4(f1_b.get("conf_threshold", 0.834))),
         ("Predictions at score 0.05", f"{A_full.get('num_predictions', 180555):,}", f"{B_full.get('num_predictions', 133986):,}"),
         ("Parameters (millions)", "not recorded", f"{op_b.get('params_m', 70.24):.2f}"),
         ("Throughput (frames per second)†", "11.36", f"{op_b.get('fps', 5.70):.2f}"),
@@ -830,11 +832,11 @@ def body_sections_b(doc):
         ("0.50", f4(at_conf_a.get("0.50", {}).get("precision", 0.6983)), f4(at_conf_a.get("0.50", {}).get("recall", 0.8148)), f4(at_conf_a.get("0.50", {}).get("f1", 0.7521)),
                  f4(at_conf_b.get("0.50", {}).get("precision", 0.8023)), f4(at_conf_b.get("0.50", {}).get("recall", 0.8711)), f4(at_conf_b.get("0.50", {}).get("f1", 0.8353))),
         ("F1-optimal", f4(f1_a.get("precision", 0.8157)), f4(f1_a.get("recall", 0.7563)), f4(f1_a.get("f1", 0.7849)),
-                       f4(f1_b.get("precision", 0.8745)), f4(f1_b.get("recall", 0.8313)), f4(f1_b.get("f1", 0.8524))),
+                       f4(f1_b.get("precision", 0.8694)), f4(f1_b.get("recall", 0.8335)), f4(f1_b.get("f1", 0.8511))),
     ], [2.1, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68], size=9, align_center_from=1)
     caption(doc, "Table 6. Precision, recall and F1 at fixed confidence thresholds, micro-averaged "
                  "over the 18 classes. The last row uses each track's own F1-optimal threshold: "
-                 "0.8103 for Track A and 0.8039 for Track B.")
+                 "0.8103 for Track A and 0.834 for Track B.")
     para(doc, "The shape of the trade-off also differs. Track A buys recall cheaply at low "
               "thresholds and loses precision quickly, whereas Track B keeps precision above 0.74 "
               "even at 0.25 (0.7416). For a downstream system that must not raise false alarms, that is the "
@@ -915,7 +917,7 @@ def body_sections_b(doc):
                  "last column is negative.")
     para(doc, "Recall at the F1-optimal threshold separates the two difficulty groups. Track A "
               "recalls 0.7564 of the non-difficult instances and 0.2630 of the difficulty-flagged "
-              "ones; Track B recalls 0.8313 and 0.2978. Both systems find far fewer flagged "
+              "ones; Track B recalls 0.8335 and 0.3019. Both systems find far fewer flagged "
               "instances, which is expected because those annotations are tiny, heavily occluded or "
               "ambiguous by construction. The gap between the tracks is 0.0749 in the non-difficult "
               "group and 0.0348 in the flagged group, so the advantage is roughly halved on the "
@@ -940,7 +942,7 @@ def body_sections_b(doc):
               "vehicle rows are separated rather than merged.")
     figure(doc, "track_b_demo_predictions.png", 4.6,
            "Figure 8. Track B predictions on two validation tiles at the F1-optimal threshold of "
-           "0.8039. Boxes are oriented; colour denotes class.")
+           "0.834. Boxes are oriented; colour denotes class.")
     para(doc, "The same figure shows the main qualitative failure. A tennis court in the left tile "
               "is left unboxed while neighbouring courts are found, which is the kind of "
               "within-class inconsistency that an aggregate AP hides: the class as a whole scores "
@@ -1003,8 +1005,8 @@ def body_sections_b(doc):
          "tracks and none of the reported differences can be attributed to one of them."),
         ("Validation-selected results.", " Checkpoint and threshold were both chosen on the reported "
          "split, so the figures are optimistic and no held-out estimate is available."),
-        ("Unequal training budget.", " Track A trained for 12 epochs and Track B for 22, and Track B "
-         "had not converged when the 12-hour compute budget ended."),
+        ("Unequal training budget.", " Track A trained for 12 epochs and Track B for 24, with the "
+         "Track B schedule completed on the official data."),
         ("Tile-level counting.", " Every count and every metric refers to tile-level annotations. "
          "Objects in overlap regions are counted more than once, so AP is not an object-level "
          "detection rate."),
@@ -1037,8 +1039,8 @@ def body_sections_b(doc):
          "with a ConvNeXt-Small backbone, holding the schedule fixed, to separate backbone capacity "
          "from detector design."),
         ("Longer and matched schedules.", " Train both tracks to convergence on the same epoch "
-         "budget. Track B reached epoch 22 before the compute allocation ended and had not flattened, "
-         "so continuing to full convergence is the primary single improvement available."),
+         "budget. Track B completed the 24-epoch budget with validation dota/mAP of 0.6535 at epoch 24; extending the "
+         "schedule (or validating at every epoch) is the primary single improvement available."),
         ("Multi-scale inference.", " Evaluate at several input scales and merge the results, which "
          "targets the small-object stratum directly."),
         ("Rare-class handling.", " Collect additional container-crane, airport and helipad "
@@ -1056,10 +1058,10 @@ def body_sections_b(doc):
               "validation tiling under a single evaluation protocol. Track A, a Rotated Faster "
               "R-CNN with a ResNet-50 and FPN backbone, reaches 0.6049 mAP50 and 0.3146 mAP50-95. "
               "Track B, an Oriented R-CNN with a ConvNeXt-Small backbone, PAFPN, Gaussian KLD "
-              "regression and class-balanced sampling, reaches 0.7015 and 0.4235 on the same 7,122 "
+              "regression and class-balanced sampling, reaches 0.7127 and 0.4320 on the same 7,122 "
               "patches.")
     para(doc, "The improvement is concentrated in box quality rather than in detection count. AP75 "
-              "rises by 63.5% relative (from 0.2785 to 0.4553), orientation error falls by about a third, and every scale "
+              "rises by 67.4% relative (from 0.2785 to 0.4664), orientation error falls by about a third, and every scale "
               "stratum improves. The gain is not uniform across classes, and the class most often "
               "used as evidence of small-object capability, small-vehicle, ranks 10th of 18 by "
               "improvement.")
@@ -1125,7 +1127,7 @@ def appendix(doc):
         ("Augmentation", "Horizontal, vertical and diagonal flips", "Flips plus random rotation, p = 0.5, 180°"),
         ("Optimizer", "SGD, momentum 0.9, weight decay 1e-4", "AdamW, weight decay 5e-2"),
         ("Learning rate", "0.005, multi-step decay at epochs 8 and 11", "1e-4, cosine annealing, T_max 24, eta_min 1e-6"),
-        ("Epochs", "12", "22 (1–16 A100 stage, 17–22 Kaggle official retrain)"),
+        ("Epochs", "12", "24 (1–16 A100 stage, 17–24 Kaggle official retrain: 17–22 then 23–24 resumed)"),
         ("Batch", "4 per GPU", "4 per GPU on A100; 1 per GPU with 4-step accumulation on T4"),
         ("Input", "1024 × 1024 patches", "1024 × 1024 patches"),
         ("Inference", "Score 0.05, rotated NMS IoU 0.7, 2,000 per patch", "Score 0.05, rotated NMS IoU 0.7, 2,000 per patch"),
@@ -1173,9 +1175,9 @@ def appendix(doc):
          "were not provided."),
         ("Repository and checkpoint location", "add the public repository URL, the checkpoint "
          "download location and the random seeds, or state that the seeds were not recorded."),
-        ("Kaggle training split", "the official retrain confirmed that epochs 17–22 trained on the "
-         "official 18-class DOTA v2.0 dataset until the 12-hour compute allocation was exhausted, "
-         "replacing the earlier non-official run."),
+        ("Kaggle training split", "epochs 17–22 trained on the official 18-class DOTA v2.0 dataset in the "
+         "first Kaggle run (12-hour session limit); a resumed Kaggle run completed epochs 23 and 24 and the epoch-24 "
+         "validation, replacing the earlier non-official run entirely."),
         ("Citations", "supply peer-reviewed sources for PAFPN and for class-balanced sampling, or "
          "approve their removal from Section 2.2."),
         ("Submission date", "add the submission date and the programme reference on the title page."),

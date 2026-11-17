@@ -14,87 +14,91 @@ tiles, and annotations are intentionally excluded from GitHub.
 
 ## Results at a glance
 
-**Track B (flagship), epoch 24 — best checkpoint `best_dota_mAP_epoch_24.pth`**
-Official DOTA v2.0 val split (593 images, 7,122 patches, 18 classes).
+**Track B (flagship), epoch 24 — final checkpoint `epoch_24.pth`**
+Official DOTA v2.0 val split (593 images, 7,122 patches, 18 classes). Full
+24-epoch budget completed on the official dataset.
 
 | | dota/mAP (mmengine) | mAP50 (ext, d0) | mAP50-95 | F1 | Precision | Recall |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | Track A (baseline) | 0.5412 | 0.6049 | 0.3146 | 0.7849 | 0.8157 | 0.7564 |
-| **Track B (official val)** | **0.6352** | **0.6968** | **0.4175** | **0.8502** | **0.8711** | **0.8302** |
+| **Track B (official val, epoch 24)** | **0.6535** | **0.7127** | **0.4320** | **0.8511** | **0.8694** | **0.8335** |
 
-Scale AP50 (small / medium / large): **0.609 / 0.684 / 0.814** · Angle error (elongated TPs): **2.05 deg** (mean) / 1.45 deg (median) · F1-optimal confidence: **0.8279** · validation: 5.70 img/s @ 4.20 GiB peak VRAM · 70.2 M parameters
+Scale AP50 (small / medium / large): **0.622 / 0.683 / 0.839** · Angle error (elongated TPs): **2.05 deg** (mean) / 1.46 deg (median) · F1-optimal confidence: **0.834** · evaluation: 2.52 img/s @ 9.25 GiB peak VRAM (Kaggle 2×T4, batch 1) · 70.2 M parameters
 
 Full write-up: [`docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf`](docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf)
 
 - **Track A (baseline)** — Rotated Faster R-CNN, ResNet-50 + FPN, Smooth-L1 loss, 12 epochs.
 - **Track B (flagship)** — Oriented R-CNN, ConvNeXt-Small + PAFPN, Gaussian KLD loss, ClassBalancedDataset, 24 epochs.
 
-Training was run in two phases:
+Training ran in two phases, with the second phase split across two Kaggle sessions:
 
 | Phase | Hardware | What happened |
 | :--- | :--- | :--- |
-| 1 | NVIDIA A100-SXM4-80GB (Colab) | Track A (12 ep) + Track B epochs 1–16; official val data (HuggingFace) |
-| 2 | 2× NVIDIA Tesla T4 (Kaggle, 12h sessions) | Track B epochs 17–24, resumed from epoch-16 checkpoint |
-| Eval | local GPU | Official-val re-evaluation of `best_dota_mAP_epoch_24.pth` — no retraining (see [Data source correction](#data-source-correction)) |
+| 1 | NVIDIA A100-SXM4-80GB (Colab) | Track A (12 ep) + Track B epochs 1–16; official data (HuggingFace) |
+| 2a | 2× NVIDIA Tesla T4 (Kaggle, 12h session) | Track B official retrain epochs 17–22, resumed from the epoch-16 checkpoint; session hit the 12-hour cap during epoch-22 validation |
+| 2b | 2× NVIDIA Tesla T4 (Kaggle) | Resumed from `epoch_22.pth` (official retrain), completed epochs 23–24, with epoch-24 validation and final evaluation |
+| Eval | Kaggle (2×T4) + local cross-check | Official-val evaluation of the saved `epoch_24.pth` (see [Data source correction](#data-source-correction)) |
 
 ## Final results (official val evaluation)
 
 Official DOTA v2.0 val split, 593 images → 7,122 tiled 1024×1024 patches,
 81,048 instances (69,542 non-difficult, 70,561 difficult). Track A = Phase 1
-(A100, same tiling). Track B = official val re-evaluation of
-`best_dota_mAP_epoch_24.pth` (no retraining).
+(A100, same tiling). Track B = the official-val evaluation of the final
+`epoch_24.pth` checkpoint, run on Kaggle (2×T4) in the epoch-24 finish notebook.
 
 | Metric | Track A (baseline) | Track B (flagship, epoch 24) |
 | :--- | :---: | :---: |
-| Official dota/mAP (mmengine, 18-class macro, diff-included) | 0.5412 | **0.6352** |
-| Extended evaluator mAP50 (non-difficult GT) | 0.6049 | **0.6968** |
-| Strict mAP50-95 | 0.3146 | **0.4175** |
-| AP75 | 0.2785 | **0.4347** |
-| Precision (F1-optimal, conf = 0.8279) | 0.8157 | **0.8711** |
-| Recall (F1-optimal, conf = 0.8279) | 0.7564 | **0.8302** |
-| F1-score (F1-optimal, conf = 0.8279) | 0.7849 | **0.8502** |
-| Scale AP50 (small/med/large) | 0.4874 / 0.5881 / 0.6602 | **0.6089 / 0.6844 / 0.8135** |
-| Mean angle error (all TPs) | 6.42 deg mean / 2.62 deg median | **4.83 deg mean / 1.56 deg median** |
-| Mean angle error (elongated TPs) | 3.78 deg mean / 2.55 deg median | **2.05 deg mean / 1.45 deg median** |
-| Easy / Difficult GT recall | 0.7565 / 0.2631 | **0.8303 / 0.299** |
-| F1-optimal confidence threshold | — | 0.8279 |
-| Validation throughput | 17.38 FPS (Phase 1) | 5.70 img/s |
-| Peak GPU memory | 28.04 GiB (Phase 1) | 4.20 GiB |
+| Official dota/mAP (mmengine, 18-class macro, diff-included) | 0.5412 | **0.6535** |
+| Extended evaluator mAP50 (non-difficult GT) | 0.6049 | **0.7127** |
+| Strict mAP50-95 | 0.3146 | **0.4320** |
+| AP75 | 0.2785 | **0.4664** |
+| Precision (F1-optimal, conf = 0.834) | 0.8157 | **0.8694** |
+| Recall (F1-optimal, conf = 0.834) | 0.7564 | **0.8335** |
+| F1-score (F1-optimal, conf = 0.834) | 0.7849 | **0.8511** |
+| Scale AP50 (small/med/large) | 0.4874 / 0.5881 / 0.6602 | **0.6220 / 0.6826 / 0.8394** |
+| Mean angle error (all TPs) | 6.42 deg mean / 2.62 deg median | **4.88 deg mean / 1.56 deg median** |
+| Mean angle error (elongated TPs) | 3.78 deg mean / 2.55 deg median | **2.05 deg mean / 1.46 deg median** |
+| Easy / Difficult GT recall | 0.7565 / 0.2631 | **0.8335 / 0.3019** |
+| F1-optimal confidence threshold | — | 0.834 |
+| Predictions (conf ≥ 0.05) | 180,555 | 136,612 |
+| Validation throughput | 17.38 FPS (Phase 1) | 2.52 img/s (Kaggle 2×T4, batch 1) |
+| Peak GPU memory | 28.04 GiB (Phase 1) | 9.25 GiB (Kaggle 2×T4) |
 
-**Two mAP conventions.** mmengine `DOTAMetric` reports `dota/mAP: 0.6352`
-(18-class macro, IoU 0.5, `diff_thr=100` — includes difficult GT). The extended
-evaluator reports `mAP50: 0.6968` on non-difficult GT only. Both conventions
+**Two mAP conventions.** mmengine `DOTAMetric` reports `dota/mAP: 0.6535`
+(18-class macro, IoU 0.5, `diff_thr=100` — includes difficult GT; identical in
+the in-training validation and the final `test.py` pass). The extended
+evaluator reports `mAP50: 0.7127` on non-difficult GT only. Both conventions
 were used in Phase 1; the extended d0-only number is the apples-to-apples
-comparison vs Track A. **Difficult recall** (0.299) is measured against 70,561
+comparison vs Track A. **Difficult recall** (0.3019) is measured against 70,561
 officially-difficult instances — genuinely tiny, occluded, or ambiguous boxes.
 The metrics here are from labeled validation data; no hidden-label DOTA server
 score is claimed.
 
 ## Per-class breakdown (AP50, recall @ F1-optimal)
 
-Track A = Phase 1 (official val, A100). Track B = official val, `best_dota_mAP_epoch_24`.
+Track A = Phase 1 (official val, A100). Track B = official val, the epoch-24 checkpoint (`epoch_24.pth`).
 Extended evaluator, non-difficult GT. #GT = non-difficult occurrences.
 
 | Class | #GT | Track A (AP / Recall) | Track B (AP / Recall) | ΔAP |
 | :--- | :---: | :---: | :---: | :---: |
-| plane | 3,976 | 0.907 / 0.858 | **0.936 / 0.908** | +0.029 |
-| baseball-diamond | 357 | 0.698 / 0.661 | **0.757 / 0.840** | +0.058 |
-| bridge | 745 | 0.390 / 0.467 | **0.557 / 0.579** | +0.167 |
-| ground-track-field | 192 | 0.729 / 0.714 | **0.798 / 0.755** | +0.070 |
-| small-vehicle | 21,258 | 0.765 / 0.763 | **0.822 / 0.810** | +0.057 |
-| large-vehicle | 9,118 | 0.730 / 0.719 | **0.869 / 0.802** | +0.139 |
-| ship | 23,075 | 0.824 / 0.802 | **0.911 / 0.889** | +0.087 |
-| tennis-court | 1,414 | 0.939 / 0.898 | **0.957 / 0.926** | +0.018 |
-| basketball-court | 242 | 0.607 / 0.612 | **0.762 / 0.731** | +0.155 |
-| storage-tank | 3,273 | 0.808 / 0.754 | **0.829 / 0.801** | +0.020 |
-| soccer-ball-field | 103 | 0.552 / 0.447 | **0.672 / 0.641** | +0.120 |
-| roundabout | 278 | 0.712 / 0.705 | **0.763 / 0.763** | +0.050 |
-| harbor | 4,102 | 0.607 / 0.638 | **0.803 / 0.783** | +0.196 |
-| swimming-pool | 1,195 | 0.637 / 0.589 | **0.669 / 0.679** | +0.032 |
-| helicopter | 116 | 0.535 / 0.552 | **0.668 / 0.569** | +0.134 |
-| container-crane | 27 | 0.000 / 0.000 | **0.032 / 0.074** | +0.032 |
-| airport | 67 | 0.449 / 0.448 | **0.488 / 0.582** | +0.038 |
-| helipad | 4 | 0.000 / 0.000 | **0.250 / 0.500** | +0.250 |
+| plane | 3,976 | 0.907 / 0.858 | **0.942 / 0.914** | +0.035 |
+| baseball-diamond | 357 | 0.698 / 0.661 | **0.778 / 0.815** | +0.080 |
+| bridge | 745 | 0.390 / 0.467 | **0.572 / 0.616** | +0.182 |
+| ground-track-field | 192 | 0.729 / 0.714 | **0.802 / 0.781** | +0.073 |
+| small-vehicle | 21,258 | 0.765 / 0.763 | **0.826 / 0.816** | +0.060 |
+| large-vehicle | 9,118 | 0.730 / 0.719 | **0.869 / 0.789** | +0.140 |
+| ship | 23,075 | 0.824 / 0.802 | **0.917 / 0.892** | +0.093 |
+| tennis-court | 1,414 | 0.939 / 0.898 | **0.954 / 0.930** | +0.016 |
+| basketball-court | 242 | 0.607 / 0.612 | **0.755 / 0.694** | +0.148 |
+| storage-tank | 3,273 | 0.808 / 0.754 | **0.825 / 0.802** | +0.017 |
+| soccer-ball-field | 103 | 0.552 / 0.447 | **0.672 / 0.602** | +0.120 |
+| roundabout | 278 | 0.712 / 0.705 | **0.771 / 0.788** | +0.059 |
+| harbor | 4,102 | 0.607 / 0.638 | **0.797 / 0.778** | +0.190 |
+| swimming-pool | 1,195 | 0.637 / 0.589 | **0.664 / 0.675** | +0.028 |
+| helicopter | 116 | 0.535 / 0.552 | **0.638 / 0.552** | +0.103 |
+| container-crane | 27 | 0.000 / 0.000 | **0.015 / 0.074** | +0.015 |
+| airport | 67 | 0.449 / 0.448 | **0.614 / 0.702** | +0.165 |
+| helipad | 4 | 0.000 / 0.000 | **0.417 / 0.500** | +0.417 |
 
 **Low-support classes.** Container-crane (27 GT), airport (67), and helipad (4)
 have very few instances; their AP should be interpreted cautiously.
@@ -107,10 +111,10 @@ Track B, official val, extended evaluator (non-difficult GT):
 
 | Conf | Precision | Recall | F1 | TP | FP | FN |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 0.25 | 0.722 | 0.893 | 0.798 | 62,067 | 23,892 | 7,475 |
-| 0.30 | 0.737 | 0.889 | 0.806 | 61,846 | 22,089 | 7,696 |
-| 0.50 | 0.787 | 0.877 | 0.829 | 60,954 | 16,510 | 8,588 |
-| **0.8279 (F1-opt)** | **0.871** | **0.830** | **0.850** | 57,736 | 8,546 | 11,806 |
+| 0.25 | 0.715 | 0.896 | 0.796 | 62,311 | 24,795 | 7,231 |
+| 0.30 | 0.730 | 0.893 | 0.803 | 62,105 | 22,964 | 7,437 |
+| 0.50 | 0.781 | 0.881 | 0.828 | 61,244 | 17,141 | 8,298 |
+| **0.834 (F1-opt)** | **0.869** | **0.834** | **0.851** | 57,961 | 8,707 | 11,581 |
 
 ## Repository layout
 
@@ -148,7 +152,7 @@ and the app draws le90 oriented boxes with class + score labels on the result.
 Inference is single image, GPU-accelerated (RTX 4060: ~0.35 s/image) with CPU fallback.
 The app includes three real DOTA validation tiles covering planes, vehicles, courts,
 and helicopters. Its slider defaults to 0.52, a UI-friendly confidence threshold
-for interactive visualization (the validation F1-optimal threshold is 0.8279).
+for interactive visualization (the validation F1-optimal threshold is 0.834).
 
 ### Live demo video
 
@@ -164,29 +168,43 @@ Example Track B predictions from the saved epoch-24 checkpoint:
 
 ## Download the model
 
-Pretrained weights are attached to the [`v1.0.0` release](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.0.0)
-and have not changed since. [`v1.1.0`](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.1.0)
+**Checkpoint provenance matters here.** The weights attached to the
+[`v1.0.0` release](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.0.0)
+(including `best_dota_mAP_epoch_24.pth` and `epoch_24.pth`, digests `0737ab2d…`
+and `880d4bcc…`) are from the **pre-correction lineage** — the initial Kaggle
+continuation trained on a non-official convenience archive (458 val images,
+16 classes, stripped difficulty flags; see [Data source correction](#data-source-correction)).
+They are retained on the release for traceability only and must not be used.
+[`v1.1.0`](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.1.0)
 records the official-val evaluation correction, and
 [`v1.2.0`](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.2.0)
 records the repository audit (no weight changes).
 
-| Asset | Size | SHA-256 | Contents |
-| :--- | :--- | :--- | :--- |
-| `best_dota_mAP_epoch_24.pth` | 294 MB | `0737ab2d…cc9198` | **Recommended** — best checkpoint (weights only), loaded by the UI |
-| `epoch_24.pth` | 856 MB | `880d4bcc…66aafc` | Resume-only — full checkpoint with optimizer/scheduler state |
-| `epoch_16.pth` | 849 MB | `997c5228…f4ff10ed` | Phase-1 anchor — resume point for the Phase-2 continuation |
-
-Full digests: `0737ab2d034abd883684e7c4bfa551754bab89f645cea9d49aa66f8705cc9198`,
-`880d4bcc865abdab58f90b46360a24cbced2e646102cfedbe98888bed166aafc`,
-`997c52283a66bdf419b58ed7bf4916c210c28ad153adf0963ad80d54f4ff10ed`.
-`dota_obb.download` verifies the flagship checkpoint against the first digest.
+The canonical Track B model is the **official-retrain `epoch_24.pth`**
+(SHA-256 `d855c250387f7e3f3fbc6b1a2a79a05932a1e11c39e855563c961f5aaa44995f`,
+858 MB, full resume state), which produced every epoch-24 result in this
+README. It is kept locally under `artifacts/checkpoints/` (gitignored) and is
+**not yet published as a release asset** — publishing a new release (e.g.
+`v1.3.0`) or re-pointing the programmatic downloader is a separate decision
+and has not been done yet. The same applies to `epoch_23.pth`
+(`21d3d203…8435f`) and to the intermediate official-retrain resume anchor
+`best_dota_mAP_epoch_22.pth` (`747d2076…e8f1041a`, byte-identical to
+`epoch_22.pth`).
 
 | Checkpoint status | |
 | :--- | :--- |
-| `best_dota_mAP_epoch_24.pth` | Recommended for inference and reporting |
-| `epoch_24.pth` | Resume-only; not a reporting artifact |
-| `epoch_16.pth` | Phase-1 resume anchor; superseded by the epoch-24 weights |
+| `epoch_24.pth` (official retrain) | **Canonical** — reports and evaluation; local only, unreleased |
+| `epoch_23.pth` (official retrain) | Intermediate, resume-only; local only |
+| `best_dota_mAP_epoch_22.pth` | Phase-2a resume anchor for the epoch-23/24 run; local only |
+| `epoch_16.pth` | Phase-1 anchor; official data; release asset retained |
+| `best_dota_mAP_epoch_24.pth` (release) | **Deprecated** — non-official lineage, superseded |
+| `epoch_24.pth` (release) | **Deprecated** — non-official lineage, superseded |
 | `epoch_20.pth` | Deprecated — pruned on Kaggle, never archived (see limitations) |
+
+`dota_obb.download` and the Gradio UI currently load the **legacy v1.0.0
+weights** (non-official lineage); they have not been re-pointed at the
+official-retrain checkpoint. Treat any UI/package output as the legacy numbers
+until that re-pointing happens.
 
 Programmatic download (cached under `~/.cache/dota_obb/`):
 
@@ -212,40 +230,58 @@ uv sync
 uv run pytest
 ```
 
-### Kaggle (GPU pipeline, `scripts/run_kaggle.py`)
+### Kaggle (GPU pipeline, official retrain and finish notebooks)
 
-1. Attach DOTA v2.0 raw archives to the Kaggle input folder (see `scripts/download_dotav2.py`).
-2. Run the notebook `colab_runner.ipynb` (or the equivalent Kaggle cell:
-   `git clone <repo> && python3 -u scripts/run_kaggle.py`).
-3. Steps executed: verify GPUs → provision Python 3.11 OpenMMLab venv via `uv`
-   (`scripts/setup_colab.sh`) → patch mmrotate losses → stage epoch_16.pth
-   checkpoint (from Google Drive, resume) → download + tile the dataset →
-   distributed `torchrun` training (2×T4) → extended evaluation + benchmark report.
-4. `scripts/run_kaggle.py` is idempotent: re-running it resumes MMEngine from the
-   latest `last_checkpoint` (checkpoint meta carries `epoch`/`iter`).
+Two Kaggle notebooks cover the official-data continuation, both generated from
+this repository's scripts:
+
+1. `colab/trackB_official_retrain_kaggle.ipynb` — resumes Track B at epoch 16,
+   downloads the official DOTA v2.0 data, re-tiles, trains epochs 17–24, evaluates.
+   Stage 2a used this notebook (session hit the 12-hour cap during epoch-22 validation).
+2. `colab/trackB_official_finish_ep23_24_kaggle.ipynb` — resumes from `epoch_22.pth`,
+   trains epochs 23–24 on 2×T4, validates at epoch 24, runs the extended evaluation
+   and packages deliverables. Stage 2b used this notebook; outputs (epoch_23/24.pth,
+   logs, `extended_metrics.json`, `preds.pkl`, `manifest.json`) are in
+   `results/trackb_official_ep23_24/`.
+
+Both provision the Python 3.11 OpenMMLab venv via `uv` (`scripts/setup_colab.sh`),
+patch mmrotate losses, tile the official data with the standard 1024/200 recipe,
+and verify patch counts before training (train ≥ 24,000 patches; val == 7,122).
 
 ### Resumability / crash-recovery
 
-- Checkpoints every epoch (`CheckpointHook interval=1`, keep best 3 by `dota/mAP`).
-- `scripts/run_kaggle.py` re-derives the dataset deterministically on every fresh
-  session (download → tile → clone), so a fresh kernel can always resume.
-- Phase 2 was executed exactly this way after two Kaggle kernel restarts; resume
-  epochs re-derived from `epoch_16.pth` → `epoch_17` → … → `epoch_24`.
+- Checkpoints every epoch (`CheckpointHook interval=1`, `max_keep_ckpts=3`,
+  `save_best='dota/mAP'`).
+- Fresh kernels can always resume: the dataset is re-derived deterministically
+  and `epoch_22.pth` is attached as a Kaggle dataset (`ada-trackb-epoch22`).
+- Phase 2 was executed exactly this way after two Kaggle kernel restarts:
+  resume epochs re-derived from `epoch_16.pth` → `epoch_17` → … → `epoch_22`
+  (first session), then `epoch_22.pth` → `epoch_23` → `epoch_24` (resumed session).
+- The epoch-23/24 run inherits the pre-correction `message_hub` best-score
+  tracker (0.6883, recorded on the non-official tiling); no post-resume
+  validation exceeded it, so no `best_dota_mAP_epoch_24.pth` was produced. The
+  final model is `epoch_24.pth`, used directly for evaluation.
 
 ## Results & artifacts
 
+- `results/trackb_official_ep23_24/` — the epoch-23/24 official-retrain run:
+  training log, `scalars.json`, `train_cfg_ep23_24.py`, `eval_cfg.py`,
+  `eval_test/extended_metrics.json`, `preds.pkl`, deliverables manifest.
 - `results/final_benchmark_report.md` — Track A vs Track B scorecard, per-class AP50, data source correction.
 - `results/extended_metrics.json` — full machine-readable metrics (official val, 7,122 patches):
   per-class AP50/AP75/mAP50-95, micro PRF at multiple confidence thresholds, scale-bucketed AP,
   angle errors, difficulty recall, FPS, VRAM.
-- `results/logs/` — mmengine logs for Phase 2 training (`2026-11-15_track_b_final_epochs_17-24.log`)
-  and the official-val re-evaluation (`2026-11-15_track_b_restored_validation_rerun.log`).
+- `results/logs/` — mmengine logs: Phase 2 (`2026-11-15_track_b_final_epochs_17-24.log`),
+  official-val re-evaluation (`2026-11-15_track_b_restored_validation_rerun.log`),
+  and the epoch-23/24 official run (`2026-11-18_track_b_epochs_23-24_kaggle.log`).
 - `results/task1_submission/` — DOTA Task 1 test-dev submission files (18 `Task1_<class>.txt` + zip).
 
 **Model checkpoints** (~850 MB each) are excluded from this repo
-(`artifacts/checkpoints/`, gitignored); the three published assets above are the
-canonical copies. The Phase-2 `epoch_19` resume checkpoint also exists in the
-private Kaggle dataset `ssgokulaswamy/ada-trackb-epoch19`.
+(`artifacts/checkpoints/`, gitignored); the canonical local set is
+`epoch_16.pth` (Phase-1 anchor), `epoch_22.pth` / `best_dota_mAP_epoch_22.pth`
+(byte-identical, Phase-2a end), and `epoch_23.pth` / `epoch_24.pth` (Phase-2b).
+The legacy `v1.0.0` release assets are from the pre-correction lineage and are
+superseded (see [Download the model](#download-the-model)).
 
 ## Known limitations / caveats
 
@@ -253,35 +289,46 @@ private Kaggle dataset `ssgokulaswamy/ada-trackb-epoch19`.
   from MMRotate (`diff_thr=100`); the extended evaluator's `mAP50` is computed
   on non-difficult GT only. Both conventions are reported.
 - Container-crane (27 GT), airport (67), and helipad (4) have very few val
-  instances; their AP should be interpreted cautiously. Airport's AP75 of 0.005
+  instances; their AP should be interpreted cautiously. Airport's AP75 of 0.083
   suggests large polygons may fail the >=70% IoF tiling rule — multi-scale tiling
   would likely help.
 - Track A metrics were re-evaluated with its epoch-10 best checkpoint on the
   identical 7,122-patch official tiling; the aggregates reproduce the Phase-1
   numbers (mAP50 0.6049, mAP50-95 0.3146). Track B metrics are the official-val
-  re-evaluation of `best_dota_mAP_epoch_24.pth` on the same tiling.
+  evaluation of the epoch-24 checkpoint on the same tiling (Kaggle 2×T4).
+- The epoch-23/24 Kaggle run resumed from the official-retrain `epoch_22.pth`;
+  the resumed run inherits the pre-correction `message_hub` best-score tracker
+  (0.6883, non-official tiling), so no post-resume validation produced a
+  `best_dota_mAP_epoch_24.pth`, and none is needed: `epoch_24.pth` is the final
+  artifact and all reported metrics use it. Validation at epochs 18/20/22/24 ran
+  on the official tiling (dota/mAP: 0.6453 / 0.6519 / 0.6366* / 0.6535);
+  *epoch-22's in-training validation was cut by the 12-hour session limit, so
+  its number is the local official-val evaluation pass.
 - `epoch_20.pth` was pruned on Kaggle by the `max_keep_ckpts=3` checkpoint hook
   before it could be archived. Its validation result (0.6879 dota/mAP) is recorded
-  in the logs. All other epoch checkpoints (16–24) and `best_dota_mAP_epoch_24.pth`
-  are preserved locally under `artifacts/checkpoints/`.
+  in the logs.
 - Kaggle interactive sessions are idle-terminated and have a 12-hour limit; this is
   why the pipeline is built around deterministic re-provisioning and per-epoch resume.
 
 ## Data source correction
 
-The Phase-2 Kaggle evaluation (`scripts/run_kaggle.py`) used `--source ultralytics`,
+The initial Phase-2 Kaggle run (epochs 17–24) used `--source ultralytics`,
 fetching `DOTAv2.zip` from the yolov5 v1.0 GitHub release. That archive is **not
 official DOTA v2.0**: it ships only 458 of the 593 official val images with 16-class
 YOLO labels (no airport/helipad) and stripped difficulty flags. Phase 1 was
 unaffected because the Colab notebook used `DATA_SOURCE = 'huggingface'`
 (isaaccorley/dota — official v2.0, 593 val images).
 
-The official-val re-evaluation was performed by re-staging the official val split
-(593 images, original-format annotations with difficulty flags intact), re-tiling
-with the same 1024/200 recipe (7,122 patches), and running Track B's saved
-checkpoint as a pure evaluation pass. No retraining was performed. The tiling
-method was correct throughout — only the data source was wrong. Phase-2 numbers
-are retained in the [report appendix](results/final_benchmark_report.md#appendix-phase-2-superseded)
+The correction was a full official-data retrain of Track B from the epoch-16
+checkpoint, using the HuggingFace official archives (merged v1.0 + v2.0 official
+imagery, 18 classes, difficulty flags preserved), re-tiled with the same
+1024/200 recipe. The first Kaggle retrain (`ssgokulaswamy/trackb-official-retrain`)
+completed epochs 17–22 before the 12-hour session cap cut the epoch-22
+validation. A resumed session (`bhaghwanss/trackb-finish-ep23-24`) completed
+epochs 23–24 with a clean epoch-24 validation and full official-val evaluation —
+no weights, losses, optimizer state or seeds were changed relative to the first
+retrain; only the epoch range differs. The pre-correction Phase-2 numbers are
+retained in the [report appendix](results/final_benchmark_report.md#appendix-phase-2-superseded)
 for traceability.
 
 ## Acknowledgements

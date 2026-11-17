@@ -94,7 +94,7 @@ def main() -> None:
         with gr.Accordion("Detection settings", open=True, elem_classes="settings-accordion"):
             threshold = gr.Slider(
                 0.1, 0.9, value=0.52, step=0.01,
-                label="Minimum confidence", info="0.52 is a UI-friendly default; the validation F1-optimal threshold is 0.8279.",
+                label="Minimum confidence", info="0.52 is a UI-friendly default; the validation F1-optimal threshold is 0.834.",
             )
         run = gr.Button("Run Track B inference", variant="primary")
         detections = gr.Dataframe(

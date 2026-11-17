@@ -151,13 +151,13 @@ def generate_all_figures(
             f1_opt_a.get("f1", 0.7849)
         ]
         track_b = [
-            ext_b.get("map50", 0.6968),
-            ext_b.get("map50_95", 0.4175),
-            ext_b.get("ap75", 0.4347),
+            ext_b.get("map50", 0.7127),
+            ext_b.get("map50_95", 0.4320),
+            ext_b.get("ap75", 0.4664),
             ext_b.get("class_agnostic_ap50", 0.8765),
             f1_opt_b.get("precision", 0.8711),
             f1_opt_b.get("recall", 0.8302),
-            f1_opt_b.get("f1", 0.8502)
+            f1_opt_b.get("f1", 0.8511)
         ]
         x = np.arange(len(metrics))
         w = 0.38
@@ -374,7 +374,7 @@ def generate_all_figures(
                   "P0079 · roundabout | small-vehicle | swimming-pool"]
         fig = plt.figure(figsize=(17, 16.5), dpi=100)
         gs = fig.add_gridspec(3, 1, height_ratios=[0.48, 0.48, 0.04], hspace=0.35)
-        conf_thr = ext_b.get("micro_prf", {}).get("f1_optimal", {}).get("conf_threshold", 0.8279)
+        conf_thr = ext_b.get("micro_prf", {}).get("f1_optimal", {}).get("conf_threshold", 0.834)
         for row, (name, title) in enumerate(zip(scenes, titles)):
             ax = fig.add_subplot(gs[row])
             tiles = [k for k in preds_by_id if k.startswith(name + "__")]

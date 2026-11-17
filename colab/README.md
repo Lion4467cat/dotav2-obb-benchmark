@@ -56,3 +56,29 @@ own interval is disabled. Each validation pass over 7,122 patches costs roughly 
   train; send the printed LR.
 - **OOM in cell 6 or 7**: the notebook already drops to batch 2 × 4 accumulation below 14 GB. If it
   still OOMs, stop and report rather than changing anything else.
+
+## Kaggle notebooks (official retrain, 2 × T4)
+
+Two generated notebooks cover the official-data continuation:
+
+- `trackB_official_retrain_kaggle.ipynb` — resumes Track B at epoch 16, re-tiles the official
+  DOTA v2.0 data and trains epochs 17–24. Session 2a used this notebook and hit the 12-hour cap
+  during the epoch-22 validation. Build it with `python scripts/build_colab_notebook.py`-adjacent
+  generators; it is committed for reproducibility.
+- `trackB_official_finish_ep23_24_kaggle.ipynb` — resumes from `epoch_22.pth` (official retrain
+  end-of-session checkpoint), trains **epochs 23 and 24**, validates at epoch 24, runs the extended
+  evaluation and packages deliverables with a SHA-256 manifest. Session 2b used this notebook
+  (`bhaghwanss/trackb-finish-ep23-24`, v4); it completed cleanly. Build it with
+  `python scripts/build_finish_ep23_24_nb.py`.
+
+Session 2b scale/identity facts: resume anchor `epoch_22.pth` (official retrain, sha256
+`747d2076…f1041a`), attached as the private Kaggle dataset `bhaghwanss/ada-trackb-epoch22`;
+training data re-downloaded and re-tiled inside the session (official v1.0 + v2.0 archives merged,
+1,830 train images → 24,151 patches; official val → 7,122 patches, 81,048 annotations);
+`epoch_24.pth` dota/mAP (validation) **0.6535**. Outputs live in `results/trackb_official_ep23_24/`.
+
+Both notebooks provision the same pinned venv as Colab, apply the same two mmrotate patches, and
+assert the official patch counts before training. Validation runs at epoch 24 only (`val_interval=2`).
+The epoch-23/24 run inherits the pre-correction `message_hub` best-score tracker (0.6883,
+non-official tiling): no post-resume validation exceeded it, so no `best_dota_mAP_epoch_24.pth`
+was saved — `epoch_24.pth` is the final artifact.

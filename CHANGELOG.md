@@ -1,7 +1,56 @@
 # Changelog
 
 All notable changes to this repository. Model weights themselves have not
-changed since v1.0.0.
+changed since v1.0.0 (releases remain the pre-correction lineage; see
+"Download the model" in the README).
+
+## [1.3.0] — 2026-11-18 — Track B official retrain completed (epochs 23 & 24)
+
+### Added
+- Official-retrain epochs **23 and 24** trained and validated on Kaggle (2×Tesla T4),
+  resumed from the official-retrain `epoch_22.pth` checkpoint (new private Kaggle
+  dataset `ada-trackb-epoch22` on the project account `bhaghwanss`).
+- Epoch-24 official validation (7,122 patches): **dota/mAP 0.6535**; final
+  `test.py` pass identical (0.6535).
+- Extended evaluation of `epoch_24.pth` on the official val split: mAP50
+  **0.7127**, AP75 **0.4664**, mAP50-95 **0.4320**, class-agnostic AP50 0.8803,
+  classification gap 0.1676, scale AP50 0.622 / 0.683 / 0.839 (s/m/l), mean angle
+  error 4.88° (all TPs) / 2.05° (elongated), easy recall 0.8335, difficult
+  recall 0.3019, F1-optimal 0.8511 at conf 0.834, 136,612 predictions.
+- `colab/trackB_official_finish_ep23_24_kaggle.ipynb` + `scripts/build_finish_ep23_24_nb.py`
+  (validated: nbformat, kernelspec, AST; resumes from `epoch_22.pth`, re-tiles the
+  official data, trains epochs 23–24, validates at 24, packages deliverables with a
+  SHA-256 manifest).
+- `results/trackb_official_ep23_24/` — training log, `scalars.json`, configs,
+  `extended_metrics.json`, `preds.pkl`, manifest, deliverables report.
+- `results/logs/2026-11-18_track_b_epochs_23-24_kaggle.log` — full kernel log.
+
+### Changed
+- README: all Track B metrics replaced with the official-retrain epoch-24 numbers
+  (dota/mAP 0.6535, mAP50 0.7127, mAP50-95 0.4320, F1 0.8511, AP75 0.4664,
+  F1-optimal confidence 0.834, throughput 2.52 img/s @ 9.25 GiB on 2×T4).
+- README "Download the model": release weights explicitly marked **deprecated**
+  (pre-correction lineage); the canonical `epoch_24.pth` (SHA-256
+  `d855c250…4995f`) is local-only and unreleased; downloader/UI documented as
+  still pointing at the legacy weights.
+- `results/extended_metrics.json` / `results/preds.pkl`: sync with the epoch-24
+  evaluation; figures regenerated; internship report rebuilt (30 pp.) to the
+  epoch-24 numbers.
+- `scripts/gradio_app.py`, `scripts/make_all_figures.py`: F1-optimal threshold
+  reference updated to 0.834.
+- `scripts/build_colab_notebook.py`: unchanged (still the Colab handover doc).
+
+### Notes
+- No `best_dota_mAP_epoch_24.pth` was produced: the resumed run inherits the
+  pre-correction `message_hub` best-score tracker (0.6883, recorded on the
+  non-official tiling), and no post-resume validation exceeded it. Epoch 24 is
+  the final checkpoint and was used directly for all reported metrics.
+- First finish-attempt notebooks failed **before execution** on missing
+  `outputs`/`execution_count` (nbformat) and missing `kernelspec` (papermill) —
+  both fixed and validated; the running v4 notebook executed all cells to
+  completion.
+- Epoch-22's in-training validation was cut by the 12-hour Kaggle cap; its
+  number in docs is the local official-val evaluation pass (dota/mAP 0.6366).
 
 ## [1.2.0] — 2026-11-16 — Repository audit, registry and documentation sync
 
