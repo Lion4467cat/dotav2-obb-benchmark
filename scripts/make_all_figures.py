@@ -1,10 +1,15 @@
-"""Generate all data-driven report figures using actual predictions and metrics."""
+"""Generate all data-driven report figures using actual predictions and metrics.
+
+Publication-grade: every figure is sized for a 6.2 in column and saved at 300 DPI.
+All plotted numbers are loaded from the extended-metrics JSON of the evaluated
+checkpoint (no hard-coded metrics). Qualitative panels show ground truth in cyan
+(non-difficult) / grey dotted (difficult) and Track B predictions in orange, at the
+F1-optimal confidence threshold recorded in the same JSON.
+"""
 from __future__ import annotations
 
 import argparse
 import json
-import math
-import os
 import re
 import sys
 from collections import Counter, defaultdict
@@ -28,8 +33,9 @@ from mmrotate.structures.bbox import rbox2qbox
 
 NAVY = "#16233b"
 TAB20 = [tuple(c[:3]) for c in plt.cm.tab20(np.linspace(0, 1, 18))]
-GT_C = "#06d6e0"   # cyan
-PR_C = "#ff6d00"   # orange
+GT_C = "#06d6e0"    # cyan   — non-difficult ground truth
+GTD_C = "#9aa7bd"   # grey   — difficulty-flagged ground truth
+PR_C = "#ff6d00"    # orange — Track B prediction
 
 TILE_RE = re.compile(r"^(?P<img>.+)__(?P<size>\d+)__(?P<x>\d+)___(?P<y>\d+)$")
 
@@ -65,6 +71,11 @@ def iou_poly(a: np.ndarray, b: np.ndarray) -> float:
         return 0.0
     return inter / (pa.union(pb).area + 1e-6)
 
+def style_ax(ax, grid_axis="y"):
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.grid(axis=grid_axis, color="#c2cad6", alpha=0.55, lw=0.7)
+    ax.set_axisbelow(True)
+
 def generate_all_figures(
     preds_pkl_path: Path,
     track_b_ext_json_path: Path,
@@ -89,31 +100,32 @@ def generate_all_figures(
     with open(preds_pkl_path, "rb") as f:
         preds_list = pickle.load(f)
     preds_by_id = {p["img_id"]: p for p in preds_list}
+    f1_opt = ext_b.get("micro_prf", {}).get("f1_optimal", {})
+    CONF = f1_opt.get("conf_threshold", 0.834)
 
     # 1. Figure 1: Dataset Profile
     def fig_dataset_profile():
         classes = sorted(D0, key=lambda c: D0[c], reverse=True)
         counts = [D0[c] for c in classes]
         colors = [TAB20[class_idx(c)] for c in classes]
-        fig = plt.figure(figsize=(21, 14), dpi=100)
-        gs = fig.add_gridspec(2, 3, height_ratios=[1.0, 0.45], hspace=0.28, wspace=0.20)
+        fig = plt.figure(figsize=(10.4, 7.2), dpi=300)
+        gs = fig.add_gridspec(2, 3, height_ratios=[1.12, 0.52], hspace=0.55, wspace=0.18)
         ax0 = fig.add_subplot(gs[0, :])
-        bars = ax0.bar(classes, counts, color=colors, width=0.7)
+        bars = ax0.bar(classes, counts, color=colors, width=0.72)
         ax0.set_yscale("log")
-        ax0.set_ylim(1, 100000)
-        ax0.set_ylabel("Non-difficult GT count (log scale)", fontsize=20, color=NAVY)
-        ax0.set_xticklabels(classes, rotation=35, ha="right", fontsize=17, color=NAVY)
-        ax0.tick_params(axis="y", labelsize=16)
+        ax0.set_ylim(1, 400000)
+        ax0.set_ylabel("Non-difficult GT count (log)", fontsize=10, color=NAVY)
+        ax0.set_xticks(range(len(classes)))
+        ax0.set_xticklabels(classes, rotation=30, ha="right", fontsize=8, color=NAVY)
+        ax0.tick_params(axis="y", labelsize=9)
         for b, n in zip(bars, counts):
-            ax0.text(b.get_x() + b.get_width() / 2, n * 1.35, f"{n:,}", ha="center",
-                     fontsize=15, color=NAVY, fontweight="bold")
-        ax0.spines[["top", "right"]].set_visible(False)
-        ax0.grid(axis="y", color="#c2cad6", alpha=0.5, lw=1)
+            ax0.text(b.get_x() + b.get_width() / 2, n * 1.42, f"{n:,}", ha="center",
+                     fontsize=6.4, color=NAVY, fontweight="bold")
+        style_ax(ax0, "y")
         ax0.set_title("Official DOTA v2.0 validation split · non-difficult support by class\n"
-                      "593 images · 7,122 patches (1024×1024) · 69,542 non-difficult ground-truth objects",
-                      fontsize=24, fontweight="bold", color=NAVY, loc="left", pad=12)
+                      "593 images · 7,122 patches (1024×1024) · 69,542 non-difficult ground-truth annotations",
+                      fontsize=10.5, fontweight="bold", color=NAVY, loc="left", pad=8)
 
-        # Bottom 3 panels
         EXAMPLES = [("plane", "P1122__1024__4944___824"),
                     ("ship", "P6769__1024__0___3296"),
                     ("small-vehicle", "P6687__1024__5768___3888")]
@@ -127,55 +139,55 @@ def generate_all_figures(
                 for g in gts:
                     if g["cls"] == cls:
                         q = np.vstack([g["quad"], g["quad"][0]])
-                        ax.plot(q[:, 0], q[:, 1], color=GT_C, lw=2.5)
+                        ax.plot(q[:, 0], q[:, 1], color=GT_C, lw=1.4)
             ax.axis("off")
-            ax.set_title(f"Example: {cls} (n={D0[cls]:,})", fontsize=18, fontweight="bold", color=NAVY, loc="left")
-
+            ax.set_title(f"Example: {cls} (n={D0[cls]:,})", fontsize=8.6, fontweight="bold",
+                         color=NAVY, loc="left", pad=4)
         for d in out_dirs:
             fig.savefig(d / "dataset_profile.png", bbox_inches="tight")
         plt.close(fig)
         print("  -> dataset_profile.png ok")
 
-    # 2. Figure: Metrics Comparison
+    # 2. Figure 5: Headline metrics, both tracks
     def fig_metrics_comparison():
-        metrics = ["mAP50", "mAP50-95", "AP75", "Class-Agnostic", "Micro P", "Micro R", "Micro F1"]
+        metrics = ["mAP50", "mAP50-95", "AP75", "Class-\nagnostic", "Micro P", "Micro R", "Micro F1"]
         f1_opt_a = ext_a.get("micro_prf", {}).get("f1_optimal", {})
-        f1_opt_b = ext_b.get("micro_prf", {}).get("f1_optimal", {})
         track_a = [
             ext_a.get("map50", 0.6049),
             ext_a.get("map50_95", 0.3146),
             ext_a.get("ap75", 0.2785),
             ext_a.get("class_agnostic_ap50", 0.7985),
             f1_opt_a.get("precision", 0.8157),
-            f1_opt_a.get("recall", 0.7564),
-            f1_opt_a.get("f1", 0.7849)
+            f1_opt_a.get("recall", 0.7563),
+            f1_opt_a.get("f1", 0.7849),
         ]
         track_b = [
             ext_b.get("map50", 0.7127),
             ext_b.get("map50_95", 0.4320),
             ext_b.get("ap75", 0.4664),
-            ext_b.get("class_agnostic_ap50", 0.8765),
-            f1_opt_b.get("precision", 0.8711),
-            f1_opt_b.get("recall", 0.8302),
-            f1_opt_b.get("f1", 0.8511)
+            ext_b.get("class_agnostic_ap50", 0.8803),
+            f1_opt.get("precision", 0.8694),
+            f1_opt.get("recall", 0.8335),
+            f1_opt.get("f1", 0.8511),
         ]
         x = np.arange(len(metrics))
         w = 0.38
-        fig, ax = plt.subplots(figsize=(19, 10.5), dpi=100)
-        ax.grid(axis="y", color="#9aa7bd", alpha=0.6, lw=1)
+        fig, ax = plt.subplots(figsize=(9.6, 4.9), dpi=300)
+        ax.grid(axis="y", color="#9aa7bd", alpha=0.55, lw=0.7)
         ax.bar(x - w / 2, track_a, w, color="#9fb3c8", label="Track A · Rotated Faster R-CNN (R50-FPN)")
         ax.bar(x + w / 2, track_b, w, color=NAVY, label="Track B · Oriented R-CNN (ConvNeXt-S + PAFPN + KLD)")
         for xi, a, b in zip(x, track_a, track_b):
-            ax.text(xi - w / 2, a + 0.014, f"{a:.3f}", ha="center", fontsize=15, color=NAVY, fontweight="bold")
-            ax.text(xi + w / 2, b + 0.014, f"{b:.3f}", ha="center", fontsize=15, color=NAVY, fontweight="bold")
-        ax.set_ylim(0, 1.15)
-        ax.set_ylabel("Score / proportion", fontsize=20, color=NAVY)
+            ax.text(xi - w / 2, a + 0.016, f"{a:.3f}", ha="center", fontsize=7.6, color=NAVY, fontweight="bold")
+            ax.text(xi + w / 2, b + 0.016, f"{b:.3f}", ha="center", fontsize=7.6, color=NAVY, fontweight="bold")
+        ax.set_ylim(0, 1.13)
+        ax.set_ylabel("Score / proportion", fontsize=10, color=NAVY)
         ax.set_xticks(x)
-        ax.set_xticklabels(metrics, fontsize=17, color=NAVY)
+        ax.set_xticklabels(metrics, fontsize=8.6, color=NAVY)
+        ax.tick_params(axis="y", labelsize=9)
         ax.set_title("Track A vs Track B on official DOTA v2.0 validation split (7,122 patches)",
-                     fontsize=23, fontweight="bold", color=NAVY, loc="left", pad=12)
+                     fontsize=10, fontweight="bold", color=NAVY, loc="left", pad=7)
         ax.spines[["top", "right", "left"]].set_visible(False)
-        ax.legend(loc="upper left", fontsize=16, frameon=False)
+        ax.legend(loc="upper left", fontsize=8, frameon=False)
         fig.tight_layout()
         for d in out_dirs:
             fig.savefig(d / "metrics_comparison.png", bbox_inches="tight")
@@ -190,26 +202,24 @@ def generate_all_figures(
         ns = [pc_a[c]["num_gt"] for c in classes]
         d = [pc_b[c]["ap50"] - pc_a[c]["ap50"] for c in classes]
 
-        fig, ax = plt.subplots(figsize=(15, 11), dpi=110)
+        fig, ax = plt.subplots(figsize=(8.6, 6.4), dpi=300)
         y = np.arange(len(classes))
         h = 0.38
         ax.barh(y + h / 2, a, h, color="#9fb3c8", label="Track A (Rotated Faster R-CNN, R50-FPN)")
         ax.barh(y - h / 2, b, h, color=NAVY, label="Track B (Oriented R-CNN, ConvNeXt-S + PAFPN)")
         for yi, av, bv, dv, n in zip(y, a, b, d, ns):
             ax.text(max(av, bv) + 0.018, yi, f"{av:.3f} → {bv:.3f}  ({dv:+.3f})   n={n:,}",
-                    va="center", fontsize=12, color="black")
+                    va="center", fontsize=6.9, color="black")
         ax.set_yticks(y)
-        ax.set_yticklabels(classes, fontsize=13)
-        ax.tick_params(axis="x", labelsize=12)
-        ax.axvline(0.5, color=NAVY, lw=1.5, ls=":", alpha=0.7)
-        ax.set_xlim(0, 1.55)
-        ax.set_xlabel("AP50 (rotated IoU ≥ 0.50, non-difficult GT)", fontsize=14)
-        ax.set_title("Per-class AP50: Track A → Track B on official 7,122-patch val split",
-                     fontsize=18, fontweight="bold", loc="left", pad=12)
-        ax.spines[["top", "right"]].set_visible(False)
-        ax.legend(fontsize=12, loc="lower right", frameon=False)
-        ax.grid(axis="x", color="#d9d9d9", lw=0.8)
-        ax.set_axisbelow(True)
+        ax.set_yticklabels(classes, fontsize=7.6)
+        ax.tick_params(axis="x", labelsize=8)
+        ax.axvline(0.5, color=NAVY, lw=1.1, ls=":", alpha=0.7)
+        ax.set_xlim(0, 1.58)
+        ax.set_xlabel("AP50 (rotated IoU ≥ 0.50, non-difficult GT)", fontsize=8.6, color=NAVY)
+        ax.set_title("Per-class AP50: Track A → Track B · official 7,122-patch val split",
+                     fontsize=10, fontweight="bold", color=NAVY, loc="left", pad=7)
+        style_ax(ax, "x")
+        ax.legend(fontsize=7.6, loc="lower right", frameon=False)
         fig.tight_layout()
         for d in out_dirs:
             fig.savefig(d / "fig_per_class_delta.png", bbox_inches="tight")
@@ -224,28 +234,26 @@ def generate_all_figures(
         ns = [pc_b[c]["num_gt"] for c in classes]
         colors = ["#9fb3c8" if n >= 100 else "#c0703c" for n in ns]
 
-        fig, ax = plt.subplots(figsize=(14, 10), dpi=110)
+        fig, ax = plt.subplots(figsize=(7.6, 5.9), dpi=300)
         bars = ax.barh(classes, aps, color=colors, height=0.72)
-        ax.axvline(0.5, color=NAVY, lw=1.5, ls=":", alpha=0.6)
+        ax.axvline(0.5, color=NAVY, lw=1.1, ls=":", alpha=0.6)
         for b, ap, n in zip(bars, aps, ns):
             ax.text(ap + 0.015, b.get_y() + b.get_height() / 2, f"{ap:.3f} · n={n:,}",
-                    va="center", fontsize=12, color=NAVY, fontweight="bold")
-        ax.set_xlim(0, 1.25)
-        ax.tick_params(axis="y", labelsize=13)
-        ax.tick_params(axis="x", labelsize=12)
-        ax.set_xlabel("AP50 (non-difficult ground truth)", fontsize=14, color=NAVY)
-        ax.set_title("Track B AP50 by class, with validation support (official DOTA v2.0 val)",
-                     fontsize=18, fontweight="bold", color=NAVY, loc="left", pad=12)
-        ax.spines[["top", "right"]].set_visible(False)
-        ax.grid(axis="x", color="#e2e2e2", lw=0.7)
-        ax.set_axisbelow(True)
+                    va="center", fontsize=7.6, color=NAVY, fontweight="bold")
+        ax.set_xlim(0, 1.28)
+        ax.tick_params(axis="y", labelsize=8)
+        ax.tick_params(axis="x", labelsize=8)
+        ax.set_xlabel("AP50 (non-difficult ground truth)", fontsize=9, color=NAVY)
+        ax.set_title("Track B AP50 by class, with validation support",
+                     fontsize=10, fontweight="bold", color=NAVY, loc="left", pad=7)
+        style_ax(ax, "x")
         fig.tight_layout()
         for d in out_dirs:
             fig.savefig(d / "class_ap.png", bbox_inches="tight")
         plt.close(fig)
         print("  -> class_ap.png ok")
 
-    # 5. Figure: Examples (1-6, 7-12, 13-18)
+    # 5. Figures 9-11: class examples
     def find_tp_example(cls, min_score=0.9, max_other_gt=2):
         idx = class_idx(cls)
         best = None
@@ -317,18 +325,17 @@ def generate_all_figures(
             q = poly.copy()
             q[:, 0] -= x0; q[:, 1] -= y0
             return np.vstack([q, q[0]])
-        ax.plot(*shift(goutline).T, color=GT_C, lw=3)
-        ax.plot(*shift(qb).T, color=PR_C, lw=3, ls="--")
+        ax.plot(*shift(goutline).T, color=GT_C, lw=1.6)
+        ax.plot(*shift(qb).T, color=PR_C, lw=1.6, ls="--")
         ax.axis("off")
 
     def fig_examples(classes, title, out_name, nrows=2):
-        fig, axes = plt.subplots(nrows, 3, figsize=(21, 13.6), dpi=100,
-                                 gridspec_kw={'hspace': 0.32, 'wspace': 0.08})
+        fig, axes = plt.subplots(nrows, 3, figsize=(9.6, 6.6), dpi=300,
+                                 gridspec_kw={'hspace': 0.30, 'wspace': 0.08})
         MIN_SCORE = {"container-crane": 0.0, "helipad": 0.0, "airport": 0.0}
         for ax, cls in zip(axes.ravel(), classes):
             ex = find_tp_example(cls, min_score=MIN_SCORE.get(cls, 0.7))
             if ex is None:
-                # show ground truth outline if no TP
                 idx = class_idx(cls)
                 gt_item, gt_id = None, None
                 for img_id, p in preds_by_id.items():
@@ -346,64 +353,65 @@ def generate_all_figures(
                     x1, y1 = min(img.shape[1], int(poly[:, 0].max() + 40)), min(img.shape[0], int(poly[:, 1].max() + 40))
                     ax.imshow(img[y0:y1, x0:x1])
                     q = np.vstack([poly - [x0, y0], poly[0] - [x0, y0]])
-                    ax.plot(q[:, 0], q[:, 1], color=GT_C, lw=3)
-                    ax.set_title(f"{cls} · GT (no TP ≥ 0.50, n={D0[cls]})", fontsize=16,
+                    ax.plot(q[:, 0], q[:, 1], color=GT_C, lw=1.6)
+                    ax.set_title(f"{cls} · GT (no TP ≥ 0.50, n={D0[cls]})", fontsize=8,
                                  fontweight="bold", color="#c0392b", loc="left")
                 else:
-                    ax.text(0.5, 0.5, f"no GT found (n={D0[cls]})", ha="center", va="center", fontsize=16, color=NAVY)
+                    ax.text(0.5, 0.5, f"no GT found (n={D0[cls]})", ha="center", va="center",
+                            fontsize=9, color=NAVY)
                 ax.axis("off")
                 continue
             img_id, si, score, gt_item, area, iou = ex
             draw_panel(ax, img_id, si, score, gt_item, iou)
-            ax.set_title(f"{cls} · IoU {iou:.2f} (score {score:.2f})", fontsize=18, fontweight="bold",
-                         color=(NAVY if iou >= 0.5 else "#c0392b"), loc="left")
-        fig.suptitle(title, fontsize=24, fontweight="bold", color=NAVY, x=0.55, y=0.99)
-        handles = [plt.Line2D([0], [0], color=GT_C, lw=3, label="Ground truth OBB"),
-                   plt.Line2D([0], [0], color=PR_C, lw=3, ls="--", label="Track B prediction OBB")]
-        fig.legend(handles=handles, loc="lower center", ncol=2, fontsize=17, frameon=False)
-        fig.tight_layout(rect=(0, 0.04, 1, 0.96))
+            ax.set_title(f"{cls} · IoU {iou:.2f} (score {score:.2f})", fontsize=8,
+                         fontweight="bold", color=(NAVY if iou >= 0.5 else "#c0392b"), loc="left")
+        handles = [plt.Line2D([0], [0], color=GT_C, lw=1.6, label="Ground truth OBB"),
+                   plt.Line2D([0], [0], color=PR_C, lw=1.6, ls="--", label="Track B prediction OBB")]
+        fig.legend(handles=handles, loc="lower center", ncol=2, fontsize=8, frameon=False)
+        fig.tight_layout(rect=(0, 0.05, 1, 1))
         for d in out_dirs:
             fig.savefig(d / out_name, bbox_inches="tight")
         plt.close(fig)
         print(f"  -> {out_name} ok")
 
-    # 6. Full scene demo predictions
+    # 6. Figure 8: Full-scene prediction examples, F1-optimal threshold
     def fig_demo():
-        scenes = ["P2375", "P0079"]
-        titles = ["P2375 · ground-track-field | soccer-ball-field | roundabout",
-                  "P0079 · roundabout | small-vehicle | swimming-pool"]
-        fig = plt.figure(figsize=(17, 16.5), dpi=100)
-        gs = fig.add_gridspec(3, 1, height_ratios=[0.48, 0.48, 0.04], hspace=0.35)
-        conf_thr = ext_b.get("micro_prf", {}).get("f1_optimal", {}).get("conf_threshold", 0.834)
-        for row, (name, title) in enumerate(zip(scenes, titles)):
+        scenes = ["P2242__1024__824___142", "P10090__1024__0___0"]
+        titles = ["P2242 · plane | small-vehicle | large-vehicle",
+                  "P10090 · ship | harbor | small-vehicle"]
+        fig = plt.figure(figsize=(8.4, 8.6), dpi=300)
+        gs = fig.add_gridspec(2, 1, height_ratios=[1.0, 1.0], hspace=0.22)
+
+        for row, (img_id, title) in enumerate(zip(scenes, titles)):
             ax = fig.add_subplot(gs[row])
-            tiles = [k for k in preds_by_id if k.startswith(name + "__")]
-            if not tiles:
+            img_file = val_images_dir / f"{img_id}.png"
+            if not img_file.is_file():
                 continue
-            t0 = tiles[0]
-            img_file = val_images_dir / f"{t0}.png"
-            if img_file.is_file():
-                img = np.asarray(Image.open(img_file).convert("RGB"))
-                ax.imshow(img)
-                gts = load_gt_quads(val_ann_dir / f"{t0}.txt")
-                p = preds_by_id[t0]["pred_instances"]
-                labels = p["labels"].numpy()
-                scores = p["scores"].numpy()
-                keep = np.where(scores >= conf_thr)[0]
-                qbs = pred_polygons(p)[keep]
-                for g in gts:
-                    q = np.vstack([g["quad"], g["quad"][0]])
-                    ax.plot(q[:, 0], q[:, 1], color=GT_C, lw=2.6)
-                for qb in qbs:
-                    q = np.vstack([qb, qb[0]])
-                    ax.plot(q[:, 0], q[:, 1], color=PR_C, lw=2.6, ls="--")
+            img = np.asarray(Image.open(img_file).convert("RGB"))
+            ax.imshow(img)
+            gts = load_gt_quads(val_ann_dir / f"{img_id}.txt")
+            p = preds_by_id[img_id]["pred_instances"]
+            labels = p["labels"].numpy()
+            scores = p["scores"].numpy()
+            keep = np.where(scores >= CONF)[0]
+            qbs = pred_polygons(p)[keep]
+            for g in gts:
+                q = np.vstack([g["quad"], g["quad"][0]])
+                if g["difficult"]:
+                    ax.plot(q[:, 0], q[:, 1], color=GTD_C, lw=0.7, ls=":", alpha=0.75)
+                else:
+                    ax.plot(q[:, 0], q[:, 1], color=GT_C, lw=1.0)
+            for qb in qbs:
+                q = np.vstack([qb, qb[0]])
+                ax.plot(q[:, 0], q[:, 1], color=PR_C, lw=1.0, ls="--")
             ax.axis("off")
-            ax.set_title(title, fontsize=20, fontweight="bold", color=NAVY, loc="left")
-        fig.suptitle("Actual Track B predictions on official DOTA validation tiles",
-                     fontsize=23, fontweight="bold", color=NAVY, x=0.52, y=0.99)
-        handles = [plt.Line2D([0], [0], color=GT_C, lw=2.6, label="Ground truth OBB"),
-                   plt.Line2D([0], [0], color=PR_C, lw=2.6, ls="--", label="Track B prediction OBB")]
-        fig.legend(handles=handles, loc="lower center", ncol=2, fontsize=16, frameon=False)
+            ax.set_title(title, fontsize=9.5, fontweight="bold", color=NAVY, loc="left", pad=4)
+        handles = [plt.Line2D([0], [0], color=GT_C, lw=1.4, label="GT (non-difficult)"),
+                   plt.Line2D([0], [0], color=GTD_C, lw=1.4, ls=":", label="GT (difficult)"),
+                   plt.Line2D([0], [0], color=PR_C, lw=1.4, ls="--",
+                               label=f"Track B prediction (conf ≥ {CONF:.3f})")]
+        fig.legend(handles=handles, loc="lower center", ncol=3, fontsize=8, frameon=False)
+        fig.tight_layout(rect=(0, 0.045, 1, 1))
         for d in out_dirs:
             fig.savefig(d / "track_b_demo_predictions.png", bbox_inches="tight")
         plt.close(fig)

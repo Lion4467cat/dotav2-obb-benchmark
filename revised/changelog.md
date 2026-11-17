@@ -166,3 +166,30 @@ results: dota/mAP **0.6535**, mAP50 **0.7127**, AP75 **0.4664**, mAP50-95 **0.43
 completed, that the epoch-24 checkpoint used for all figures is `epoch_24.pth` (no best/-last
 selection, see the best-score inheritance note), and that the Phase-2 superseded numbers live in
 the benchmark-report appendix. Page map: 30 pages, 75/75 resolved, 0 mismatches.
+
+---
+
+## 2026-11-18 — Publication-grade refinement pass (Figure X.Y / Table X.Y)
+
+Full factual audit against the committed epoch-24 artifacts (`results/extended_metrics.json`,
+`results/trackb_official_ep23_24/manifest.json`, `results/final_benchmark_report.md`):
+every number in the document re-derived from the artifacts or corrected to them
+(e.g. operating-point defaults, scale/orientation defaults, class-agnostic AP50, classification
+gap, difficulty gaps, predictions count, relative AP75 gain +67.4%, small-vehicle rank 12th of 18).
+
+Changes:
+- Figures regenerated at **300 DPI**, sized for a 6.2–5.4 in column, no overlapping labels,
+  consistent NAVY/GT-cyan/GT-grey-difficult/PR-orange palette. Figure 8.1 re-tiled onto
+  two dense, representative validation tiles (P2242 airfield, P10090 marina) at the F1-optimal
+  confidence of 0.834, with difficulty-flagged GT drawn dotted grey. Qualitative narrative
+  rewritten to match the regenerated figure.
+- All captions renumbered to **Figure X.Y / Table X.Y** (section-scoped); captions above
+  tables / below figures preserved; List of Figures and List of Tables regenerated.
+- Layout: forced page breaks before Figures 8.2/8.4 removed (page 23 no longer blank);
+  front matter keeps the institution-specific [AUTHOR TO CONFIRM] blocks (guide, TD, certificate
+  wording, acknowledgements) — those require the author and cannot be inferred.
+- Narrative tightened throughout: every claim grounded in the epoch-24 artifacts; PAFPN and
+  class-balanced sampling now cited to primary sources ([8], [9]); the "two validation tilings"
+  framing removed (superseded by the official-tiling correction); throughput/memory figures
+  explicitly labelled with the hardware that measured them.
+- Two-pass build: 30 pages; 75/75 TOC/LoF/LoT entries resolved; page-map mismatches: 0.

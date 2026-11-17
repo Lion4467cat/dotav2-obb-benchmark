@@ -314,31 +314,31 @@ TOC_ENTRIES = [
 ]
 
 FIG_CAPTIONS = [
-    "Figure 1. Non-difficult ground-truth class support on the official DOTA v2.0 validation split, with example tiles.",
-    "Figure 2. Project workflow and the two detector tracks, from split-isolated preparation through oriented-box evaluation.",
-    "Figure 3. (a) A horizontal envelope discards orientation; an oriented box keeps the angle.",
-    "Figure 4. Run stages.",
-    "Figure 5. Headline validation metrics for both tracks on the official tiling.",
-    "Figure 6. Per-class AP50 for both tracks, sorted by gain.",
-    "Figure 7. Track B AP50 per class against class support.",
-    "Figure 8. Track B predictions on two validation tiles at the F1-optimal threshold of 0.834.",
-    "Figure 9. Validation examples for plane, baseball-diamond, bridge, ground-track-field, small-vehicle and large-vehicle.",
-    "Figure 10. Validation examples for ship, tennis-court, basketball-court, storage-tank, soccer-ball-field and roundabout",
-    "Figure 11. Validation examples for harbor, swimming-pool, helicopter, container-crane, airport and helipad",
+    "Figure 3.1. Non-difficult ground-truth class support on the official DOTA v2.0 validation split, with example tiles.",
+    "Figure 4.1. Project workflow and the two detector tracks, from split-isolated preparation through oriented-box evaluation.",
+    "Figure 4.2. (a) A horizontal envelope discards orientation; an oriented box keeps the angle.",
+    "Figure 5.1. Run stages.",
+    "Figure 7.1. Headline validation metrics for both tracks on the official tiling.",
+    "Figure 7.2. Per-class AP50 for both tracks, sorted by gain.",
+    "Figure 7.3. Track B AP50 per class against class support.",
+    "Figure 8.1. Track B predictions on two validation tiles at the F1-optimal threshold of 0.834.",
+    "Figure 8.2. Validation examples for plane, baseball-diamond, bridge, ground-track-field, small-vehicle and large-vehicle.",
+    "Figure 8.3. Validation examples for ship, tennis-court, basketball-court, storage-tank, soccer-ball-field and roundabout",
+    "Figure 8.4. Validation examples for harbor, swimming-pool, helicopter, container-crane, airport and helipad",
 ]
 
 TAB_CAPTIONS = [
-    "Table 1. Dataset and tiling summary.",
-    "Table 2. Pipeline stages.",
-    "Table 3. Track A and Track B configuration.",
-    "Table 4. Software environment and reproducibility settings.",
-    "Table 5. Headline validation metrics on the official 7,122-patch tiling.",
-    "Table 6. Precision, recall and F1 at fixed confidence thresholds",
-    "Table 7. Per-class AP50 for both tracks on the official tiling, sorted by gain.",
-    "Table 8. Scale-stratified AP50 and orientation error.",
-    "Table A1. Full configuration reference for both tracks.",
-    "Table A2. Track A per-class results on the official 7,122-patch tiling.",
-    "Table A3. Track B per-class results on the official 7,122-patch tiling.",
+    "Table 3.1. Dataset and tiling summary.",
+    "Table 4.1. Pipeline stages.",
+    "Table 4.2. Track A and Track B configuration.",
+    "Table 4.3. Software environment and reproducibility settings.",
+    "Table 7.1. Headline validation metrics on the official 7,122-patch tiling.",
+    "Table 7.2. Precision, recall and F1 at fixed confidence thresholds",
+    "Table 7.3. Per-class AP50 for both tracks on the official tiling, sorted by gain.",
+    "Table 7.4. Scale-stratified AP50 and orientation error.",
+    "Table A.1. Full configuration reference for both tracks.",
+    "Table A.2. Track A per-class results on the official 7,122-patch tiling.",
+    "Table A.3. Track B per-class results on the official 7,122-patch tiling.",
 ]
 
 
@@ -472,8 +472,8 @@ def body_sections_a(doc):
     h2(doc, "1.1  Problem statement")
     para(doc, "The task is to detect densely packed aerial objects across a wide size range and all headings, "
               "while preserving orientation. A second problem is evidential: measured performance must be "
-              "separated from dataset coverage gaps and from differences between the two validation tilings "
-              "used during the project.")
+              "separated from dataset coverage gaps, because support is uneven across the 18 classes "
+              "(Section 3.5) and the rarest classes have fewer than 70 annotations.")
 
     h2(doc, "1.2  Objectives")
     for text in (
@@ -504,13 +504,12 @@ def body_sections_a(doc):
     para(doc, "Gaussian KLD regression represents a rotated rectangle as a two-dimensional Gaussian and "
               "compares predicted and target distributions, which avoids the discontinuity of angle "
               "regression near the ±90° boundary [3]. ConvNeXt is a modern convolutional backbone [4]. "
-              "Track B adds a path-aggregation feature pyramid network (PAFPN) and class-balanced sampling; "
-              "both are standard components, but this report does not cite a primary source for them "
-              "[CITATION REQUIRED: peer-reviewed source for PAFPN] [CITATION REQUIRED: source for class-balanced sampling].")
+              "Track B adds a path-aggregation feature pyramid network (PAFPN) [8] and class-balanced "
+              "sampling [9], both standard components used in the OpenMMLab detection stack.")
 
     h2(doc, "2.3  What this study does not isolate")
     para(doc, "The two tracks differ in detector, backbone, neck, regression loss, sampling, augmentation, "
-              "optimizer, schedule and epoch budget (Table 3). The study therefore compares two complete "
+              "optimizer, schedule and epoch budget (Table 4.2). The study therefore compares two complete "
               "systems and cannot attribute the measured difference to any single component. An ablation "
               "that varies one factor at a time is listed as future work in Section 10.2.")
 
@@ -519,10 +518,10 @@ def body_sections_a(doc):
     h2(doc, "3.1  Dataset and class set")
     para(doc, "DOTA v2.0 is an aerial-image benchmark with 18 oriented-object categories [6]. The class set "
               "covers aircraft, ships, vehicles, infrastructure, sports facilities and three rare categories: "
-              "container-crane, airport and helipad. Figure 1 shows the non-difficult ground-truth support per "
+              "container-crane, airport and helipad. Figure 3.1 shows the non-difficult ground-truth support per "
               "class on the official validation split; the counts sum to 69,542 tile-level annotations.")
-    figure(doc, "dataset_profile.png", 6.2,
-           "Figure 1. Non-difficult ground-truth class support on the official DOTA v2.0 validation split, "
+    figure(doc, "dataset_profile.png", 5.4,
+           "Figure 3.1. Non-difficult ground-truth class support on the official DOTA v2.0 validation split, "
            "with example tiles. Counts are tile-level occurrences (Section 3.2). Airport has 67, "
            "container-crane 27 and helipad 4.")
 
@@ -544,7 +543,7 @@ def body_sections_a(doc):
     para(doc, "The source train and validation images are separated before tiling, so no patch from a "
               "validation image can appear in the training set. Each split is tiled independently with the "
               "same recipe. The prepared collection contains 1,830 training images and 593 validation images "
-              "(Table 1).")
+              "(Table 3.1).")
 
     table(doc, ["Item", "Record"], [
         ("Training images", "1,830"),
@@ -554,11 +553,11 @@ def body_sections_a(doc):
         ("IoF threshold for keeping a polygon", "0.70"),
         ("Patch coverage threshold", "0.60"),
         ("Official validation tiling", "7,122 patches (Track A and Track B evaluation)"),
-        ("Official retrain validation tiling", "7,122 patches (Track B retrained on official 18-class data to epoch 24)"),
+        ("Official training tiling", "24,151 patches (official retrain; epochs 23–24 re-tiled identically)"),
         ("Non-difficult / difficult annotations", "69,542 / 70,561"),
         ("Classes", "18, including airport (67) and helipad (4) in the official tiling"),
     ], [2.6, 3.6], size=9.5, align_center_from=2)
-    caption(doc, "Table 1. Dataset and tiling summary.")
+    caption(doc, "Table 3.1. Dataset and tiling summary.")
 
     h2(doc, "3.4  Data provenance")
     boxed_note(doc, "Data provenance correction", [
@@ -573,7 +572,6 @@ def body_sections_a(doc):
         "training examples throughout, and all difficulty flags were preserved. Both tracks are thus trained "
         "and evaluated on official DOTA v2.0 data.",
     ])
-    author_note(doc, "official retrain confirmed: epochs 17–22 trained on the official 18-class DOTA v2.0 dataset; epochs 23–24 were completed in the resumed Kaggle run")
 
     h2(doc, "3.5  Class support")
     para(doc, "Class support is highly uneven. Ship (23,075) and small-vehicle (21,258) dominate, while "
@@ -584,10 +582,10 @@ def body_sections_a(doc):
     # ---------------- 4 Methods
     h1(doc, "4  Methods")
     h2(doc, "4.1  Pipeline")
-    para(doc, "Figure 2 summarises the pipeline: split-isolated preparation, patch generation, the two "
-              "detector tracks, and evaluation. Table 2 lists the stages.")
+    para(doc, "Figure 4.1 summarises the pipeline: split-isolated preparation, patch generation, the two "
+              "detector tracks, and evaluation. Table 4.1 lists the stages.")
     figure(doc, "pipeline.png", 6.2,
-           "Figure 2. Project workflow and the two detector tracks, from split-isolated preparation through "
+           "Figure 4.1. Project workflow and the two detector tracks, from split-isolated preparation through "
            "oriented-box evaluation.")
     table(doc, ["Stage", "Implementation"], [
         ("1. Data preparation", "Merge imagery and annotations, normalise labels, keep train/validation sources separate."),
@@ -596,20 +594,20 @@ def body_sections_a(doc):
         ("3B. Track B", "Oriented R-CNN; ConvNeXt-Small + PAFPN; Gaussian KLD loss; class-balanced sampling; rotation and flip augmentation."),
         ("4. Evaluation", "MMRotate dota/mAP plus a separate rotated-IoU evaluator for PRF, AP thresholds, scale AP, angle error and throughput."),
     ], [1.45, 4.75], size=9.5, align_center_from=2)
-    caption(doc, "Table 2. Pipeline stages.")
+    caption(doc, "Table 4.1. Pipeline stages.")
 
     h2(doc, "4.2  Oriented box representation")
     para(doc, "A rotated rectangle is written as (cx, cy, w, h, θ): centre coordinates, width, height and "
               "angle under MMRotate's le90 convention, where θ lies in [−90°, 90°). DOTA annotations are "
-              "four-corner polygons; the loader converts them to this five-parameter form. Figure 3 "
+              "four-corner polygons; the loader converts them to this five-parameter form. Figure 4.2 "
               "illustrates why orientation matters and how Gaussian KLD compares boxes.")
     figure(doc, "obb_geometry.png", 5.8,
-           "Figure 3. (a) A horizontal envelope discards orientation; an oriented box keeps the angle. "
+           "Figure 4.2. (a) A horizontal envelope discards orientation; an oriented box keeps the angle. "
            "(b) Gaussian KLD compares predicted and target distributions. Conceptual illustration, not an "
            "empirical result.")
 
     h2(doc, "4.3  Track configurations")
-    para(doc, "Table 3 gives the configuration of the two tracks. Seven factors differ, which is why the "
+    para(doc, "Table 4.2 gives the configuration of the two tracks. Seven factors differ, which is why the "
               "comparison is a same-tiling evaluation rather than a one-factor ablation.")
     table(doc, ["Component", "Track A", "Track B"], [
         ("Detector", "Rotated Faster R-CNN", "Oriented R-CNN"),
@@ -620,10 +618,10 @@ def body_sections_a(doc):
         ("Epochs", "12", "24 (1–16 A100 stage; 17–24 Kaggle official retrain: 17–22 then 23–24 resumed)"),
         ("Hardware", "1 × A100-SXM4-80GB", "1 × A100-SXM4-80GB, then 2 × Tesla T4"),
     ], [1.55, 2.2, 2.45], size=9, align_center_from=2)
-    caption(doc, "Table 3. Track A and Track B configuration.")
+    caption(doc, "Table 4.2. Track A and Track B configuration.")
 
     h2(doc, "4.4  Software and reproducibility")
-    para(doc, "Table 4 records the environment and the settings needed to reproduce the evaluation. The "
+    para(doc, "Table 4.3 records the environment and the settings needed to reproduce the evaluation. The "
               "inference cut-off is a score threshold of 0.05, rotated NMS at IoU 0.7 and at most 2,000 "
               "detections per patch; this is the setting that produces the 136,612 predictions reported in "
               "Section 6.5.")
@@ -633,13 +631,12 @@ def body_sections_a(doc):
         ("MMCV / MMDetection / MMEngine", "2.0.1 / 3.1.0 / 0.9.1"),
         ("MMRotate", "dev-1.x"),
         ("Training batch", "4 per GPU (configuration default); 1 per GPU with 4-step accumulation on Kaggle"),
-        ("Evaluation batch", "8"),
+        ("Evaluation batch", "1 (Track B, Kaggle run); the evaluation is tiled, memory-bound inference"),
         ("Inference score threshold / NMS / max detections", "0.05 / rotated NMS IoU 0.7 / 2,000 per patch"),
         ("Precision policy", "Track B full precision for KLD (half-precision determinant limitation)"),
-        ("Checkpoint used", "epoch_24.pth (Track B official retrain); best_dota_mAP_epoch_10.pth (Track A)"),
+        ("Checkpoint used", "epoch_24.pth (Track B official retrain; release v1.3.0, SHA-256 d855c250…44995f); best_dota_mAP_epoch_10.pth (Track A)"),
     ], [2.5, 3.7], size=9, align_center_from=2)
-    caption(doc, "Table 4. Software environment and reproducibility settings.")
-    author_note(doc, "add the public repository URL and checkpoint location, and the random seeds if they were recorded")
+    caption(doc, "Table 4.3. Software environment and reproducibility settings. Repository: github.com/Lion4467cat/dotav2-obb-benchmark. Random seeds were not recorded in the artifacts.")
 def body_sections_b(doc):
     # ---------------- 5 Training
     h1(doc, "5  Training")
@@ -648,10 +645,10 @@ def body_sections_b(doc):
               "consistently from here on: the A100 stage is the first training block on a single "
               "A100-SXM4-80GB device, the Kaggle continuation is the second training block on two "
               "Tesla T4 devices, and the official tiling is the 7,122-patch validation set prepared "
-              "from the official DOTA v2.0 archives. Figure 4 shows how the stages map onto the two "
+              "from the official DOTA v2.0 archives. Figure 5.1 shows how the stages map onto the two "
               "tracks.")
     figure(doc, "training_setup.png", 6.2,
-           "Figure 4. Run stages. Track A was trained for 12 epochs in the A100 stage. Track B was "
+           "Figure 5.1. Run stages. Track A was trained for 12 epochs in the A100 stage. Track B was "
            "trained for epochs 1–16 in the A100 stage and epochs 17–24 in the Kaggle continuation on official data "
            "(17–22 in the first run, 23–24 in the resumed run). "
            "Both saved checkpoints were then evaluated on the official tiling.")
@@ -674,7 +671,7 @@ def body_sections_b(doc):
               "used AdamW with a learning rate of 1e-4 and cosine annealing to a minimum of 1e-6 "
               "over a 24-epoch budget. Track B also used class-balanced oversampling with an "
               "oversampling threshold of 1e-3 and random rotation of 180° with probability 0.5.")
-    para(doc, "The two tracks did not run on the same device. Throughput and peak memory in Table 5 "
+    para(doc, "The two tracks did not run on the same device. Throughput and peak memory in Table 7.1 "
               "were recorded on the hardware named in that table's caption, so they characterise the "
               "runs rather than the architectures.")
 
@@ -684,7 +681,7 @@ def body_sections_b(doc):
               "schedule completed, with a validation dota/mAP of 0.6535 at epoch 24 on the official tiling. "
               "The epoch-24 result is the complete schedule rather than a truncated one.")
     para(doc, "The earlier continuation run using a non-official archive had reported 0.6892 dota/mAP "
-              "on 16 classes. The official retrain on all 18 classes reaches 0.7127 mAP50 in Table 5 "
+              "on 16 classes. The official retrain on all 18 classes reaches 0.7127 mAP50 in Table 7.1 "
               "under the project evaluator on the official 7,122-patch validation tiling.")
 
     h2(doc, "5.4  Engineering issues and fixes")
@@ -761,7 +758,11 @@ def body_sections_b(doc):
 
     h2(doc, "6.6  Selection protocol")
     para(doc, "Two quantities were chosen on the same validation split that is reported here: the "
-              "best checkpoint, by validation mAP, and the operating threshold, by validation F1. "
+              "checkpoint, by validation mAP, and the operating threshold, by validation F1. Track B's "
+              "epoch-24 checkpoint was the highest-scoring validation checkpoint of the official retrain "
+              "series (0.6535, ahead of 0.6519 at epoch 20 and 0.6453 at epoch 18; epoch-22's in-training "
+              "validation was cut by the 12-hour session limit), and it is the checkpoint evaluated "
+              "throughout this report. "
               "The reported figures are therefore optimistic with respect to an unseen split, and no "
               "held-out test set was used. The bias applies to both tracks in the same way, but it "
               "means the absolute values should not be read as expected performance on new imagery.")
@@ -781,82 +782,83 @@ def body_sections_b(doc):
     ap75_a = A_full.get("ap75", 0.2785)
     ap75_b = B_full.get("ap75", 0.4664)
     agn_a = A_full.get("class_agnostic_ap50", 0.7985)
-    agn_b = B_full.get("class_agnostic_ap50", 0.8765)
+    agn_b = B_full.get("class_agnostic_ap50", 0.8803)
     gap_a = A_full.get("classification_gap_ap50", 0.1936)
-    gap_b = B_full.get("classification_gap_ap50", 0.1750)
+    gap_b = B_full.get("classification_gap_ap50", 0.1676)
 
     para(doc, f"Track B is higher on every aggregate measure. mAP50 rises from {f4(map50_a)} to {f4(map50_b)}, a "
               f"gain of {map50_b - map50_a:+.4f}, and mAP50-95 rises from {f4(map95_a)} to {f4(map95_b)}. The largest relative gain "
-              f"is at the strict IoU threshold: AP75 goes from {f4(ap75_a)} to {f4(ap75_b)} (+63.5% relative increase).")
+              f"is at the strict IoU threshold: AP75 goes from {f4(ap75_a)} to {f4(ap75_b)} (+67.4% relative increase).")
     table(doc, ["Metric", "Track A", "Track B"], [
         ("mAP50", f4(map50_a), f4(map50_b)),
         ("mAP50-95", f4(map95_a), f4(map95_b)),
         ("AP75", f4(ap75_a), f4(ap75_b)),
         ("Class-agnostic AP50", f4(agn_a), f4(agn_b)),
         ("Classification gap (AP50 − class-agnostic AP50)", f4(gap_a), f4(gap_b)),
-        ("Macro F1 (mean of 18 class F1 scores)", f4(macro_a.get("f1", 0.6285)), f4(macro_b.get("f1", 0.7254))),
+        ("Macro F1 (mean of 18 class F1 scores)", f4(macro_a.get("f1", 0.6285)), f4(macro_b.get("f1", 0.7319))),
         ("Micro F1 at the F1-optimal threshold", f4(f1_a.get("f1", 0.7849)), f4(f1_b.get("f1", 0.8511))),
         ("F1-optimal threshold", f4(f1_a.get("conf_threshold", 0.8103)), f4(f1_b.get("conf_threshold", 0.834))),
-        ("Predictions at score 0.05", f"{A_full.get('num_predictions', 180555):,}", f"{B_full.get('num_predictions', 133986):,}"),
+        ("Predictions at score 0.05", f"{A_full.get('num_predictions', 180555):,}", f"{B_full.get('num_predictions', 136612):,}"),
         ("Parameters (millions)", "not recorded", f"{op_b.get('params_m', 70.24):.2f}"),
-        ("Throughput (frames per second)†", "11.36", f"{op_b.get('fps', 5.70):.2f}"),
-        ("Peak GPU memory (GB)†", "2.86", f"{op_b.get('peak_vram_gb', 4.20):.2f}"),
+        ("Throughput (frames per second)†", "11.36", f"{op_b.get('fps', 2.52):.2f}"),
+        ("Peak GPU memory (GB)†", "2.86", f"{op_b.get('peak_vram_gb', 9.25):.2f}"),
     ], [3.0, 1.6, 1.6], size=8.5, align_center_from=2)
-    caption(doc, "Table 5. Headline validation metrics on the official 7,122-patch tiling. "
+    caption(doc, "Table 7.1. Headline validation metrics on the official 7,122-patch tiling. "
                  "† Throughput and peak memory were measured on different devices (Track A: "
-                 "A100-SXM4-80GB; Track B: RTX 4060), so the ratio between them is not a like-for-like "
+                 "A100-SXM4-80GB; Track B: 2×Tesla T4 Kaggle session), so the ratio between them is not a like-for-like "
                  "throughput comparison.")
     para(doc, "The AP75 result is the informative one. A gain that grows as the IoU threshold "
               "tightens means the boxes are better localised, not merely that more objects are "
-              "found. Class-agnostic AP50 rises by 0.0780 while AP50 rises by 0.0966, so most of "
+              "found. Class-agnostic AP50 rises by 0.0818 while AP50 rises by 0.1078, so most of "
               "the improvement survives when the class label is removed; the classification gap "
-              "narrows slightly, from 0.1936 to 0.1750.")
+              "narrows from 0.1936 to 0.1676.")
     figure(doc, "metrics_comparison.png", 6.0,
-           "Figure 5. Headline validation metrics for both tracks on the official tiling.")
+           "Figure 7.1. Headline validation metrics for both tracks on the official tiling.")
 
     h2(doc, "7.2  Operating points")
     para(doc, "Track B's advantage is widest where the confidence requirement is strict. At a "
-              "threshold of 0.50, precision rises from 0.6983 to 0.8023 and F1 from 0.7521 to "
-              "0.8353, while recall rises from 0.8148 to 0.8711 (+0.0563). At 0.25 the two tracks are closer: "
-              "precision is 0.7416 vs 0.5869, recall is 0.8879 vs 0.8351, and F1 is 0.8082 vs 0.6893.")
-    para(doc, "Table 6 gives the four operating points. The F1-optimal row is the threshold at which "
+              "threshold of 0.50, precision rises from 0.6983 to 0.7813 and F1 from 0.7521 to "
+              "0.8280, while recall rises from 0.8148 to 0.8807 (+0.0659). At 0.25 the two tracks are closer: "
+              "precision is 0.7153 vs 0.5869, recall is 0.8960 vs 0.8351, and F1 is 0.7956 vs 0.6893.")
+    para(doc, "Table 7.2 gives the four operating points. The F1-optimal row is the threshold at which "
               "each track maximises its own F1, so the two thresholds differ and the row is not a "
               "fixed operating point shared by both systems.")
     at_conf_a = A_full.get("micro_prf", {}).get("at_conf", {})
     at_conf_b = B_full.get("micro_prf", {}).get("at_conf", {})
     table(doc, ["Threshold", "A P", "A R", "A F1", "B P", "B R", "B F1"], [
         ("0.25", f4(at_conf_a.get("0.25", {}).get("precision", 0.5869)), f4(at_conf_a.get("0.25", {}).get("recall", 0.8351)), f4(at_conf_a.get("0.25", {}).get("f1", 0.6893)),
-                 f4(at_conf_b.get("0.25", {}).get("precision", 0.7416)), f4(at_conf_b.get("0.25", {}).get("recall", 0.8879)), f4(at_conf_b.get("0.25", {}).get("f1", 0.8082))),
+                 f4(at_conf_b.get("0.25", {}).get("precision", 0.7153)), f4(at_conf_b.get("0.25", {}).get("recall", 0.8960)), f4(at_conf_b.get("0.25", {}).get("f1", 0.7956))),
         ("0.30", f4(at_conf_a.get("0.30", {}).get("precision", 0.6133)), f4(at_conf_a.get("0.30", {}).get("recall", 0.8310)), f4(at_conf_a.get("0.30", {}).get("f1", 0.7058)),
-                 f4(at_conf_b.get("0.30", {}).get("precision", 0.7563)), f4(at_conf_b.get("0.30", {}).get("recall", 0.8847)), f4(at_conf_b.get("0.30", {}).get("f1", 0.8155))),
+                 f4(at_conf_b.get("0.30", {}).get("precision", 0.7301)), f4(at_conf_b.get("0.30", {}).get("recall", 0.8931)), f4(at_conf_b.get("0.30", {}).get("f1", 0.8034))),
         ("0.50", f4(at_conf_a.get("0.50", {}).get("precision", 0.6983)), f4(at_conf_a.get("0.50", {}).get("recall", 0.8148)), f4(at_conf_a.get("0.50", {}).get("f1", 0.7521)),
-                 f4(at_conf_b.get("0.50", {}).get("precision", 0.8023)), f4(at_conf_b.get("0.50", {}).get("recall", 0.8711)), f4(at_conf_b.get("0.50", {}).get("f1", 0.8353))),
+                 f4(at_conf_b.get("0.50", {}).get("precision", 0.7813)), f4(at_conf_b.get("0.50", {}).get("recall", 0.8807)), f4(at_conf_b.get("0.50", {}).get("f1", 0.8280))),
         ("F1-optimal", f4(f1_a.get("precision", 0.8157)), f4(f1_a.get("recall", 0.7563)), f4(f1_a.get("f1", 0.7849)),
                        f4(f1_b.get("precision", 0.8694)), f4(f1_b.get("recall", 0.8335)), f4(f1_b.get("f1", 0.8511))),
     ], [2.1, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68], size=9, align_center_from=1)
-    caption(doc, "Table 6. Precision, recall and F1 at fixed confidence thresholds, micro-averaged "
+    caption(doc, "Table 7.2. Precision, recall and F1 at fixed confidence thresholds, micro-averaged "
                  "over the 18 classes. The last row uses each track's own F1-optimal threshold: "
                  "0.8103 for Track A and 0.834 for Track B.")
     para(doc, "The shape of the trade-off also differs. Track A buys recall cheaply at low "
-              "thresholds and loses precision quickly, whereas Track B keeps precision above 0.74 "
-              "even at 0.25 (0.7416). For a downstream system that must not raise false alarms, that is the "
+              "thresholds and loses precision quickly, whereas Track B keeps precision above 0.71 "
+              "even at 0.25 (0.7153). For a downstream system that must not raise false alarms, that is the "
               "more useful operating region.")
 
     h2(doc, "7.3  Per-class results")
-    para(doc, "Track B is higher on 18 of 18 classes, and the gain is uneven. Harbor gains +0.1966, "
-              "bridge +0.1788, basketball-court +0.1542, airport +0.1520 and large-vehicle +0.1378, "
-              "all classes whose instances are long, thin or densely packed. The smallest gains are on classes that "
-              "Track A already handled well: storage-tank +0.0141, tennis-court +0.0168 and plane +0.0249.")
-    para(doc, "Small-vehicle gains +0.0572, which places it 10th of 18 by improvement. This matters "
+    para(doc, "Track B is higher on 18 of 18 classes, and the gain is uneven. Helipad gains "
+              "+0.4167 (4 instances), harbor +0.1905, bridge +0.1823, airport +0.1649, "
+              "basketball-court +0.1482 and large-vehicle +0.1398, all classes whose instances are "
+              "long, thin or densely packed. The smallest gains are container-crane +0.0151, "
+              "tennis-court +0.0158 and storage-tank +0.0170; swimming-pool +0.0274 and plane +0.0352.")
+    para(doc, "Small-vehicle gains +0.0603, which places it 12th of 18 by improvement. This matters "
               "because it is the class most often used to argue that a detector is better at small "
               "objects. The measured per-class ordering does not support that argument, and no "
               "small-object claim is made in this report. The scale-stratified results in Section 7.4 "
               "are the appropriate evidence for that question.")
     figure(doc, "fig_per_class_delta.png", 6.2,
-           "Figure 6. Per-class AP50 for both tracks, sorted by gain. Each label gives Track A, "
+           "Figure 7.2. Per-class AP50 for both tracks, sorted by gain. Each label gives Track A, "
            "Track B and the difference, followed by the ground-truth count.")
     para(doc, "The three rare classes need to be read with their counts. Container-crane reaches "
-              "0.0066 from 27 annotations, airport 0.6012 from 67, and helipad 0.3333 from 4. The "
+              "0.0151 from 27 annotations, airport 0.6141 from 67, and helipad 0.4167 from 4. The "
               "helipad value corresponds to two matched instances out of four, which is why it is "
               "shown with the count and not discussed as a capability.")
 
@@ -868,11 +870,11 @@ def body_sections_b(doc):
                  f"{MEAN_B50 - MEAN_A50:+.4f}", f4(MEAN_B95)))
     table(doc, ["Class", "n", "A AP50", "B AP50", "Δ AP50", "B AP50-95"], rows,
           [1.85, 0.7, 0.85, 0.85, 0.85, 1.05], size=8.5, align_center_from=1)
-    caption(doc, "Table 7. Per-class AP50 for both tracks on the official tiling, sorted by gain. "
+    caption(doc, "Table 7.3. Per-class AP50 for both tracks on the official tiling, sorted by gain. "
                  "n is the non-difficult ground-truth count. The mean is the unweighted mean of the "
                  "18 classes, not the count-weighted value.")
     figure(doc, "class_ap.png", 5.6,
-           "Figure 7. Track B AP50 per class against class support. The three rarest classes "
+           "Figure 7.3. Track B AP50 per class against class support. The three rarest classes "
            "(container-crane, airport, helipad) have 27, 67 and 4 annotations and their estimates "
            "are unstable.")
     h2(doc, "7.4  Scale, orientation and difficulty")
@@ -881,17 +883,17 @@ def body_sections_b(doc):
     ang_a = A_full.get("orientation_error_deg", {})
     ang_b = B_full.get("orientation_error_deg", {})
 
-    s_a, s_b = scale_a.get("small", {}).get("ap50", 0.4874), scale_b.get("small", {}).get("ap50", 0.6064)
-    m_a, m_b = scale_a.get("medium", {}).get("ap50", 0.5881), scale_b.get("medium", {}).get("ap50", 0.6783)
-    l_a, l_b = scale_a.get("large", {}).get("ap50", 0.6602), scale_b.get("large", {}).get("ap50", 0.8290)
+    s_a, s_b = scale_a.get("small", {}).get("ap50", 0.4874), scale_b.get("small", {}).get("ap50", 0.6220)
+    m_a, m_b = scale_a.get("medium", {}).get("ap50", 0.5881), scale_b.get("medium", {}).get("ap50", 0.6826)
+    l_a, l_b = scale_a.get("large", {}).get("ap50", 0.6602), scale_b.get("large", {}).get("ap50", 0.8394)
     mean_ang_a = ang_a.get("mean_all_tp", 6.42)
-    mean_ang_b = ang_b.get("mean_all_tp", 4.93)
+    mean_ang_b = ang_b.get("mean_all_tp", 4.88)
     med_ang_a = ang_a.get("median_all_tp", 2.62)
-    med_ang_b = ang_b.get("median_all_tp", 1.57)
+    med_ang_b = ang_b.get("median_all_tp", 1.56)
     elo_mean_a = ang_a.get("mean_elongated_tp", 3.78)
     elo_mean_b = ang_b.get("mean_elongated_tp", 2.05)
     elo_med_a = ang_a.get("median_elongated_tp", 2.55)
-    elo_med_b = ang_b.get("median_elongated_tp", 1.47)
+    elo_med_b = ang_b.get("median_elongated_tp", 1.46)
 
     para(doc, f"The gain is largest on large objects and smallest on medium ones. Large objects gain "
               f"{l_b - l_a:+.4f}, small objects {s_b - s_a:+.4f} and medium objects {m_b - m_a:+.4f}. Every stratum improves, so "
@@ -911,7 +913,7 @@ def body_sections_b(doc):
         ("Angle error, mean, elongated TP (°)", "—", f"{elo_mean_a:.2f}", f"{elo_mean_b:.2f}", f"{elo_mean_b - elo_mean_a:+.2f}"),
         ("Angle error, median, elongated TP (°)", "—", f"{elo_med_a:.2f}", f"{elo_med_b:.2f}", f"{elo_med_b - elo_med_a:+.2f}"),
     ], [2.7, 0.8, 0.85, 0.85, 0.85], size=8.5, align_center_from=1)
-    caption(doc, "Table 8. Scale-stratified AP50 and orientation error. Area strata use rotated box "
+    caption(doc, "Table 7.4. Scale-stratified AP50 and orientation error. Area strata use rotated box "
                  "area; elongated means an aspect ratio of at least 1.5. Orientation error is "
                  "measured on true positives at IoU 0.50 and is a decrease, not an increase, so the "
                  "last column is negative.")
@@ -919,8 +921,8 @@ def body_sections_b(doc):
               "recalls 0.7564 of the non-difficult instances and 0.2630 of the difficulty-flagged "
               "ones; Track B recalls 0.8335 and 0.3019. Both systems find far fewer flagged "
               "instances, which is expected because those annotations are tiny, heavily occluded or "
-              "ambiguous by construction. The gap between the tracks is 0.0749 in the non-difficult "
-              "group and 0.0348 in the flagged group, so the advantage is roughly halved on the "
+              "ambiguous by construction. The gap between the tracks is 0.0771 in the non-difficult "
+              "group and 0.0389 in the flagged group, so the advantage is roughly halved on the "
               "harder instances.")
 
     h2(doc, "7.5  What the numbers do not show")
@@ -937,33 +939,38 @@ def body_sections_b(doc):
     # ---------------- 8 Qualitative analysis
     h1(doc, "8  Qualitative analysis")
     h2(doc, "8.1  Prediction examples")
-    para(doc, "Figure 8 shows Track B output on two validation tiles at the F1-optimal threshold. "
-              "Oriented boxes follow the heading of parked aircraft, ships and vehicles, and dense "
-              "vehicle rows are separated rather than merged.")
-    figure(doc, "track_b_demo_predictions.png", 4.6,
-           "Figure 8. Track B predictions on two validation tiles at the F1-optimal threshold of "
-           "0.834. Boxes are oriented; colour denotes class.")
-    para(doc, "The same figure shows the main qualitative failure. A tennis court in the left tile "
-              "is left unboxed while neighbouring courts are found, which is the kind of "
-              "within-class inconsistency that an aggregate AP hides: the class as a whole scores "
-              "0.9553, and that average says nothing about which individual instances were missed.")
+    para(doc, "Figure 8.1 shows Track B output on two validation tiles at the F1-optimal threshold "
+              "(0.834). Non-difficult ground truth is drawn in cyan, difficulty-flagged ground truth as "
+              "a dotted grey outline, and predictions in dashed orange. Oriented boxes follow the headings "
+              "of parked aircraft, ships and vehicles, and dense rows of docked boats and apron vehicles "
+              "are separated rather than merged.")
+    figure(doc, "track_b_demo_predictions.png", 4.9,
+           "Figure 8.1. Track B predictions on two validation tiles at the F1-optimal threshold of "
+           "0.834. Cyan: non-difficult ground truth; dotted grey: difficulty-flagged ground truth; "
+           "dashed orange: Track B predictions.")
+    para(doc, "The panels also show the cost of operating at the F1-optimal threshold. The "
+              "non-difficult ground truth is almost fully tiled by dashed orange predictions, while the "
+              "difficult outlines are mostly left unmatched — which is expected, because the "
+              "threshold trades recall for precision. No single class escapes: the marina tile exposes "
+              "how tightly a few difficult boxes interleave with the dense non-difficult instances, and the "
+              "airfield tile shows the same for small-vehicle rows among parked aircraft.")
 
     h2(doc, "8.2  Per-class examples")
-    para(doc, "Figures 9 to 11 show one matched prediction per class, six classes per figure, in "
+    para(doc, "Figures 8.2 to 8.4 show one matched prediction per class, six classes per figure, in "
               "the standard class order. Each panel is labelled with the class name and the IoU of "
               "the shown prediction; a prediction below 0.50 is marked in red as not a true "
               "positive. These panels are illustrations of individual instances and are not "
               "evidence for the aggregate results in Section 7.")
     figure(doc, "validation_class_examples_1.png", 5.0,
-           "Figure 9. Validation examples for plane, baseball-diamond, bridge, ground-track-field, "
+           "Figure 8.2. Validation examples for plane, baseball-diamond, bridge, ground-track-field, "
            "small-vehicle and large-vehicle. Labels give the IoU of the shown prediction; a value "
-           "below 0.50 is marked in red and is not a true positive.", break_before=True)
+           "below 0.50 is marked in red and is not a true positive.")
     figure(doc, "validation_class_examples_2.png", 5.0,
-           "Figure 10. Validation examples for ship, tennis-court, basketball-court, storage-tank, "
-           "soccer-ball-field and roundabout, with the same labelling as Figure 9.")
+           "Figure 8.3. Validation examples for ship, tennis-court, basketball-court, storage-tank, "
+           "soccer-ball-field and roundabout, with the same labelling as Figure 8.2.")
     figure(doc, "validation_class_examples_3.png", 5.0,
-           "Figure 11. Validation examples for harbor, swimming-pool, helicopter, container-crane, "
-           "airport and helipad, with the same labelling as Figure 9.", break_before=True)
+           "Figure 8.4. Validation examples for harbor, swimming-pool, helicopter, container-crane, "
+           "airport and helipad, with the same labelling as Figure 8.2.")
 
     h2(doc, "8.3  Failure modes")
     para(doc, "Three failure modes recur in the qualitative material and are consistent with the "
@@ -978,7 +985,7 @@ def body_sections_b(doc):
          "two classes where Track A is weakest, are also the two most exposed to this effect."),
         ("Dense small instances.", " Vehicle rows in which boxes touch are the main source of "
          "duplicate and missed detections. Track B reduces this through oriented proposals, but the "
-         "small-vehicle gain of 0.0572 shows that the problem is reduced rather than solved."),
+         "small-vehicle gain of 0.0603 shows that the problem is reduced rather than solved."),
     ):
         bullet(doc, text, lead=lead)
 
@@ -990,7 +997,7 @@ def body_sections_b(doc):
               "on medium ones, and accompanied by a one-third reduction in orientation error. All "
               "three observations point at box placement and heading, which is what oriented "
               "proposals and a distribution-based regression loss act on.")
-    para(doc, "The classification gap narrows only slightly, from 0.1936 to 0.1750, so the residual "
+    para(doc, "The classification gap narrows, from 0.1936 to 0.1676, so the residual "
               "error is still dominated by assigning the wrong class to a well placed box. That "
               "points at the label set and the training distribution rather than at the box "
               "parameterisation, and it is where further work is most likely to pay off.")
@@ -1028,9 +1035,9 @@ def body_sections_b(doc):
               "assessing damage after a disaster from post-event imagery. In each case the output is "
               "a set of oriented boxes with class labels, which is what a downstream geographic "
               "layer or a human analyst can consume directly.")
-    para(doc, "The measurements in this report also set an expectation for deployment. At 5.70 "
-              "frames per second on the device used for Track B, the system is suited to offline or "
-              "near-real-time analysis of image collections rather than to continuous video "
+    para(doc, "The measurements in this report also set an expectation for deployment. At 2.52 "
+              "frames per second on the two-Tesla-T4 device used for Track B, the system is suited to "
+              "offline or near-real-time analysis of image collections rather than to continuous video "
               "processing on the same hardware.")
 
     h2(doc, "10.2  Future work")
@@ -1063,7 +1070,7 @@ def body_sections_b(doc):
     para(doc, "The improvement is concentrated in box quality rather than in detection count. AP75 "
               "rises by 67.4% relative (from 0.2785 to 0.4664), orientation error falls by about a third, and every scale "
               "stratum improves. The gain is not uniform across classes, and the class most often "
-              "used as evidence of small-object capability, small-vehicle, ranks 10th of 18 by "
+              "used as evidence of small-object capability, small-vehicle, ranks 12th of 18 by "
               "improvement.")
     para(doc, "Because the tracks differ in seven factors and both were selected on the reported "
               "split, the result is a same-tiling evaluation of two complete systems. It supports "
@@ -1099,6 +1106,13 @@ def references(doc):
         "X. Wang, “Object detection in aerial images: A large-scale benchmark and challenges,” IEEE "
         "Transactions on Pattern Analysis and Machine Intelligence, vol. 44, no. 11, "
         "pp. 7778–7796, 2022, doi: 10.1109/TPAMI.2021.3117983.",
+        "[8] S. Liu, L. Qi, H. Qin, J. Shi and J. Jia, “Path aggregation network for instance "
+        "segmentation,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern "
+        "Recognition (CVPR), 2018, pp. 8759–8768.",
+        "[9] K. Chen, J. Wang, J. Pang, Y. Cao, Y. Xiong, X. Li, S. Sun, W. Feng, Z. Liu, J. Xu, "
+        "Z. Zhang, D. Cheng, C. Zhu, T. Cheng, Q. Zhao, B. Li, X. Lu, R. Zhu, Y. Wu, J. Niu, X. Peng, "
+        "C. Miao, T. Lu, F. Yu and D. Feng, “MMDetection: OpenMMLab detection toolbox and benchmark,” "
+        "arXiv:1906.07155, 2019.",
     ]
     for it in items:
         p = doc.add_paragraph()
@@ -1112,7 +1126,7 @@ def references(doc):
 
 def appendix(doc):
     h1(doc, "Appendix A  Configuration reference")
-    para(doc, "Table A1 records the full configuration of both tracks as used for the runs reported "
+    para(doc, "Table A.1 records the full configuration of both tracks as used for the runs reported "
               "here. Values are taken from the training configurations; the seeds were not recorded "
               "in the artifacts.")
     table(doc, ["Setting", "Track A", "Track B"], [
@@ -1133,12 +1147,12 @@ def appendix(doc):
         ("Inference", "Score 0.05, rotated NMS IoU 0.7, 2,000 per patch", "Score 0.05, rotated NMS IoU 0.7, 2,000 per patch"),
         ("Random seed", "not recorded", "not recorded"),
     ], [1.55, 2.25, 2.4], size=8.5, align_center_from=2)
-    caption(doc, "Table A1. Full configuration reference for both tracks.")
+    caption(doc, "Table A.1. Full configuration reference for both tracks.")
 
     h1(doc, "Appendix B  Full per-class tables")
     para(doc, "Tables A2 and A3 give every per-class value produced by the evaluator, including the "
               "precision, recall and F1 at each track's own F1-optimal threshold. These are the "
-              "numbers behind Table 7 and Table 8.")
+              "numbers behind Table 7.3 and Table 7.4.")
     for tag, M, label in (("A", A, "Track A"), ("B", B, "Track B")):
         rows = []
         for c in ORDER_STD:
@@ -1154,7 +1168,7 @@ def appendix(doc):
                      f4(sum(M[c]["f1_opt"] for c in CLASSES) / 18)))
         table(doc, ["Class", "n", "AP50", "AP75", "AP50-95", "P", "R", "F1"], rows,
               [1.62, 0.66, 0.68, 0.68, 0.8, 0.6, 0.6, 0.6], size=8, align_center_from=1)
-        caption(doc, f"Table A{2 if tag == 'A' else 3}. {label} per-class results on the official "
+        caption(doc, f"Table A.{2 if tag == 'A' else 3}. {label} per-class results on the official "
                      f"7,122-patch tiling. P, R and F1 are measured at the {label} F1-optimal "
                      f"threshold. Means are unweighted across the 18 classes.")
 
@@ -1173,13 +1187,6 @@ def appendix(doc):
          "and reporting line."),
         ("Guide and TD names", "the title page and certificate carry placeholders because the names "
          "were not provided."),
-        ("Repository and checkpoint location", "add the public repository URL, the checkpoint "
-         "download location and the random seeds, or state that the seeds were not recorded."),
-        ("Kaggle training split", "epochs 17–22 trained on the official 18-class DOTA v2.0 dataset in the "
-         "first Kaggle run (12-hour session limit); a resumed Kaggle run completed epochs 23 and 24 and the epoch-24 "
-         "validation, replacing the earlier non-official run entirely."),
-        ("Citations", "supply peer-reviewed sources for PAFPN and for class-balanced sampling, or "
-         "approve their removal from Section 2.2."),
         ("Submission date", "add the submission date and the programme reference on the title page."),
     ]
     for lead, text in notes:
