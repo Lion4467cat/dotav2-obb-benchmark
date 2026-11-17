@@ -897,15 +897,22 @@ def body_sections_b(doc):
               "harder instances.")
 
     h2(doc, "7.5  What the numbers do not show")
+    para(doc, "The reported metrics are self-referential to the validation split. The final "
+              "checkpoint (epoch_24.pth) and the F1-optimal operating threshold (0.834) were both "
+              "selected on the same official 7,122-patch validation tiling on which 0.7127 mAP50 and "
+              "0.8511 micro-F1 are reported. Every aggregate and per-class figure in Sections 7.1 to "
+              "7.4 is therefore a measurement on the split used for selection, not on held-out data.")
+    para(doc, "The generalisation gap is unmeasured. Test-dev ground truth is withheld and no server "
+              "submission was scored, so there is no held-out estimate of performance on unseen "
+              "operational imagery. A number on new imagery would be lower, by an amount this study "
+              "does not, and from the artifacts at hand cannot, measure.")
     para(doc, "The comparison is between two complete systems, not between two components. The "
               "tracks differ in detector, backbone, neck, regression loss, sampling, augmentation, "
               "optimizer and schedule, and this study contains no run that varies one of those "
               "factors while holding the others fixed. Nothing in Sections 7.1 to 7.4 identifies "
-              "which factor produced the gain, and the report does not attempt that attribution.")
-    para(doc, "The results are validation results. Test-dev ground truth is withheld, no server "
-              "submission was scored, and both the checkpoint and the operating threshold were "
-              "chosen on the split that is reported. A number on new imagery would be lower, by an "
-              "amount this study does not measure.")
+              "which factor produced the gain, and the report does not attempt that attribution. "
+              "The deliverable is a bounded, apples-to-apples system comparison under one shared "
+              "protocol, not component attribution and not out-of-distribution generalisation.")
 
     # ---------------- 8 Qualitative analysis
     h1(doc, "8  Qualitative analysis")
@@ -977,6 +984,26 @@ def body_sections_b(doc):
               "its last epoch, so its figures are a lower bound. Track A used a shorter schedule and "
               "a smaller backbone, so part of the gap may reflect training budget rather than "
               "architecture. Neither point can be settled with the runs available here.")
+    para(doc, "Taken together, the measurements in this section and the caveats that bound them "
+              "support the following structured synthesis.")
+    para(doc, "This study delivers four things. First, a packaged, reproducible oriented-detection "
+              "system: Track B, an Oriented R-CNN with a ConvNeXt-Small backbone, PAFPN neck and "
+              "Gaussian KLD regression, published at release v1.3.0 and running at 2.52 frames per "
+              "second on 2 × Tesla T4. Second, a clean, split-isolated benchmark pipeline and "
+              "reproducible training and evaluation artifacts on the official 18-class DOTA v2.0 "
+              "data, following the Phase-2 data-provenance correction. Third, a controlled, "
+              "same-protocol comparison showing Track B outperforming the Track A baseline on every "
+              "aggregate measure (+0.1078 mAP50, +0.1879 AP75), on all 18 classes, on the large and "
+              "elongated strata, and on angular accuracy. Fourth, a transparent operating "
+              "characterisation across rare classes, patch-boundary truncation and difficulty "
+              "flags.")
+    para(doc, "What this study does not claim is equally explicit. It does not establish "
+              "single-factor component attribution: the two tracks differ on seven factors with no "
+              "ablation to separate them. It does not establish out-of-distribution generalisation "
+              "to unseen sensors, platforms or scenes. It does not establish public leaderboard "
+              "standing, as no test-dev submission was scored. And it does not establish downstream "
+              "task readiness, such as automated counting, tracking or alerting in an operational "
+              "workflow, which remains future work.")
 
     h2(doc, "9.2  Limitations")
     for lead, text in (
@@ -1045,10 +1072,12 @@ def body_sections_b(doc):
               "used as evidence of small-object capability, small-vehicle, ranks 12th of 18 by "
               "improvement.")
     para(doc, "Because the tracks differ in seven factors and both were selected on the reported "
-              "split, the result is a same-tiling evaluation of two complete systems. It supports "
-              "the statement that the Track B configuration performs better on this benchmark. It "
-              "does not support a claim about which component caused the difference, and the "
-              "one-factor ablation needed for that claim is the first item of future work.")
+              "split, the result is a same-tiling evaluation of two complete systems. It demonstrates "
+              "a reproducible, end-to-end oriented detection pipeline on the official DOTA v2.0 "
+              "benchmark that decisively outperforms its baseline under a shared evaluation protocol, "
+              "while explicitly bounding its quantitative figures as validation-selected benchmarks "
+              "rather than uncalibrated predictions of performance on unseen data or of downstream "
+              "operational performance.")
 
 
 def references(doc):
