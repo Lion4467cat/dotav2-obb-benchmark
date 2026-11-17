@@ -1,3 +1,6 @@
+> **HISTORICAL — superseded.** Entries before 2026-11-18 describe the epoch-22 rebuild.
+> The current document is the epoch-24 rebuild (see the final section).
+
 # Revision changelog — ADA internship report
 
 **Source document:** `docs/ADA_REPORT_S_S_GOKULA_SWAMY.docx` (unchanged, 21 pages)

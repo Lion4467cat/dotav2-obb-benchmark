@@ -2,7 +2,7 @@
 
 Usage:
     from dota_obb import load_model, predict
-    model = load_model()              # loads config + best_dota_mAP_epoch_24.pth
+    model = load_model()              # loads config + epoch_24.pth (official retrain)
     result = predict(image_bgr)       # dict with 'detections' and 'annotated' (RGB)
 """
 
@@ -19,13 +19,13 @@ import torch
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = REPO_ROOT / "configs" / "benchmark_oriented_faster_rcnn_convnext_s_pafpn_kld_2x_dotav2.py"
-DEFAULT_CKPT = REPO_ROOT / "artifacts" / "checkpoints" / "best_dota_mAP_epoch_24.pth"
+DEFAULT_CKPT = REPO_ROOT / "artifacts" / "checkpoints" / "epoch_24.pth"
 CACHE_DIR = Path(os.environ.get("DOTA_OBB_CACHE", Path.home() / ".cache" / "dota_obb"))
 DEFAULT_CKPT_URL = (
-    "https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/download/v1.0.0/best_dota_mAP_epoch_24.pth"
+    "https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/download/v1.3.0/epoch_24.pth"
 )
-# SHA-256 of the v1.0.0 release asset (verified against the GitHub release digest).
-DEFAULT_CKPT_SHA256 = "0737ab2d034abd883684e7c4bfa551754bab89f645cea9d49aa66f8705cc9198"
+# SHA-256 of the v1.3.0 release asset (verified against the GitHub release digest).
+DEFAULT_CKPT_SHA256 = "d855c250387f7e3f3fbc6b1a2a79a05932a1e11c39e855563c961f5aaa44995f"
 
 DOTA_V2_CLASSES = (
     "plane", "baseball-diamond", "bridge", "ground-track-field", "small-vehicle",

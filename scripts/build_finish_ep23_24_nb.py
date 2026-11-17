@@ -440,8 +440,8 @@ report = f'''# DOTA v2.0 Final Benchmark Report (Official Full Run: 24 Epochs)
 ## Diagnostic Metrics
 - Class-Agnostic AP50: {metrics.get('class_agnostic_ap50', 0):.4f}
 - Classification Gap: {metrics.get('classification_gap_ap50', 0):.4f}
-- Orientation Error (Mean): {metrics.get('orientation_error_deg', {}).get('mean_all_tp', 0):.2f}°
-- Orientation Error (Median): {metrics.get('orientation_error_deg', {}).get('median_all_tp', 0):.2f}°
+- Orientation Error (Mean): {metrics.get('orientation_error', {}).get('mean_deg_all', 0):.2f}°
+- Orientation Error (Median): {metrics.get('orientation_error', {}).get('median_deg_all', 0):.2f}°
 - Easy GT Recall: {metrics.get('difficulty_recall', {}).get('easy_recall', 0):.4f}
 - Difficult GT Recall: {metrics.get('difficulty_recall', {}).get('difficult_recall', 0):.4f}
 '''

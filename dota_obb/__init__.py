@@ -2,6 +2,6 @@
 
 from .model import load_model, predict, render_detections
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 __all__ = ["__version__", "load_model", "predict", "render_detections"]

@@ -168,43 +168,36 @@ Example Track B predictions from the saved epoch-24 checkpoint:
 
 ## Download the model
 
-**Checkpoint provenance matters here.** The weights attached to the
-[`v1.0.0` release](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.0.0)
-(including `best_dota_mAP_epoch_24.pth` and `epoch_24.pth`, digests `0737ab2d…`
-and `880d4bcc…`) are from the **pre-correction lineage** — the initial Kaggle
-continuation trained on a non-official convenience archive (458 val images,
-16 classes, stripped difficulty flags; see [Data source correction](#data-source-correction)).
-They are retained on the release for traceability only and must not be used.
-[`v1.1.0`](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.1.0)
-records the official-val evaluation correction, and
-[`v1.2.0`](https://github.com/Lion4467cat/dotav2-obb-benchmark/releases/tag/v1.2.0)
-records the repository audit (no weight changes).
+| Asset | Release | SHA-256 | Notes |
+| :--- | :--- | :--- | :--- |
+| `epoch_24.pth` | **v1.3.0** | `d855c250387f7e3f3fbc6b1a2a79a05932a1e11c39e855563c961f5aaa44995f` | **Canonical** — official retrain, 24 epochs; the model behind every epoch-24 number in this README |
+| `epoch_24.pth.sha256` | **v1.3.0** | — | checksum sidecar, verified by `dota_obb.download` |
+| `epoch_16.pth` | v1.3.0 | `997c52283a66bdf419b58ed7bf4916c210c28ad153adf0963ad80d54f4ff10ed` | Phase-1 anchor (official data; kept for resume reproduction) |
 
 The canonical Track B model is the **official-retrain `epoch_24.pth`**
-(SHA-256 `d855c250387f7e3f3fbc6b1a2a79a05932a1e11c39e855563c961f5aaa44995f`,
-858 MB, full resume state), which produced every epoch-24 result in this
-README. It is kept locally under `artifacts/checkpoints/` (gitignored) and is
-**not yet published as a release asset** — publishing a new release (e.g.
-`v1.3.0`) or re-pointing the programmatic downloader is a separate decision
-and has not been done yet. The same applies to `epoch_23.pth`
-(`21d3d203…8435f`) and to the intermediate official-retrain resume anchor
-`best_dota_mAP_epoch_22.pth` (`747d2076…e8f1041a`, byte-identical to
-`epoch_22.pth`).
+(SHA-256 above, 858 MB), produced on Kaggle by resuming from the epoch-22
+checkpoint (official 18-class DOTA v2.0, difficulty flags preserved) and
+completing epochs 23–24. The earlier release weights (the initial release,
+later mislabelled as the flagship) came from the **pre-correction lineage** —
+the initial Kaggle continuation trained on a non-official convenience archive
+(458 val images, 16 classes, stripped difficulty flags; see [Data source correction](#data-source-correction)).
+Their assets were **removed from the GitHub releases on 2026-11-18** and the
+initial release's notes were updated to say so; those weights are unavailable
+for download. `v1.3.0` is the first release built entirely on official data
+with matching evaluation provenance.
 
-| Checkpoint status | |
+`dota_obb.download` and the Gradio UI load the **v1.3.0** asset (`epoch_24.pth`)
+and verify it against the SHA-256 above before use.
+
+Checkpoint status:
+
+| Checkpoint | |
 | :--- | :--- |
-| `epoch_24.pth` (official retrain) | **Canonical** — reports and evaluation; local only, unreleased |
-| `epoch_23.pth` (official retrain) | Intermediate, resume-only; local only |
-| `best_dota_mAP_epoch_22.pth` | Phase-2a resume anchor for the epoch-23/24 run; local only |
-| `epoch_16.pth` | Phase-1 anchor; official data; release asset retained |
-| `best_dota_mAP_epoch_24.pth` (release) | **Deprecated** — non-official lineage, superseded |
-| `epoch_24.pth` (release) | **Deprecated** — non-official lineage, superseded |
-| `epoch_20.pth` | Deprecated — pruned on Kaggle, never archived (see limitations) |
-
-`dota_obb.download` and the Gradio UI currently load the **legacy v1.0.0
-weights** (non-official lineage); they have not been re-pointed at the
-official-retrain checkpoint. Treat any UI/package output as the legacy numbers
-until that re-pointing happens.
+| `epoch_24.pth` (v1.3.0 release and `artifacts/checkpoints/`) | **Canonical** |
+| `epoch_23.pth` (local only) | Resume-only intermediate; local only |
+| `best_dota_mAP_epoch_22.pth` (local only) | Phase-2a resume anchor for the epoch-23/24 run; local only |
+| `epoch_16.pth` (v1.3.0 release asset) | Phase-1 anchor; official data; kept for resume reproduction |
+| `epoch_20.pth` | Never archived (pruned on Kaggle by `max_keep_ckpts=3`) |
 
 Programmatic download (cached under `~/.cache/dota_obb/`):
 
@@ -259,7 +252,7 @@ and verify patch counts before training (train ≥ 24,000 patches; val == 7,122)
   (first session), then `epoch_22.pth` → `epoch_23` → `epoch_24` (resumed session).
 - The epoch-23/24 run inherits the pre-correction `message_hub` best-score
   tracker (0.6883, recorded on the non-official tiling); no post-resume
-  validation exceeded it, so no `best_dota_mAP_epoch_24.pth` was produced. The
+  validation exceeded it, so no best-checkpoint file was produced. The
   final model is `epoch_24.pth`, used directly for evaluation.
 
 ## Results & artifacts
@@ -274,14 +267,13 @@ and verify patch counts before training (train ≥ 24,000 patches; val == 7,122)
 - `results/logs/` — mmengine logs: Phase 2 (`2026-11-15_track_b_final_epochs_17-24.log`),
   official-val re-evaluation (`2026-11-15_track_b_restored_validation_rerun.log`),
   and the epoch-23/24 official run (`2026-11-18_track_b_epochs_23-24_kaggle.log`).
-- `results/task1_submission/` — DOTA Task 1 test-dev submission files (18 `Task1_<class>.txt` + zip).
 
 **Model checkpoints** (~850 MB each) are excluded from this repo
 (`artifacts/checkpoints/`, gitignored); the canonical local set is
 `epoch_16.pth` (Phase-1 anchor), `epoch_22.pth` / `best_dota_mAP_epoch_22.pth`
 (byte-identical, Phase-2a end), and `epoch_23.pth` / `epoch_24.pth` (Phase-2b).
-The legacy `v1.0.0` release assets are from the pre-correction lineage and are
-superseded (see [Download the model](#download-the-model)).
+The v1.3.0 release carries `epoch_24.pth`; the pre-correction release assets were
+removed on 2026-11-18 (see [Download the model](#download-the-model)).
 
 ## Known limitations / caveats
 
@@ -298,9 +290,8 @@ superseded (see [Download the model](#download-the-model)).
   evaluation of the epoch-24 checkpoint on the same tiling (Kaggle 2×T4).
 - The epoch-23/24 Kaggle run resumed from the official-retrain `epoch_22.pth`;
   the resumed run inherits the pre-correction `message_hub` best-score tracker
-  (0.6883, non-official tiling), so no post-resume validation produced a
-  `best_dota_mAP_epoch_24.pth`, and none is needed: `epoch_24.pth` is the final
-  artifact and all reported metrics use it. Validation at epochs 18/20/22/24 ran
+  (0.6883, non-official tiling), so no best-checkpoint file was produced, and
+  none is needed: `epoch_24.pth` is the final artifact and all reported metrics use it. Validation at epochs 18/20/22/24 ran
   on the official tiling (dota/mAP: 0.6453 / 0.6519 / 0.6366* / 0.6535);
   *epoch-22's in-training validation was cut by the 12-hour session limit, so
   its number is the local official-val evaluation pass.

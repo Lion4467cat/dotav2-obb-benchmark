@@ -1,3 +1,8 @@
+> **HISTORICAL — superseded.** This is the audit of the pre-correction shipped document
+> (21 pages). The report has since been rebuilt twice: against the epoch-22 official-retrain
+> evaluation and then the epoch-24 evaluation. Numbers quoted below describe the superseded
+> document only; the current report's figures are in `docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf`.
+
 # Audit — ADA_REPORT_S_S_GOKULA_SWAMY.pdf
 
 **Document:** *Deep Learning-Based Aerial Object Detection Using Oriented Faster R-CNN on the DOTA Dataset* (21 pages, 8 tables, 11 figures)

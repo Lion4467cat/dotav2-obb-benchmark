@@ -80,5 +80,5 @@ training data re-downloaded and re-tiled inside the session (official v1.0 + v2.
 Both notebooks provision the same pinned venv as Colab, apply the same two mmrotate patches, and
 assert the official patch counts before training. Validation runs at epoch 24 only (`val_interval=2`).
 The epoch-23/24 run inherits the pre-correction `message_hub` best-score tracker (0.6883,
-non-official tiling): no post-resume validation exceeded it, so no `best_dota_mAP_epoch_24.pth`
+non-official tiling): no post-resume validation exceeded it, so no best-checkpoint file
 was saved — `epoch_24.pth` is the final artifact.

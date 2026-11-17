@@ -20,7 +20,7 @@ TILE_GLOB = "*.png"
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/benchmark_oriented_faster_rcnn_convnext_s_pafpn_kld_2x_dotav2.py")
-    parser.add_argument("--checkpoint", default="artifacts/checkpoints/best_dota_mAP_epoch_24.pth")
+    parser.add_argument("--checkpoint", default="artifacts/checkpoints/epoch_24.pth")
     parser.add_argument("--tiles-dir", default=".task-data/split_ss_dotav2/test/images")
     parser.add_argument("--out", default=".task-data/test_tile_preds.pkl")
     parser.add_argument("--batch-size", type=int, default=8)

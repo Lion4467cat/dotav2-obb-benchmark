@@ -1,8 +1,8 @@
 # Changelog
 
-All notable changes to this repository. Model weights themselves have not
-changed since v1.0.0 (releases remain the pre-correction lineage; see
-"Download the model" in the README).
+All notable changes to this repository. Release assets published before the
+official retrain were from the pre-correction lineage and were removed on
+2026-11-18; see "Download the model" in the README.
 
 ## [1.3.0] — 2026-11-18 — Track B official retrain completed (epochs 23 & 24)
 
@@ -29,19 +29,21 @@ changed since v1.0.0 (releases remain the pre-correction lineage; see
 - README: all Track B metrics replaced with the official-retrain epoch-24 numbers
   (dota/mAP 0.6535, mAP50 0.7127, mAP50-95 0.4320, F1 0.8511, AP75 0.4664,
   F1-optimal confidence 0.834, throughput 2.52 img/s @ 9.25 GiB on 2×T4).
-- README "Download the model": release weights explicitly marked **deprecated**
-  (pre-correction lineage); the canonical `epoch_24.pth` (SHA-256
-  `d855c250…4995f`) is local-only and unreleased; downloader/UI documented as
-  still pointing at the legacy weights.
+- README "Download the model": pre-correction release assets marked removed
+  (2026-11-18) and the initial release's notes updated in place; the canonical
+  `epoch_24.pth` (SHA-256 `d855c250…4995f`, 858 MB) is published as the
+  **v1.3.0** asset together with its SHA-256 sidecar; `dota_obb.download` and the
+  Gradio UI re-pointed at v1.3.0 with digest verification.
+- Package version unified at **1.3.0** (`pyproject.toml`, `dota_obb.__version__`).
 - `results/extended_metrics.json` / `results/preds.pkl`: sync with the epoch-24
   evaluation; figures regenerated; internship report rebuilt (30 pp.) to the
   epoch-24 numbers.
 - `scripts/gradio_app.py`, `scripts/make_all_figures.py`: F1-optimal threshold
-  reference updated to 0.834.
+  reference and metrics fallbacks updated to the epoch-24 values.
 - `scripts/build_colab_notebook.py`: unchanged (still the Colab handover doc).
 
 ### Notes
-- No `best_dota_mAP_epoch_24.pth` was produced: the resumed run inherits the
+- No best-checkpoint file was produced (the resumed run inherits the
   pre-correction `message_hub` best-score tracker (0.6883, recorded on the
   non-official tiling), and no post-resume validation exceeded it. Epoch 24 is
   the final checkpoint and was used directly for all reported metrics.
@@ -102,8 +104,9 @@ changed since v1.0.0 (releases remain the pre-correction lineage; see
 
 - Track B re-evaluated on the official DOTA v2.0 val split (593 images, 7,122
   patches); Phase-2 numbers retained as a superseded appendix.
-- Report and README corrected; same weights as v1.0.0.
+- Report and README corrected; same weights as the initial release.
 
 ## [1.0.0] — 2026-11-15 — Track B flagship (epoch 24)
 
-- Initial release: `best_dota_mAP_epoch_24.pth`, `epoch_24.pth`, `epoch_16.pth`.
+- Initial release of the Track B weights (pre-correction lineage; both Track B assets were
+  removed on 2026-11-18) alongside the phase-1 anchor checkpoint.

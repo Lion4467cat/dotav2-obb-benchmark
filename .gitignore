@@ -18,3 +18,5 @@ artifacts/
 docs/*backup*
 mmrotate
 graphify-out/
+.ipynb_checkpoints/
+results/backup_*/

@@ -1,3 +1,8 @@
+> **HISTORICAL — superseded.** This is the audit of the pre-correction shipped document
+> (21 pages). The report has since been rebuilt twice: against the epoch-22 official-retrain
+> evaluation and then the epoch-24 evaluation. Numbers quoted below describe the superseded
+> document only; the current report's figures are in `docs/ADA_REPORT_S_S_GOKULA_SWAMY.pdf`.
+
 # PROMPT — Fix formatting faults in ADA internship report DOCX
 
 > **Status: historical.** This is a one-off working prompt used on 2026-11-16 for

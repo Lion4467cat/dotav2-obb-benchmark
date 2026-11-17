@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dotav2-oriented-faster-rcnn-benchmark"
-version = "1.2.0"
+version = "1.3.0"
 description = "DOTA v2.0 oriented (le90) object-detection benchmark: rotated and Oriented R-CNN tracks, evaluation tooling, and a local inference package"
 readme = "README.md"
 requires-python = ">=3.10,<3.12"
