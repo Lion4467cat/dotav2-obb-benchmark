@@ -493,7 +493,7 @@ def body_sections_a(doc):
               "small vehicles occupy very few pixels, and neighbouring instances often overlap. A horizontal "
               "box around a rotated target includes background and can merge adjacent objects during "
               "suppression. An oriented box keeps the target's position, size and heading, which is why "
-              "oriented detection is the standard formulation for aerial benchmarks such as DOTA [6].")
+              "oriented detection is the standard formulation for aerial benchmarks such as DOTA [6,7].")
 
     h2(doc, "1.1  Problem statement")
     para(doc, "The task is to detect densely packed aerial objects across a wide size range and all headings, "
