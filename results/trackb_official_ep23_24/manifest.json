@@ -1,0 +1,81 @@
+{
+  "created_at_utc": "2026-11-17T18:31:16.252395+00:00",
+  "completed_epochs": 24,
+  "metrics": {
+    "map50": 0.7127,
+    "ap75": 0.4664,
+    "map50_95": 0.432,
+    "f1_optimal": {
+      "conf_threshold": 0.834,
+      "precision": 0.8694,
+      "recall": 0.8335,
+      "f1": 0.8511,
+      "tp": 57961,
+      "fp": 8707,
+      "fn": 11581
+    }
+  },
+  "n_files": 12,
+  "files": [
+    {
+      "path": "checkpoints/epoch_23.pth",
+      "size": 856732673,
+      "sha256": "21d3d2033cfb6379f3ec628e536887cb70808e81ed9af2405b24ade578b8435f"
+    },
+    {
+      "path": "checkpoints/epoch_24.pth",
+      "size": 857869889,
+      "sha256": "d855c250387f7e3f3fbc6b1a2a79a05932a1e11c39e855563c961f5aaa44995f"
+    },
+    {
+      "path": "eval_cfg.py",
+      "size": 28334,
+      "sha256": "ce7cb976ffbcebd65d69a5b85eccae495aa6025f77f618d05c429baf38997560"
+    },
+    {
+      "path": "eval_test/20261117_174252/20261117_174252.json",
+      "size": 116,
+      "sha256": "ca9db4862a11c6c599459f93dbc72352daade43df3f0a02bcc34f949cf1752b3"
+    },
+    {
+      "path": "eval_test/20261117_174252/20261117_174252.log",
+      "size": 54885,
+      "sha256": "2cb6b6680eb61163c001bf402e1984b5445c6e68c8075ecd023fcf20d189b4eb"
+    },
+    {
+      "path": "eval_test/20261117_174252/vis_data/config.py",
+      "size": 28203,
+      "sha256": "e2cbc7804a841279480ec66d99940b113e9cdd59265f2e222f33c0d22dd1189c"
+    },
+    {
+      "path": "eval_test/eval_cfg.py",
+      "size": 28203,
+      "sha256": "e2cbc7804a841279480ec66d99940b113e9cdd59265f2e222f33c0d22dd1189c"
+    },
+    {
+      "path": "eval_test/extended_metrics.json",
+      "size": 5432,
+      "sha256": "b04d4135088f6a21180312504ca763f1558116224a59a254754fb872f44f9691"
+    },
+    {
+      "path": "eval_test/preds.pkl",
+      "size": 30169343,
+      "sha256": "8c812bedb3837c60d31e3150128c97cccfc7c89b8848d726f86eb3c6062f8179"
+    },
+    {
+      "path": "final_benchmark_report_ep24.md",
+      "size": 1087,
+      "sha256": "5298022bbc970c60f3ea10f9ad001b2b57b5cf9185a3371988c7a466d6770837"
+    },
+    {
+      "path": "logs/train_ep23_24_stdout.log",
+      "size": 117698,
+      "sha256": "c80c74889cb6fbf541bb6a56bc61193da4ee92a1b41e7e86355cdd167748f430"
+    },
+    {
+      "path": "train_cfg_ep23_24.py",
+      "size": 28150,
+      "sha256": "18cd3f86e05fe8a2a45b0581f253325a51db3da3820cfe84febaaf98af289ea7"
+    }
+  ]
+}

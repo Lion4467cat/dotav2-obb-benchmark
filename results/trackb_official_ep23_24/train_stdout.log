@@ -1,0 +1,1668 @@
+WARNING:torch.distributed.run:
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+/tmp/mmrotate_venv/lib/python3.11/site-packages/mmengine/utils/dl_utils/setup_env.py:56: UserWarning: Setting MKL_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed.
+  warnings.warn(
+/tmp/mmrotate_venv/lib/python3.11/site-packages/mmengine/utils/dl_utils/setup_env.py:56: UserWarning: Setting MKL_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed.
+  warnings.warn(
+11/17 13:52:43 - mmengine - INFO - 
+------------------------------------------------------------
+System environment:
+    sys.platform: linux
+    Python: 3.11.17 (main, Oct 14 2026, 01:05:33) [Clang 23.1.3 ]
+    CUDA available: True
+    numpy_random_seed: 1376597670
+    GPU 0,1: Tesla T4
+    CUDA_HOME: /usr/local/cuda
+    NVCC: Cuda compilation tools, release 13.0, V13.0.88
+    GCC: cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+    PyTorch: 2.0.1+cu118
+    PyTorch compiling details: PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+    TorchVision: 0.15.2+cu118
+    OpenCV: 4.11.0
+    MMEngine: 0.9.1
+
+Runtime environment:
+    cudnn_benchmark: False
+    dist_cfg: {'backend': 'nccl'}
+    mp_cfg: {'mp_start_method': 'fork', 'opencv_num_threads': 0}
+    seed: 1376597670
+    Distributed launcher: pytorch
+    Distributed training: True
+    GPU number: 2
+------------------------------------------------------------
+
+11/17 13:52:45 - mmengine - INFO - Config:
+DOTA_V2_CLASSES = (
+    'plane',
+    'baseball-diamond',
+    'bridge',
+    'ground-track-field',
+    'small-vehicle',
+    'large-vehicle',
+    'ship',
+    'tennis-court',
+    'basketball-court',
+    'storage-tank',
+    'soccer-ball-field',
+    'roundabout',
+    'harbor',
+    'swimming-pool',
+    'helicopter',
+    'container-crane',
+    'airport',
+    'helipad',
+)
+DOTA_V2_PALETTE = [
+    (
+        165,
+        42,
+        42,
+    ),
+    (
+        189,
+        183,
+        107,
+    ),
+    (
+        0,
+        255,
+        0,
+    ),
+    (
+        255,
+        0,
+        0,
+    ),
+    (
+        138,
+        43,
+        226,
+    ),
+    (
+        255,
+        128,
+        0,
+    ),
+    (
+        255,
+        0,
+        255,
+    ),
+    (
+        0,
+        255,
+        255,
+    ),
+    (
+        255,
+        193,
+        193,
+    ),
+    (
+        0,
+        51,
+        153,
+    ),
+    (
+        255,
+        250,
+        205,
+    ),
+    (
+        0,
+        139,
+        139,
+    ),
+    (
+        255,
+        255,
+        0,
+    ),
+    (
+        147,
+        116,
+        116,
+    ),
+    (
+        0,
+        0,
+        255,
+    ),
+    (
+        100,
+        149,
+        237,
+    ),
+    (
+        34,
+        139,
+        34,
+    ),
+    (
+        255,
+        20,
+        147,
+    ),
+]
+angle_version = 'le90'
+backend_args = None
+convnext_s_ckpt = 'https://download.openmmlab.com/mmclassification/v0/convnext/convnext-small_3rdparty_32xb128_in1k_20220124-d39b5192.pth'
+custom_hooks = [
+    dict(
+        interval=1,
+        max_keep_ckpts=2,
+        out_dir=
+        '/kaggle/working/ada_trackB_official/work_dirs/trackB_official_ep17-24',
+        type='CheckpointHook'),
+]
+custom_imports = dict(
+    allow_failed_imports=False, imports=[
+        'mmpretrain.models',
+    ])
+data_root = '/content/data/split_ss_dotav2/'
+dataset_type = 'DOTADataset'
+default_hooks = dict(
+    checkpoint=dict(
+        interval=1,
+        max_keep_ckpts=3,
+        out_dir='/kaggle/working/work_dirs/trackB_official_ep23-24',
+        rule='greater',
+        save_best='dota/mAP',
+        type='CheckpointHook'),
+    logger=dict(interval=50, type='LoggerHook'),
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    timer=dict(type='IterTimerHook'),
+    visualization=dict(type='mmdet.DetVisualizationHook'))
+default_scope = 'mmrotate'
+env_cfg = dict(
+    cudnn_benchmark=False,
+    dist_cfg=dict(backend='nccl'),
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0))
+launcher = 'pytorch'
+load_from = '/tmp/epoch_22.pth'
+log_level = 'INFO'
+log_processor = dict(by_epoch=True, type='LogProcessor', window_size=50)
+max_epochs = 24
+metainfo = dict(
+    classes=(
+        'plane',
+        'baseball-diamond',
+        'bridge',
+        'ground-track-field',
+        'small-vehicle',
+        'large-vehicle',
+        'ship',
+        'tennis-court',
+        'basketball-court',
+        'storage-tank',
+        'soccer-ball-field',
+        'roundabout',
+        'harbor',
+        'swimming-pool',
+        'helicopter',
+        'container-crane',
+        'airport',
+        'helipad',
+    ),
+    palette=[
+        (
+            165,
+            42,
+            42,
+        ),
+        (
+            189,
+            183,
+            107,
+        ),
+        (
+            0,
+            255,
+            0,
+        ),
+        (
+            255,
+            0,
+            0,
+        ),
+        (
+            138,
+            43,
+            226,
+        ),
+        (
+            255,
+            128,
+            0,
+        ),
+        (
+            255,
+            0,
+            255,
+        ),
+        (
+            0,
+            255,
+            255,
+        ),
+        (
+            255,
+            193,
+            193,
+        ),
+        (
+            0,
+            51,
+            153,
+        ),
+        (
+            255,
+            250,
+            205,
+        ),
+        (
+            0,
+            139,
+            139,
+        ),
+        (
+            255,
+            255,
+            0,
+        ),
+        (
+            147,
+            116,
+            116,
+        ),
+        (
+            0,
+            0,
+            255,
+        ),
+        (
+            100,
+            149,
+            237,
+        ),
+        (
+            34,
+            139,
+            34,
+        ),
+        (
+            255,
+            20,
+            147,
+        ),
+    ])
+model = dict(
+    backbone=dict(
+        arch='small',
+        drop_path_rate=0.4,
+        gap_before_final_norm=False,
+        init_cfg=dict(
+            checkpoint=
+            'https://download.openmmlab.com/mmclassification/v0/convnext/convnext-small_3rdparty_32xb128_in1k_20220124-d39b5192.pth',
+            prefix='backbone.',
+            type='Pretrained'),
+        layer_scale_init_value=1.0,
+        out_indices=(
+            0,
+            1,
+            2,
+            3,
+        ),
+        type='mmpretrain.ConvNeXt'),
+    data_preprocessor=dict(
+        bgr_to_rgb=True,
+        boxtype2tensor=False,
+        mean=[
+            123.675,
+            116.28,
+            103.53,
+        ],
+        pad_size_divisor=32,
+        std=[
+            58.395,
+            57.12,
+            57.375,
+        ],
+        type='mmdet.DetDataPreprocessor'),
+    neck=dict(
+        in_channels=[
+            96,
+            192,
+            384,
+            768,
+        ],
+        num_outs=5,
+        out_channels=256,
+        type='mmdet.PAFPN'),
+    roi_head=dict(
+        bbox_head=dict(
+            bbox_coder=dict(
+                angle_version='le90',
+                edge_swap=True,
+                norm_factor=None,
+                proj_xy=True,
+                target_means=(
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                ),
+                target_stds=(
+                    0.1,
+                    0.1,
+                    0.2,
+                    0.2,
+                    0.1,
+                ),
+                type='DeltaXYWHTRBBoxCoder'),
+            cls_predictor_cfg=dict(type='mmdet.Linear'),
+            fc_out_channels=1024,
+            in_channels=256,
+            loss_bbox=dict(
+                fun='log1p',
+                loss_type='kld',
+                loss_weight=5.0,
+                sqrt=False,
+                tau=1.0,
+                type='GDLoss'),
+            loss_cls=dict(
+                loss_weight=1.0,
+                type='mmdet.CrossEntropyLoss',
+                use_sigmoid=False),
+            num_classes=18,
+            predict_box_type='rbox',
+            reg_class_agnostic=True,
+            reg_decoded_bbox=True,
+            reg_predictor_cfg=dict(type='mmdet.Linear'),
+            roi_feat_size=7,
+            type='mmdet.Shared2FCBBoxHead'),
+        bbox_roi_extractor=dict(
+            featmap_strides=[
+                4,
+                8,
+                16,
+                32,
+            ],
+            out_channels=256,
+            roi_layer=dict(
+                clockwise=True,
+                out_size=7,
+                sample_num=2,
+                type='RoIAlignRotated'),
+            type='RotatedSingleRoIExtractor'),
+        type='mmdet.StandardRoIHead'),
+    rpn_head=dict(
+        anchor_generator=dict(
+            ratios=[
+                0.5,
+                1.0,
+                2.0,
+            ],
+            scales=[
+                8,
+            ],
+            strides=[
+                4,
+                8,
+                16,
+                32,
+                64,
+            ],
+            type='mmdet.AnchorGenerator',
+            use_box_type=True),
+        bbox_coder=dict(
+            angle_version='le90',
+            target_means=[
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+            ],
+            target_stds=[
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                0.5,
+                0.5,
+            ],
+            type='MidpointOffsetCoder'),
+        feat_channels=256,
+        in_channels=256,
+        loss_bbox=dict(
+            beta=0.1111111111111111,
+            loss_weight=1.0,
+            type='mmdet.SmoothL1Loss'),
+        loss_cls=dict(
+            loss_weight=1.0, type='mmdet.CrossEntropyLoss', use_sigmoid=True),
+        type='OrientedRPNHead'),
+    test_cfg=dict(
+        rcnn=dict(
+            max_per_img=2000,
+            min_bbox_size=0,
+            nms=dict(iou_threshold=0.1, type='nms_rotated'),
+            nms_pre=2000,
+            score_thr=0.05),
+        rpn=dict(
+            max_per_img=2000,
+            min_bbox_size=0,
+            nms=dict(iou_threshold=0.8, type='nms'),
+            nms_pre=2000)),
+    train_cfg=dict(
+        rcnn=dict(
+            assigner=dict(
+                ignore_iof_thr=-1,
+                iou_calculator=dict(type='RBboxOverlaps2D'),
+                match_low_quality=False,
+                min_pos_iou=0.5,
+                neg_iou_thr=0.5,
+                pos_iou_thr=0.5,
+                type='mmdet.MaxIoUAssigner'),
+            debug=False,
+            pos_weight=-1,
+            sampler=dict(
+                add_gt_as_proposals=True,
+                neg_pos_ub=-1,
+                num=512,
+                pos_fraction=0.25,
+                type='mmdet.RandomSampler')),
+        rpn=dict(
+            allowed_border=0,
+            assigner=dict(
+                ignore_iof_thr=-1,
+                iou_calculator=dict(type='RBbox2HBboxOverlaps2D'),
+                match_low_quality=True,
+                min_pos_iou=0.3,
+                neg_iou_thr=0.3,
+                pos_iou_thr=0.7,
+                type='mmdet.MaxIoUAssigner'),
+            debug=False,
+            pos_weight=-1,
+            sampler=dict(
+                add_gt_as_proposals=False,
+                neg_pos_ub=-1,
+                num=256,
+                pos_fraction=0.5,
+                type='mmdet.RandomSampler')),
+        rpn_proposal=dict(
+            max_per_img=2000,
+            min_bbox_size=0,
+            nms=dict(iou_threshold=0.8, type='nms'),
+            nms_pre=2000)),
+    type='mmdet.FasterRCNN')
+optim_wrapper = dict(
+    accumulative_counts=4,
+    clip_grad=dict(max_norm=35, norm_type=2),
+    optimizer=dict(
+        betas=(
+            0.9,
+            0.999,
+        ), lr=0.0001, type='AdamW', weight_decay=0.05),
+    type='OptimWrapper')
+param_scheduler = [
+    dict(
+        begin=0, by_epoch=False, end=500, start_factor=0.001, type='LinearLR'),
+    dict(
+        T_max=24,
+        begin=0,
+        by_epoch=True,
+        end=24,
+        eta_min=1e-06,
+        type='CosineAnnealingLR'),
+]
+raw_train_dataset = dict(
+    ann_file='train/annfiles/',
+    data_prefix=dict(img_path='train/images/'),
+    data_root='/content/data/split_ss_dotav2/',
+    filter_cfg=dict(filter_empty_gt=True),
+    metainfo=dict(
+        classes=(
+            'plane',
+            'baseball-diamond',
+            'bridge',
+            'ground-track-field',
+            'small-vehicle',
+            'large-vehicle',
+            'ship',
+            'tennis-court',
+            'basketball-court',
+            'storage-tank',
+            'soccer-ball-field',
+            'roundabout',
+            'harbor',
+            'swimming-pool',
+            'helicopter',
+            'container-crane',
+            'airport',
+            'helipad',
+        ),
+        palette=[
+            (
+                165,
+                42,
+                42,
+            ),
+            (
+                189,
+                183,
+                107,
+            ),
+            (
+                0,
+                255,
+                0,
+            ),
+            (
+                255,
+                0,
+                0,
+            ),
+            (
+                138,
+                43,
+                226,
+            ),
+            (
+                255,
+                128,
+                0,
+            ),
+            (
+                255,
+                0,
+                255,
+            ),
+            (
+                0,
+                255,
+                255,
+            ),
+            (
+                255,
+                193,
+                193,
+            ),
+            (
+                0,
+                51,
+                153,
+            ),
+            (
+                255,
+                250,
+                205,
+            ),
+            (
+                0,
+                139,
+                139,
+            ),
+            (
+                255,
+                255,
+                0,
+            ),
+            (
+                147,
+                116,
+                116,
+            ),
+            (
+                0,
+                0,
+                255,
+            ),
+            (
+                100,
+                149,
+                237,
+            ),
+            (
+                34,
+                139,
+                34,
+            ),
+            (
+                255,
+                20,
+                147,
+            ),
+        ]),
+    pipeline=[
+        dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+        dict(box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+        dict(box_type_mapping=dict(gt_bboxes='rbox'), type='ConvertBoxType'),
+        dict(keep_ratio=True, scale=(
+            1024,
+            1024,
+        ), type='mmdet.Resize'),
+        dict(
+            direction=[
+                'horizontal',
+                'vertical',
+                'diagonal',
+            ],
+            prob=0.75,
+            type='mmdet.RandomFlip'),
+        dict(
+            angle_range=180,
+            prob=0.5,
+            rect_obj_labels=[
+                9,
+                11,
+            ],
+            type='RandomRotate'),
+        dict(type='mmdet.PackDetInputs'),
+    ],
+    type='DOTADataset')
+resume = True
+test_cfg = dict(type='TestLoop')
+test_dataloader = dict(
+    batch_size=4,
+    dataset=dict(
+        ann_file='val/annfiles/',
+        data_prefix=dict(img_path='val/images/'),
+        data_root='/content/data/split_ss_dotav2/',
+        metainfo=dict(
+            classes=(
+                'plane',
+                'baseball-diamond',
+                'bridge',
+                'ground-track-field',
+                'small-vehicle',
+                'large-vehicle',
+                'ship',
+                'tennis-court',
+                'basketball-court',
+                'storage-tank',
+                'soccer-ball-field',
+                'roundabout',
+                'harbor',
+                'swimming-pool',
+                'helicopter',
+                'container-crane',
+                'airport',
+                'helipad',
+            ),
+            palette=[
+                (
+                    165,
+                    42,
+                    42,
+                ),
+                (
+                    189,
+                    183,
+                    107,
+                ),
+                (
+                    0,
+                    255,
+                    0,
+                ),
+                (
+                    255,
+                    0,
+                    0,
+                ),
+                (
+                    138,
+                    43,
+                    226,
+                ),
+                (
+                    255,
+                    128,
+                    0,
+                ),
+                (
+                    255,
+                    0,
+                    255,
+                ),
+                (
+                    0,
+                    255,
+                    255,
+                ),
+                (
+                    255,
+                    193,
+                    193,
+                ),
+                (
+                    0,
+                    51,
+                    153,
+                ),
+                (
+                    255,
+                    250,
+                    205,
+                ),
+                (
+                    0,
+                    139,
+                    139,
+                ),
+                (
+                    255,
+                    255,
+                    0,
+                ),
+                (
+                    147,
+                    116,
+                    116,
+                ),
+                (
+                    0,
+                    0,
+                    255,
+                ),
+                (
+                    100,
+                    149,
+                    237,
+                ),
+                (
+                    34,
+                    139,
+                    34,
+                ),
+                (
+                    255,
+                    20,
+                    147,
+                ),
+            ]),
+        pipeline=[
+            dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+            dict(keep_ratio=True, scale=(
+                1024,
+                1024,
+            ), type='mmdet.Resize'),
+            dict(
+                box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+            dict(
+                box_type_mapping=dict(gt_bboxes='rbox'),
+                type='ConvertBoxType'),
+            dict(
+                meta_keys=(
+                    'img_id',
+                    'img_path',
+                    'ori_shape',
+                    'img_shape',
+                    'scale_factor',
+                ),
+                type='mmdet.PackDetInputs'),
+        ],
+        test_mode=True,
+        type='DOTADataset'),
+    drop_last=False,
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(shuffle=False, type='DefaultSampler'))
+test_evaluator = dict(metric='mAP', type='DOTAMetric')
+test_pipeline = [
+    dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+    dict(keep_ratio=True, scale=(
+        1024,
+        1024,
+    ), type='mmdet.Resize'),
+    dict(
+        meta_keys=(
+            'img_id',
+            'img_path',
+            'ori_shape',
+            'img_shape',
+            'scale_factor',
+        ),
+        type='mmdet.PackDetInputs'),
+]
+train_cfg = dict(max_epochs=24, type='EpochBasedTrainLoop', val_interval=2)
+train_dataloader = dict(
+    batch_sampler=None,
+    batch_size=1,
+    dataset=dict(
+        dataset=dict(
+            ann_file='train/annfiles/',
+            data_prefix=dict(img_path='train/images/'),
+            data_root='/content/data/split_ss_dotav2/',
+            filter_cfg=dict(filter_empty_gt=True),
+            metainfo=dict(
+                classes=(
+                    'plane',
+                    'baseball-diamond',
+                    'bridge',
+                    'ground-track-field',
+                    'small-vehicle',
+                    'large-vehicle',
+                    'ship',
+                    'tennis-court',
+                    'basketball-court',
+                    'storage-tank',
+                    'soccer-ball-field',
+                    'roundabout',
+                    'harbor',
+                    'swimming-pool',
+                    'helicopter',
+                    'container-crane',
+                    'airport',
+                    'helipad',
+                ),
+                palette=[
+                    (
+                        165,
+                        42,
+                        42,
+                    ),
+                    (
+                        189,
+                        183,
+                        107,
+                    ),
+                    (
+                        0,
+                        255,
+                        0,
+                    ),
+                    (
+                        255,
+                        0,
+                        0,
+                    ),
+                    (
+                        138,
+                        43,
+                        226,
+                    ),
+                    (
+                        255,
+                        128,
+                        0,
+                    ),
+                    (
+                        255,
+                        0,
+                        255,
+                    ),
+                    (
+                        0,
+                        255,
+                        255,
+                    ),
+                    (
+                        255,
+                        193,
+                        193,
+                    ),
+                    (
+                        0,
+                        51,
+                        153,
+                    ),
+                    (
+                        255,
+                        250,
+                        205,
+                    ),
+                    (
+                        0,
+                        139,
+                        139,
+                    ),
+                    (
+                        255,
+                        255,
+                        0,
+                    ),
+                    (
+                        147,
+                        116,
+                        116,
+                    ),
+                    (
+                        0,
+                        0,
+                        255,
+                    ),
+                    (
+                        100,
+                        149,
+                        237,
+                    ),
+                    (
+                        34,
+                        139,
+                        34,
+                    ),
+                    (
+                        255,
+                        20,
+                        147,
+                    ),
+                ]),
+            pipeline=[
+                dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+                dict(
+                    box_type='qbox',
+                    type='mmdet.LoadAnnotations',
+                    with_bbox=True),
+                dict(
+                    box_type_mapping=dict(gt_bboxes='rbox'),
+                    type='ConvertBoxType'),
+                dict(
+                    keep_ratio=True, scale=(
+                        1024,
+                        1024,
+                    ), type='mmdet.Resize'),
+                dict(
+                    direction=[
+                        'horizontal',
+                        'vertical',
+                        'diagonal',
+                    ],
+                    prob=0.75,
+                    type='mmdet.RandomFlip'),
+                dict(
+                    angle_range=180,
+                    prob=0.5,
+                    rect_obj_labels=[
+                        9,
+                        11,
+                    ],
+                    type='RandomRotate'),
+                dict(type='mmdet.PackDetInputs'),
+            ],
+            type='DOTADataset'),
+        oversample_thr=0.001,
+        type='mmdet.ClassBalancedDataset'),
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(shuffle=True, type='DefaultSampler'))
+train_pipeline = [
+    dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+    dict(box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+    dict(box_type_mapping=dict(gt_bboxes='rbox'), type='ConvertBoxType'),
+    dict(keep_ratio=True, scale=(
+        1024,
+        1024,
+    ), type='mmdet.Resize'),
+    dict(
+        direction=[
+            'horizontal',
+            'vertical',
+            'diagonal',
+        ],
+        prob=0.75,
+        type='mmdet.RandomFlip'),
+    dict(
+        angle_range=180,
+        prob=0.5,
+        rect_obj_labels=[
+            9,
+            11,
+        ],
+        type='RandomRotate'),
+    dict(type='mmdet.PackDetInputs'),
+]
+val_cfg = dict(type='ValLoop')
+val_dataloader = dict(
+    batch_size=4,
+    dataset=dict(
+        ann_file='val/annfiles/',
+        data_prefix=dict(img_path='val/images/'),
+        data_root='/content/data/split_ss_dotav2/',
+        metainfo=dict(
+            classes=(
+                'plane',
+                'baseball-diamond',
+                'bridge',
+                'ground-track-field',
+                'small-vehicle',
+                'large-vehicle',
+                'ship',
+                'tennis-court',
+                'basketball-court',
+                'storage-tank',
+                'soccer-ball-field',
+                'roundabout',
+                'harbor',
+                'swimming-pool',
+                'helicopter',
+                'container-crane',
+                'airport',
+                'helipad',
+            ),
+            palette=[
+                (
+                    165,
+                    42,
+                    42,
+                ),
+                (
+                    189,
+                    183,
+                    107,
+                ),
+                (
+                    0,
+                    255,
+                    0,
+                ),
+                (
+                    255,
+                    0,
+                    0,
+                ),
+                (
+                    138,
+                    43,
+                    226,
+                ),
+                (
+                    255,
+                    128,
+                    0,
+                ),
+                (
+                    255,
+                    0,
+                    255,
+                ),
+                (
+                    0,
+                    255,
+                    255,
+                ),
+                (
+                    255,
+                    193,
+                    193,
+                ),
+                (
+                    0,
+                    51,
+                    153,
+                ),
+                (
+                    255,
+                    250,
+                    205,
+                ),
+                (
+                    0,
+                    139,
+                    139,
+                ),
+                (
+                    255,
+                    255,
+                    0,
+                ),
+                (
+                    147,
+                    116,
+                    116,
+                ),
+                (
+                    0,
+                    0,
+                    255,
+                ),
+                (
+                    100,
+                    149,
+                    237,
+                ),
+                (
+                    34,
+                    139,
+                    34,
+                ),
+                (
+                    255,
+                    20,
+                    147,
+                ),
+            ]),
+        pipeline=[
+            dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+            dict(keep_ratio=True, scale=(
+                1024,
+                1024,
+            ), type='mmdet.Resize'),
+            dict(
+                box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+            dict(
+                box_type_mapping=dict(gt_bboxes='rbox'),
+                type='ConvertBoxType'),
+            dict(
+                meta_keys=(
+                    'img_id',
+                    'img_path',
+                    'ori_shape',
+                    'img_shape',
+                    'scale_factor',
+                ),
+                type='mmdet.PackDetInputs'),
+        ],
+        test_mode=True,
+        type='DOTADataset'),
+    drop_last=False,
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(shuffle=False, type='DefaultSampler'))
+val_evaluator = dict(metric='mAP', type='DOTAMetric')
+val_pipeline = [
+    dict(backend_args=None, type='mmdet.LoadImageFromFile'),
+    dict(keep_ratio=True, scale=(
+        1024,
+        1024,
+    ), type='mmdet.Resize'),
+    dict(box_type='qbox', type='mmdet.LoadAnnotations', with_bbox=True),
+    dict(box_type_mapping=dict(gt_bboxes='rbox'), type='ConvertBoxType'),
+    dict(
+        meta_keys=(
+            'img_id',
+            'img_path',
+            'ori_shape',
+            'img_shape',
+            'scale_factor',
+        ),
+        type='mmdet.PackDetInputs'),
+]
+vis_backends = [
+    dict(type='LocalVisBackend'),
+]
+visualizer = dict(
+    name='visualizer',
+    type='RotLocalVisualizer',
+    vis_backends=[
+        dict(type='LocalVisBackend'),
+    ])
+work_dir = '/kaggle/working/work_dirs/trackB_official_ep23-24'
+
+11/17 13:52:48 - mmengine - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+before_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(VERY_LOW    ) CheckpointHook                     
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DistSamplerSeedHook                
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) IterTimerHook                      
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_val_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_val_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DetVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_val_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(VERY_LOW    ) CheckpointHook                     
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_test_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_test_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_test_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DetVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_run:
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+11/17 13:52:57 - mmengine - WARNING - Failed to search registry with scope "mmrotate" in the "optim_wrapper" registry tree. As a workaround, the current "optim_wrapper" registry in "mmengine" is used to build instance. This may cause unexpected failure when running the built modules. Please check whether "mmrotate" is a correct scope, or whether the registry is initialized.
+11/17 13:53:01 - mmengine - INFO - load backbone. in model from: https://download.openmmlab.com/mmclassification/v0/convnext/convnext-small_3rdparty_32xb128_in1k_20220124-d39b5192.pth
+Loads checkpoint by http backend from path: https://download.openmmlab.com/mmclassification/v0/convnext/convnext-small_3rdparty_32xb128_in1k_20220124-d39b5192.pth
+Loads checkpoint by http backend from path: https://download.openmmlab.com/mmclassification/v0/convnext/convnext-small_3rdparty_32xb128_in1k_20220124-d39b5192.pth
+Downloading: "https://download.openmmlab.com/mmclassification/v0/convnext/convnext-small_3rdparty_32xb128_in1k_20220124-d39b5192.pth" to /root/.cache/torch/hub/checkpoints/convnext-small_3rdparty_32xb128_in1k_20220124-d39b5192.pth
+11/17 13:53:07 - mmengine - WARNING - The model and loaded state dict do not match exactly
+
+missing keys in source state_dict: norm0.weight, norm0.bias, norm1.weight, norm1.bias, norm2.weight, norm2.bias
+
+Loads checkpoint by local backend from path: /tmp/epoch_22.pth
+Loads checkpoint by local backend from path: /tmp/epoch_22.pth
+11/17 13:53:08 - mmengine - INFO - Load checkpoint from /tmp/epoch_22.pth
+11/17 13:53:08 - mmengine - INFO - resumed epoch: 22, iter: 66780
+11/17 13:53:08 - mmengine - WARNING - "FileClient" will be deprecated in future. Please use io functions in https://mmengine.readthedocs.io/en/latest/api/fileio.html#file-io
+11/17 13:53:08 - mmengine - WARNING - "HardDiskBackend" is the alias of "LocalBackend" and the former will be deprecated in future.
+11/17 13:53:08 - mmengine - INFO - Checkpoints will be saved to /kaggle/working/work_dirs/trackB_official_ep23-24.
+11/17 13:53:08 - mmengine - INFO - Checkpoints will be saved to /kaggle/working/ada_trackB_official/work_dirs/trackB_official_ep17-24/trackB_official_ep23-24.
+/tmp/ada/ADA/mmrotate/mmrotate/structures/bbox/rotated_boxes.py:192: UserWarning: The `clip` function does nothing in `RotatedBoxes`.
+  warnings.warn('The `clip` function does nothing in `RotatedBoxes`.')
+/tmp/ada/ADA/mmrotate/mmrotate/structures/bbox/rotated_boxes.py:192: UserWarning: The `clip` function does nothing in `RotatedBoxes`.
+  warnings.warn('The `clip` function does nothing in `RotatedBoxes`.')
+/tmp/ada/ADA/mmrotate/mmrotate/structures/bbox/rotated_boxes.py:192: UserWarning: The `clip` function does nothing in `RotatedBoxes`.
+  warnings.warn('The `clip` function does nothing in `RotatedBoxes`.')
+/tmp/ada/ADA/mmrotate/mmrotate/structures/bbox/rotated_boxes.py:192: UserWarning: The `clip` function does nothing in `RotatedBoxes`.
+  warnings.warn('The `clip` function does nothing in `RotatedBoxes`.')
+/tmp/ada/ADA/mmrotate/mmrotate/structures/bbox/rotated_boxes.py:192: UserWarning: The `clip` function does nothing in `RotatedBoxes`.
+  warnings.warn('The `clip` function does nothing in `RotatedBoxes`.')
+/tmp/ada/ADA/mmrotate/mmrotate/structures/bbox/rotated_boxes.py:192: UserWarning: The `clip` function does nothing in `RotatedBoxes`.
+  warnings.warn('The `clip` function does nothing in `RotatedBoxes`.')
+/tmp/ada/ADA/mmrotate/mmrotate/structures/bbox/rotated_boxes.py:192: UserWarning: The `clip` function does nothing in `RotatedBoxes`.
+  warnings.warn('The `clip` function does nothing in `RotatedBoxes`.')
+/tmp/ada/ADA/mmrotate/mmrotate/structures/bbox/rotated_boxes.py:192: UserWarning: The `clip` function does nothing in `RotatedBoxes`.
+  warnings.warn('The `clip` function does nothing in `RotatedBoxes`.')
+11/17 13:53:50 - mmengine - INFO - Epoch(train) [23][  50/6751]  lr: 2.6867e-06  eta: 22:01:16  time: 0.8328  data_time: 0.0115  memory: 7239  grad_norm: 1.8017  loss: 0.1465  loss_rpn_cls: 0.0066  loss_rpn_bbox: 0.0418  loss_cls: 0.0757  acc: 95.7031  loss_bbox: 0.0225
+11/17 13:54:33 - mmengine - INFO - Epoch(train) [23][ 100/6751]  lr: 2.6867e-06  eta: 22:16:52  time: 0.8533  data_time: 0.0047  memory: 6231  grad_norm: 1.8642  loss: 0.1491  loss_rpn_cls: 0.0098  loss_rpn_bbox: 0.0363  loss_cls: 0.0784  acc: 97.4609  loss_bbox: 0.0247
+11/17 13:55:20 - mmengine - INFO - Epoch(train) [23][ 150/6751]  lr: 2.6867e-06  eta: 23:07:25  time: 0.9401  data_time: 0.0047  memory: 8078  grad_norm: 1.8515  loss: 0.1473  loss_rpn_cls: 0.0089  loss_rpn_bbox: 0.0290  loss_cls: 0.0849  acc: 99.2188  loss_bbox: 0.0245
+11/17 13:56:04 - mmengine - INFO - Epoch(train) [23][ 200/6751]  lr: 2.6867e-06  eta: 23:13:04  time: 0.8915  data_time: 0.0046  memory: 6013  grad_norm: 1.9081  loss: 0.1734  loss_rpn_cls: 0.0064  loss_rpn_bbox: 0.0536  loss_cls: 0.0845  acc: 97.4609  loss_bbox: 0.0288
+11/17 13:56:23 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 13:56:50 - mmengine - INFO - Epoch(train) [23][ 250/6751]  lr: 2.6867e-06  eta: 23:22:26  time: 0.9113  data_time: 0.0049  memory: 5896  grad_norm: 1.9800  loss: 0.1779  loss_rpn_cls: 0.0106  loss_rpn_bbox: 0.0504  loss_cls: 0.0895  acc: 95.5078  loss_bbox: 0.0273
+11/17 13:57:35 - mmengine - INFO - Epoch(train) [23][ 300/6751]  lr: 2.6867e-06  eta: 23:25:20  time: 0.8996  data_time: 0.0047  memory: 5943  grad_norm: 1.9962  loss: 0.2062  loss_rpn_cls: 0.0089  loss_rpn_bbox: 0.0705  loss_cls: 0.0972  acc: 88.2812  loss_bbox: 0.0296
+11/17 13:58:20 - mmengine - INFO - Epoch(train) [23][ 350/6751]  lr: 2.6867e-06  eta: 23:30:02  time: 0.9121  data_time: 0.0047  memory: 5896  grad_norm: 1.9969  loss: 0.1734  loss_rpn_cls: 0.0073  loss_rpn_bbox: 0.0465  loss_cls: 0.0888  acc: 98.4375  loss_bbox: 0.0307
+11/17 13:59:06 - mmengine - INFO - Epoch(train) [23][ 400/6751]  lr: 2.6867e-06  eta: 23:31:50  time: 0.9045  data_time: 0.0047  memory: 6691  grad_norm: 1.9297  loss: 0.2207  loss_rpn_cls: 0.0069  loss_rpn_bbox: 0.0768  loss_cls: 0.1045  acc: 99.2188  loss_bbox: 0.0326
+11/17 13:59:51 - mmengine - INFO - Epoch(train) [23][ 450/6751]  lr: 2.6867e-06  eta: 23:33:57  time: 0.9094  data_time: 0.0047  memory: 6074  grad_norm: 1.8746  loss: 0.1797  loss_rpn_cls: 0.0079  loss_rpn_bbox: 0.0431  loss_cls: 0.1006  acc: 97.6562  loss_bbox: 0.0281
+11/17 14:00:37 - mmengine - INFO - Epoch(train) [23][ 500/6751]  lr: 2.6867e-06  eta: 23:35:26  time: 0.9091  data_time: 0.0047  memory: 6071  grad_norm: 1.8186  loss: 0.1532  loss_rpn_cls: 0.0096  loss_rpn_bbox: 0.0365  loss_cls: 0.0829  acc: 96.4844  loss_bbox: 0.0242
+11/17 14:01:22 - mmengine - INFO - Epoch(train) [23][ 550/6751]  lr: 2.6867e-06  eta: 23:36:01  time: 0.9057  data_time: 0.0046  memory: 5955  grad_norm: 1.7926  loss: 0.1458  loss_rpn_cls: 0.0079  loss_rpn_bbox: 0.0410  loss_cls: 0.0740  acc: 94.1406  loss_bbox: 0.0229
+11/17 14:02:07 - mmengine - INFO - Epoch(train) [23][ 600/6751]  lr: 2.6867e-06  eta: 23:36:52  time: 0.9094  data_time: 0.0047  memory: 5838  grad_norm: 1.8183  loss: 0.1594  loss_rpn_cls: 0.0119  loss_rpn_bbox: 0.0394  loss_cls: 0.0827  acc: 95.8984  loss_bbox: 0.0254
+11/17 14:02:53 - mmengine - INFO - Epoch(train) [23][ 650/6751]  lr: 2.6867e-06  eta: 23:38:16  time: 0.9159  data_time: 0.0046  memory: 9187  grad_norm: 1.8611  loss: 0.1712  loss_rpn_cls: 0.0114  loss_rpn_bbox: 0.0479  loss_cls: 0.0872  acc: 99.0234  loss_bbox: 0.0247
+11/17 14:03:39 - mmengine - INFO - Epoch(train) [23][ 700/6751]  lr: 2.6867e-06  eta: 23:38:43  time: 0.9103  data_time: 0.0048  memory: 6163  grad_norm: 1.8335  loss: 0.1614  loss_rpn_cls: 0.0076  loss_rpn_bbox: 0.0376  loss_cls: 0.0902  acc: 95.8984  loss_bbox: 0.0260
+11/17 14:04:24 - mmengine - INFO - Epoch(train) [23][ 750/6751]  lr: 2.6867e-06  eta: 23:38:41  time: 0.9072  data_time: 0.0045  memory: 6072  grad_norm: 1.8492  loss: 0.1626  loss_rpn_cls: 0.0048  loss_rpn_bbox: 0.0552  loss_cls: 0.0788  acc: 98.0469  loss_bbox: 0.0237
+11/17 14:05:10 - mmengine - INFO - Epoch(train) [23][ 800/6751]  lr: 2.6867e-06  eta: 23:38:43  time: 0.9088  data_time: 0.0045  memory: 5955  grad_norm: 1.8975  loss: 0.1848  loss_rpn_cls: 0.0078  loss_rpn_bbox: 0.0502  loss_cls: 0.0975  acc: 94.9219  loss_bbox: 0.0292
+11/17 14:05:55 - mmengine - INFO - Epoch(train) [23][ 850/6751]  lr: 2.6867e-06  eta: 23:38:42  time: 0.9092  data_time: 0.0046  memory: 6154  grad_norm: 1.9088  loss: 0.1792  loss_rpn_cls: 0.0087  loss_rpn_bbox: 0.0462  loss_cls: 0.0931  acc: 98.4375  loss_bbox: 0.0312
+11/17 14:06:40 - mmengine - INFO - Epoch(train) [23][ 900/6751]  lr: 2.6867e-06  eta: 23:37:55  time: 0.9013  data_time: 0.0047  memory: 5722  grad_norm: 1.8446  loss: 0.1455  loss_rpn_cls: 0.0044  loss_rpn_bbox: 0.0326  loss_cls: 0.0852  acc: 92.9688  loss_bbox: 0.0232
+11/17 14:07:25 - mmengine - INFO - Epoch(train) [23][ 950/6751]  lr: 2.6867e-06  eta: 23:37:25  time: 0.9048  data_time: 0.0046  memory: 5776  grad_norm: 1.8765  loss: 0.1791  loss_rpn_cls: 0.0059  loss_rpn_bbox: 0.0485  loss_cls: 0.0957  acc: 90.2344  loss_bbox: 0.0289
+11/17 14:08:10 - mmengine - INFO - Epoch(train) [23][1000/6751]  lr: 2.6867e-06  eta: 23:36:40  time: 0.9020  data_time: 0.0046  memory: 7122  grad_norm: 1.7767  loss: 0.1565  loss_rpn_cls: 0.0058  loss_rpn_bbox: 0.0373  loss_cls: 0.0884  acc: 91.2109  loss_bbox: 0.0250
+11/17 14:08:55 - mmengine - INFO - Epoch(train) [23][1050/6751]  lr: 2.6867e-06  eta: 23:35:45  time: 0.8998  data_time: 0.0048  memory: 5780  grad_norm: 1.8900  loss: 0.1815  loss_rpn_cls: 0.0089  loss_rpn_bbox: 0.0620  loss_cls: 0.0840  acc: 99.4141  loss_bbox: 0.0266
+11/17 14:09:41 - mmengine - INFO - Epoch(train) [23][1100/6751]  lr: 2.6867e-06  eta: 23:35:00  time: 0.9017  data_time: 0.0046  memory: 5721  grad_norm: 1.9259  loss: 0.1462  loss_rpn_cls: 0.0052  loss_rpn_bbox: 0.0338  loss_cls: 0.0815  acc: 99.2188  loss_bbox: 0.0257
+11/17 14:10:26 - mmengine - INFO - Epoch(train) [23][1150/6751]  lr: 2.6867e-06  eta: 23:34:43  time: 0.9088  data_time: 0.0047  memory: 7647  grad_norm: 1.8797  loss: 0.1334  loss_rpn_cls: 0.0058  loss_rpn_bbox: 0.0274  loss_cls: 0.0752  acc: 96.2891  loss_bbox: 0.0251
+11/17 14:11:11 - mmengine - INFO - Epoch(train) [23][1200/6751]  lr: 2.6867e-06  eta: 23:34:02  time: 0.9032  data_time: 0.0048  memory: 5837  grad_norm: 1.9264  loss: 0.1914  loss_rpn_cls: 0.0074  loss_rpn_bbox: 0.0491  loss_cls: 0.1024  acc: 95.5078  loss_bbox: 0.0324
+11/17 14:11:29 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 14:11:56 - mmengine - INFO - Epoch(train) [23][1250/6751]  lr: 2.6867e-06  eta: 23:33:17  time: 0.9021  data_time: 0.0047  memory: 5776  grad_norm: 1.7966  loss: 0.1236  loss_rpn_cls: 0.0071  loss_rpn_bbox: 0.0225  loss_cls: 0.0697  acc: 97.0703  loss_bbox: 0.0243
+11/17 14:12:42 - mmengine - INFO - Epoch(train) [23][1300/6751]  lr: 2.6867e-06  eta: 23:33:08  time: 0.9120  data_time: 0.0047  memory: 6068  grad_norm: 1.8085  loss: 0.1702  loss_rpn_cls: 0.0102  loss_rpn_bbox: 0.0399  loss_cls: 0.0929  acc: 94.9219  loss_bbox: 0.0273
+11/17 14:13:27 - mmengine - INFO - Epoch(train) [23][1350/6751]  lr: 2.6867e-06  eta: 23:32:17  time: 0.9011  data_time: 0.0046  memory: 5896  grad_norm: 1.8403  loss: 0.1404  loss_rpn_cls: 0.0112  loss_rpn_bbox: 0.0263  loss_cls: 0.0823  acc: 96.0938  loss_bbox: 0.0206
+11/17 14:14:13 - mmengine - INFO - Epoch(train) [23][1400/6751]  lr: 2.6867e-06  eta: 23:31:58  time: 0.9102  data_time: 0.0047  memory: 6150  grad_norm: 1.8555  loss: 0.1863  loss_rpn_cls: 0.0119  loss_rpn_bbox: 0.0461  loss_cls: 0.1009  acc: 97.2656  loss_bbox: 0.0275
+11/17 14:14:58 - mmengine - INFO - Epoch(train) [23][1450/6751]  lr: 2.6867e-06  eta: 23:31:15  time: 0.9035  data_time: 0.0049  memory: 5721  grad_norm: 1.8515  loss: 0.1421  loss_rpn_cls: 0.0057  loss_rpn_bbox: 0.0344  loss_cls: 0.0788  acc: 98.6328  loss_bbox: 0.0233
+11/17 14:15:43 - mmengine - INFO - Epoch(train) [23][1500/6751]  lr: 2.6867e-06  eta: 23:30:59  time: 0.9119  data_time: 0.0048  memory: 6372  grad_norm: 1.8739  loss: 0.1679  loss_rpn_cls: 0.0069  loss_rpn_bbox: 0.0404  loss_cls: 0.0928  acc: 99.4141  loss_bbox: 0.0279
+11/17 14:16:29 - mmengine - INFO - Epoch(train) [23][1550/6751]  lr: 2.6867e-06  eta: 23:30:47  time: 0.9141  data_time: 0.0050  memory: 6186  grad_norm: 1.8010  loss: 0.1436  loss_rpn_cls: 0.0047  loss_rpn_bbox: 0.0317  loss_cls: 0.0844  acc: 98.0469  loss_bbox: 0.0227
+11/17 14:17:15 - mmengine - INFO - Epoch(train) [23][1600/6751]  lr: 2.6867e-06  eta: 23:30:48  time: 0.9194  data_time: 0.0048  memory: 6798  grad_norm: 1.7517  loss: 0.1545  loss_rpn_cls: 0.0071  loss_rpn_bbox: 0.0374  loss_cls: 0.0836  acc: 94.9219  loss_bbox: 0.0263
+11/17 14:18:00 - mmengine - INFO - Epoch(train) [23][1650/6751]  lr: 2.6867e-06  eta: 23:29:53  time: 0.9003  data_time: 0.0049  memory: 5780  grad_norm: 1.7570  loss: 0.1386  loss_rpn_cls: 0.0068  loss_rpn_bbox: 0.0320  loss_cls: 0.0759  acc: 99.6094  loss_bbox: 0.0239
+11/17 14:18:45 - mmengine - INFO - Epoch(train) [23][1700/6751]  lr: 2.6867e-06  eta: 23:29:11  time: 0.9052  data_time: 0.0048  memory: 5896  grad_norm: 1.8100  loss: 0.1976  loss_rpn_cls: 0.0067  loss_rpn_bbox: 0.0575  loss_cls: 0.1016  acc: 96.0938  loss_bbox: 0.0318
+11/17 14:19:31 - mmengine - INFO - Epoch(train) [23][1750/6751]  lr: 2.6867e-06  eta: 23:29:00  time: 0.9167  data_time: 0.0048  memory: 6027  grad_norm: 1.8871  loss: 0.1584  loss_rpn_cls: 0.0078  loss_rpn_bbox: 0.0382  loss_cls: 0.0848  acc: 99.0234  loss_bbox: 0.0276
+11/17 14:20:17 - mmengine - INFO - Epoch(train) [23][1800/6751]  lr: 2.6867e-06  eta: 23:28:24  time: 0.9077  data_time: 0.0047  memory: 5741  grad_norm: 1.8843  loss: 0.1365  loss_rpn_cls: 0.0059  loss_rpn_bbox: 0.0319  loss_cls: 0.0750  acc: 95.3125  loss_bbox: 0.0238
+11/17 14:21:02 - mmengine - INFO - Epoch(train) [23][1850/6751]  lr: 2.6867e-06  eta: 23:27:54  time: 0.9102  data_time: 0.0049  memory: 7014  grad_norm: 1.8497  loss: 0.1427  loss_rpn_cls: 0.0064  loss_rpn_bbox: 0.0363  loss_cls: 0.0758  acc: 98.8281  loss_bbox: 0.0242
+11/17 14:21:48 - mmengine - INFO - Epoch(train) [23][1900/6751]  lr: 2.6867e-06  eta: 23:27:33  time: 0.9144  data_time: 0.0048  memory: 5982  grad_norm: 1.8202  loss: 0.1689  loss_rpn_cls: 0.0118  loss_rpn_bbox: 0.0415  loss_cls: 0.0876  acc: 96.0938  loss_bbox: 0.0280
+11/17 14:22:34 - mmengine - INFO - Epoch(train) [23][1950/6751]  lr: 2.6867e-06  eta: 23:27:10  time: 0.9139  data_time: 0.0048  memory: 5896  grad_norm: 1.8127  loss: 0.1629  loss_rpn_cls: 0.0097  loss_rpn_bbox: 0.0407  loss_cls: 0.0847  acc: 94.1406  loss_bbox: 0.0279
+11/17 14:23:19 - mmengine - INFO - Epoch(train) [23][2000/6751]  lr: 2.6867e-06  eta: 23:26:23  time: 0.9046  data_time: 0.0046  memory: 5896  grad_norm: 1.8449  loss: 0.1426  loss_rpn_cls: 0.0043  loss_rpn_bbox: 0.0304  loss_cls: 0.0838  acc: 99.2188  loss_bbox: 0.0242
+11/17 14:24:04 - mmengine - INFO - Epoch(train) [23][2050/6751]  lr: 2.6867e-06  eta: 23:25:31  time: 0.9020  data_time: 0.0047  memory: 5834  grad_norm: 1.9137  loss: 0.1781  loss_rpn_cls: 0.0081  loss_rpn_bbox: 0.0512  loss_cls: 0.0916  acc: 96.0938  loss_bbox: 0.0272
+11/17 14:24:50 - mmengine - INFO - Epoch(train) [23][2100/6751]  lr: 2.6867e-06  eta: 23:25:12  time: 0.9167  data_time: 0.0046  memory: 9475  grad_norm: 1.8954  loss: 0.1869  loss_rpn_cls: 0.0103  loss_rpn_bbox: 0.0597  loss_cls: 0.0917  acc: 98.2422  loss_bbox: 0.0252
+11/17 14:25:35 - mmengine - INFO - Epoch(train) [23][2150/6751]  lr: 2.6867e-06  eta: 23:24:28  time: 0.9058  data_time: 0.0047  memory: 5838  grad_norm: 1.9321  loss: 0.2115  loss_rpn_cls: 0.0111  loss_rpn_bbox: 0.0585  loss_cls: 0.1082  acc: 93.5547  loss_bbox: 0.0337
+11/17 14:26:20 - mmengine - INFO - Epoch(train) [23][2200/6751]  lr: 2.6867e-06  eta: 23:23:41  time: 0.9042  data_time: 0.0046  memory: 5896  grad_norm: 1.9240  loss: 0.1747  loss_rpn_cls: 0.0118  loss_rpn_bbox: 0.0332  loss_cls: 0.1013  acc: 93.7500  loss_bbox: 0.0284
+11/17 14:26:39 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 14:27:06 - mmengine - INFO - Epoch(train) [23][2250/6751]  lr: 2.6867e-06  eta: 23:23:09  time: 0.9116  data_time: 0.0048  memory: 6235  grad_norm: 1.8549  loss: 0.1506  loss_rpn_cls: 0.0064  loss_rpn_bbox: 0.0324  loss_cls: 0.0887  acc: 95.5078  loss_bbox: 0.0231
+11/17 14:27:51 - mmengine - INFO - Epoch(train) [23][2300/6751]  lr: 2.6867e-06  eta: 23:22:37  time: 0.9117  data_time: 0.0047  memory: 6013  grad_norm: 1.8372  loss: 0.1568  loss_rpn_cls: 0.0072  loss_rpn_bbox: 0.0376  loss_cls: 0.0851  acc: 96.4844  loss_bbox: 0.0269
+11/17 14:28:37 - mmengine - INFO - Epoch(train) [23][2350/6751]  lr: 2.6867e-06  eta: 23:21:56  time: 0.9078  data_time: 0.0047  memory: 5780  grad_norm: 1.8416  loss: 0.1742  loss_rpn_cls: 0.0051  loss_rpn_bbox: 0.0429  loss_cls: 0.1013  acc: 90.2344  loss_bbox: 0.0248
+11/17 14:29:22 - mmengine - INFO - Epoch(train) [23][2400/6751]  lr: 2.6867e-06  eta: 23:21:13  time: 0.9066  data_time: 0.0047  memory: 6013  grad_norm: 1.8664  loss: 0.1786  loss_rpn_cls: 0.0094  loss_rpn_bbox: 0.0503  loss_cls: 0.0934  acc: 98.2422  loss_bbox: 0.0254
+11/17 14:30:07 - mmengine - INFO - Epoch(train) [23][2450/6751]  lr: 2.6867e-06  eta: 23:20:16  time: 0.8997  data_time: 0.0046  memory: 5697  grad_norm: 1.8926  loss: 0.1234  loss_rpn_cls: 0.0040  loss_rpn_bbox: 0.0216  loss_cls: 0.0772  acc: 97.6562  loss_bbox: 0.0206
+11/17 14:30:53 - mmengine - INFO - Epoch(train) [23][2500/6751]  lr: 2.6867e-06  eta: 23:19:50  time: 0.9158  data_time: 0.0046  memory: 5780  grad_norm: 1.8979  loss: 0.1746  loss_rpn_cls: 0.0095  loss_rpn_bbox: 0.0368  loss_cls: 0.0989  acc: 99.8047  loss_bbox: 0.0294
+11/17 14:31:38 - mmengine - INFO - Epoch(train) [23][2550/6751]  lr: 2.6867e-06  eta: 23:19:08  time: 0.9071  data_time: 0.0047  memory: 6310  grad_norm: 1.8566  loss: 0.1567  loss_rpn_cls: 0.0080  loss_rpn_bbox: 0.0378  loss_cls: 0.0855  acc: 97.8516  loss_bbox: 0.0255
+11/17 14:32:24 - mmengine - INFO - Epoch(train) [23][2600/6751]  lr: 2.6867e-06  eta: 23:18:34  time: 0.9121  data_time: 0.0046  memory: 5837  grad_norm: 1.7893  loss: 0.1697  loss_rpn_cls: 0.0085  loss_rpn_bbox: 0.0346  loss_cls: 0.0992  acc: 97.8516  loss_bbox: 0.0274
+11/17 14:33:09 - mmengine - INFO - Epoch(train) [23][2650/6751]  lr: 2.6867e-06  eta: 23:17:47  time: 0.9051  data_time: 0.0047  memory: 6383  grad_norm: 1.8584  loss: 0.1786  loss_rpn_cls: 0.0078  loss_rpn_bbox: 0.0513  loss_cls: 0.0922  acc: 97.0703  loss_bbox: 0.0273
+11/17 14:33:55 - mmengine - INFO - Epoch(train) [23][2700/6751]  lr: 2.6867e-06  eta: 23:17:09  time: 0.9097  data_time: 0.0047  memory: 6454  grad_norm: 1.8513  loss: 0.1575  loss_rpn_cls: 0.0071  loss_rpn_bbox: 0.0480  loss_cls: 0.0788  acc: 99.6094  loss_bbox: 0.0235
+11/17 14:34:40 - mmengine - INFO - Epoch(train) [23][2750/6751]  lr: 2.6867e-06  eta: 23:16:34  time: 0.9117  data_time: 0.0048  memory: 5780  grad_norm: 1.8390  loss: 0.1747  loss_rpn_cls: 0.0102  loss_rpn_bbox: 0.0369  loss_cls: 0.0972  acc: 92.3828  loss_bbox: 0.0303
+11/17 14:35:26 - mmengine - INFO - Epoch(train) [23][2800/6751]  lr: 2.6867e-06  eta: 23:15:47  time: 0.9053  data_time: 0.0046  memory: 6013  grad_norm: 1.9045  loss: 0.1646  loss_rpn_cls: 0.0080  loss_rpn_bbox: 0.0456  loss_cls: 0.0860  acc: 93.5547  loss_bbox: 0.0251
+11/17 14:36:11 - mmengine - INFO - Epoch(train) [23][2850/6751]  lr: 2.6867e-06  eta: 23:15:16  time: 0.9144  data_time: 0.0047  memory: 6543  grad_norm: 1.8103  loss: 0.1477  loss_rpn_cls: 0.0066  loss_rpn_bbox: 0.0273  loss_cls: 0.0882  acc: 98.0469  loss_bbox: 0.0256
+11/17 14:36:57 - mmengine - INFO - Epoch(train) [23][2900/6751]  lr: 2.6867e-06  eta: 23:14:32  time: 0.9070  data_time: 0.0047  memory: 5895  grad_norm: 1.7646  loss: 0.1393  loss_rpn_cls: 0.0051  loss_rpn_bbox: 0.0263  loss_cls: 0.0833  acc: 99.0234  loss_bbox: 0.0246
+11/17 14:37:42 - mmengine - INFO - Epoch(train) [23][2950/6751]  lr: 2.6867e-06  eta: 23:13:52  time: 0.9094  data_time: 0.0046  memory: 5780  grad_norm: 1.7897  loss: 0.1714  loss_rpn_cls: 0.0124  loss_rpn_bbox: 0.0442  loss_cls: 0.0861  acc: 99.0234  loss_bbox: 0.0288
+11/17 14:38:28 - mmengine - INFO - Epoch(train) [23][3000/6751]  lr: 2.6867e-06  eta: 23:13:10  time: 0.9085  data_time: 0.0047  memory: 5884  grad_norm: 1.7598  loss: 0.1780  loss_rpn_cls: 0.0130  loss_rpn_bbox: 0.0459  loss_cls: 0.0903  acc: 97.6562  loss_bbox: 0.0288
+11/17 14:39:13 - mmengine - INFO - Epoch(train) [23][3050/6751]  lr: 2.6867e-06  eta: 23:12:21  time: 0.9034  data_time: 0.0046  memory: 5834  grad_norm: 1.8334  loss: 0.1528  loss_rpn_cls: 0.0084  loss_rpn_bbox: 0.0399  loss_cls: 0.0804  acc: 95.5078  loss_bbox: 0.0241
+11/17 14:39:58 - mmengine - INFO - Epoch(train) [23][3100/6751]  lr: 2.6867e-06  eta: 23:11:26  time: 0.8997  data_time: 0.0046  memory: 5776  grad_norm: 1.9538  loss: 0.1831  loss_rpn_cls: 0.0093  loss_rpn_bbox: 0.0606  loss_cls: 0.0871  acc: 99.6094  loss_bbox: 0.0261
+11/17 14:40:43 - mmengine - INFO - Epoch(train) [23][3150/6751]  lr: 2.6867e-06  eta: 23:10:35  time: 0.9021  data_time: 0.0046  memory: 5776  grad_norm: 1.9118  loss: 0.1300  loss_rpn_cls: 0.0060  loss_rpn_bbox: 0.0253  loss_cls: 0.0747  acc: 99.0234  loss_bbox: 0.0241
+11/17 14:41:28 - mmengine - INFO - Epoch(train) [23][3200/6751]  lr: 2.6867e-06  eta: 23:09:53  time: 0.9084  data_time: 0.0046  memory: 6228  grad_norm: 1.8930  loss: 0.1890  loss_rpn_cls: 0.0084  loss_rpn_bbox: 0.0574  loss_cls: 0.0956  acc: 95.5078  loss_bbox: 0.0277
+11/17 14:41:46 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 14:42:14 - mmengine - INFO - Epoch(train) [23][3250/6751]  lr: 2.6867e-06  eta: 23:09:12  time: 0.9092  data_time: 0.0046  memory: 6243  grad_norm: 1.8166  loss: 0.1656  loss_rpn_cls: 0.0072  loss_rpn_bbox: 0.0413  loss_cls: 0.0918  acc: 97.0703  loss_bbox: 0.0254
+11/17 14:42:59 - mmengine - INFO - Epoch(train) [23][3300/6751]  lr: 2.6867e-06  eta: 23:08:27  time: 0.9060  data_time: 0.0047  memory: 5721  grad_norm: 1.7501  loss: 0.1552  loss_rpn_cls: 0.0061  loss_rpn_bbox: 0.0475  loss_cls: 0.0765  acc: 99.0234  loss_bbox: 0.0252
+11/17 14:43:44 - mmengine - INFO - Epoch(train) [23][3350/6751]  lr: 2.6867e-06  eta: 23:07:36  time: 0.9020  data_time: 0.0046  memory: 5951  grad_norm: 1.7586  loss: 0.1301  loss_rpn_cls: 0.0044  loss_rpn_bbox: 0.0307  loss_cls: 0.0741  acc: 97.8516  loss_bbox: 0.0209
+11/17 14:44:30 - mmengine - INFO - Epoch(train) [23][3400/6751]  lr: 2.6867e-06  eta: 23:06:57  time: 0.9104  data_time: 0.0045  memory: 6375  grad_norm: 1.7494  loss: 0.1489  loss_rpn_cls: 0.0064  loss_rpn_bbox: 0.0306  loss_cls: 0.0872  acc: 99.8047  loss_bbox: 0.0248
+11/17 14:45:15 - mmengine - INFO - Epoch(train) [23][3450/6751]  lr: 2.6867e-06  eta: 23:06:04  time: 0.9008  data_time: 0.0046  memory: 5892  grad_norm: 1.7943  loss: 0.1672  loss_rpn_cls: 0.0062  loss_rpn_bbox: 0.0532  loss_cls: 0.0831  acc: 97.0703  loss_bbox: 0.0246
+11/17 14:46:00 - mmengine - INFO - Epoch(train) [23][3500/6751]  lr: 2.6867e-06  eta: 23:05:11  time: 0.9001  data_time: 0.0046  memory: 5896  grad_norm: 1.7380  loss: 0.1530  loss_rpn_cls: 0.0073  loss_rpn_bbox: 0.0342  loss_cls: 0.0848  acc: 91.4062  loss_bbox: 0.0266
+11/17 14:46:45 - mmengine - INFO - Epoch(train) [23][3550/6751]  lr: 2.6867e-06  eta: 23:04:25  time: 0.9056  data_time: 0.0047  memory: 5780  grad_norm: 1.8162  loss: 0.1850  loss_rpn_cls: 0.0136  loss_rpn_bbox: 0.0548  loss_cls: 0.0901  acc: 94.7266  loss_bbox: 0.0266
+11/17 14:47:31 - mmengine - INFO - Epoch(train) [23][3600/6751]  lr: 2.6867e-06  eta: 23:03:46  time: 0.9106  data_time: 0.0045  memory: 6830  grad_norm: 1.8132  loss: 0.1665  loss_rpn_cls: 0.0142  loss_rpn_bbox: 0.0374  loss_cls: 0.0899  acc: 98.6328  loss_bbox: 0.0249
+11/17 14:48:16 - mmengine - INFO - Epoch(train) [23][3650/6751]  lr: 2.6867e-06  eta: 23:03:00  time: 0.9053  data_time: 0.0046  memory: 6095  grad_norm: 1.8551  loss: 0.2105  loss_rpn_cls: 0.0106  loss_rpn_bbox: 0.0609  loss_cls: 0.1087  acc: 89.8438  loss_bbox: 0.0302
+11/17 14:49:01 - mmengine - INFO - Epoch(train) [23][3700/6751]  lr: 2.6867e-06  eta: 23:02:07  time: 0.8999  data_time: 0.0046  memory: 5780  grad_norm: 1.9084  loss: 0.1552  loss_rpn_cls: 0.0060  loss_rpn_bbox: 0.0384  loss_cls: 0.0853  acc: 93.7500  loss_bbox: 0.0254
+11/17 14:49:46 - mmengine - INFO - Epoch(train) [23][3750/6751]  lr: 2.6867e-06  eta: 23:01:23  time: 0.9064  data_time: 0.0047  memory: 6013  grad_norm: 1.8299  loss: 0.1708  loss_rpn_cls: 0.0091  loss_rpn_bbox: 0.0396  loss_cls: 0.0944  acc: 94.9219  loss_bbox: 0.0277
+11/17 14:50:31 - mmengine - INFO - Epoch(train) [23][3800/6751]  lr: 2.6867e-06  eta: 23:00:35  time: 0.9042  data_time: 0.0047  memory: 5896  grad_norm: 1.8980  loss: 0.1663  loss_rpn_cls: 0.0064  loss_rpn_bbox: 0.0449  loss_cls: 0.0866  acc: 98.0469  loss_bbox: 0.0284
+11/17 14:51:16 - mmengine - INFO - Epoch(train) [23][3850/6751]  lr: 2.6867e-06  eta: 22:59:41  time: 0.8987  data_time: 0.0046  memory: 5930  grad_norm: 1.8955  loss: 0.1948  loss_rpn_cls: 0.0154  loss_rpn_bbox: 0.0515  loss_cls: 0.1011  acc: 99.2188  loss_bbox: 0.0268
+11/17 14:52:02 - mmengine - INFO - Epoch(train) [23][3900/6751]  lr: 2.6867e-06  eta: 22:58:55  time: 0.9050  data_time: 0.0046  memory: 6009  grad_norm: 1.9242  loss: 0.1553  loss_rpn_cls: 0.0080  loss_rpn_bbox: 0.0356  loss_cls: 0.0842  acc: 94.9219  loss_bbox: 0.0276
+11/17 14:52:47 - mmengine - INFO - Epoch(train) [23][3950/6751]  lr: 2.6867e-06  eta: 22:58:08  time: 0.9040  data_time: 0.0047  memory: 6330  grad_norm: 1.9754  loss: 0.1849  loss_rpn_cls: 0.0069  loss_rpn_bbox: 0.0504  loss_cls: 0.0995  acc: 96.6797  loss_bbox: 0.0280
+11/17 14:53:32 - mmengine - INFO - Epoch(train) [23][4000/6751]  lr: 2.6867e-06  eta: 22:57:23  time: 0.9062  data_time: 0.0046  memory: 5838  grad_norm: 1.9224  loss: 0.1386  loss_rpn_cls: 0.0086  loss_rpn_bbox: 0.0249  loss_cls: 0.0816  acc: 95.7031  loss_bbox: 0.0234
+11/17 14:54:17 - mmengine - INFO - Epoch(train) [23][4050/6751]  lr: 2.6867e-06  eta: 22:56:34  time: 0.9024  data_time: 0.0046  memory: 5838  grad_norm: 1.8984  loss: 0.1391  loss_rpn_cls: 0.0063  loss_rpn_bbox: 0.0291  loss_cls: 0.0779  acc: 96.2891  loss_bbox: 0.0258
+11/17 14:55:03 - mmengine - INFO - Epoch(train) [23][4100/6751]  lr: 2.6867e-06  eta: 22:55:54  time: 0.9104  data_time: 0.0046  memory: 7134  grad_norm: 1.9012  loss: 0.1432  loss_rpn_cls: 0.0087  loss_rpn_bbox: 0.0297  loss_cls: 0.0816  acc: 90.6250  loss_bbox: 0.0232
+11/17 14:55:48 - mmengine - INFO - Epoch(train) [23][4150/6751]  lr: 2.6867e-06  eta: 22:55:08  time: 0.9055  data_time: 0.0046  memory: 5892  grad_norm: 1.8917  loss: 0.1744  loss_rpn_cls: 0.0089  loss_rpn_bbox: 0.0537  loss_cls: 0.0872  acc: 99.6094  loss_bbox: 0.0246
+11/17 14:56:33 - mmengine - INFO - Epoch(train) [23][4200/6751]  lr: 2.6867e-06  eta: 22:54:22  time: 0.9050  data_time: 0.0048  memory: 6595  grad_norm: 1.8839  loss: 0.1942  loss_rpn_cls: 0.0105  loss_rpn_bbox: 0.0596  loss_cls: 0.0973  acc: 99.0234  loss_bbox: 0.0268
+11/17 14:56:52 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 14:57:19 - mmengine - INFO - Epoch(train) [23][4250/6751]  lr: 2.6867e-06  eta: 22:53:47  time: 0.9151  data_time: 0.0047  memory: 5955  grad_norm: 1.8794  loss: 0.1698  loss_rpn_cls: 0.0083  loss_rpn_bbox: 0.0520  loss_cls: 0.0845  acc: 97.2656  loss_bbox: 0.0250
+11/17 14:58:05 - mmengine - INFO - Epoch(train) [23][4300/6751]  lr: 2.6867e-06  eta: 22:53:06  time: 0.9097  data_time: 0.0047  memory: 6013  grad_norm: 1.8015  loss: 0.1656  loss_rpn_cls: 0.0077  loss_rpn_bbox: 0.0465  loss_cls: 0.0869  acc: 91.4062  loss_bbox: 0.0244
+11/17 14:58:50 - mmengine - INFO - Epoch(train) [23][4350/6751]  lr: 2.6867e-06  eta: 22:52:26  time: 0.9111  data_time: 0.0048  memory: 5780  grad_norm: 1.8462  loss: 0.1802  loss_rpn_cls: 0.0066  loss_rpn_bbox: 0.0587  loss_cls: 0.0884  acc: 97.4609  loss_bbox: 0.0266
+11/17 14:59:36 - mmengine - INFO - Epoch(train) [23][4400/6751]  lr: 2.6867e-06  eta: 22:51:49  time: 0.9145  data_time: 0.0047  memory: 6370  grad_norm: 1.8018  loss: 0.1515  loss_rpn_cls: 0.0063  loss_rpn_bbox: 0.0389  loss_cls: 0.0815  acc: 97.6562  loss_bbox: 0.0248
+11/17 15:00:21 - mmengine - INFO - Epoch(train) [23][4450/6751]  lr: 2.6867e-06  eta: 22:51:03  time: 0.9050  data_time: 0.0048  memory: 5780  grad_norm: 1.8092  loss: 0.1691  loss_rpn_cls: 0.0091  loss_rpn_bbox: 0.0382  loss_cls: 0.0946  acc: 99.2188  loss_bbox: 0.0272
+11/17 15:01:07 - mmengine - INFO - Epoch(train) [23][4500/6751]  lr: 2.6867e-06  eta: 22:50:18  time: 0.9068  data_time: 0.0048  memory: 5834  grad_norm: 1.8877  loss: 0.1638  loss_rpn_cls: 0.0105  loss_rpn_bbox: 0.0359  loss_cls: 0.0904  acc: 95.5078  loss_bbox: 0.0270
+11/17 15:01:52 - mmengine - INFO - Epoch(train) [23][4550/6751]  lr: 2.6867e-06  eta: 22:49:31  time: 0.9038  data_time: 0.0047  memory: 5896  grad_norm: 1.8604  loss: 0.1912  loss_rpn_cls: 0.0116  loss_rpn_bbox: 0.0547  loss_cls: 0.0985  acc: 98.2422  loss_bbox: 0.0264
+11/17 15:02:37 - mmengine - INFO - Epoch(train) [23][4600/6751]  lr: 2.6867e-06  eta: 22:48:44  time: 0.9046  data_time: 0.0045  memory: 5955  grad_norm: 1.9376  loss: 0.1477  loss_rpn_cls: 0.0082  loss_rpn_bbox: 0.0309  loss_cls: 0.0827  acc: 99.6094  loss_bbox: 0.0259
+11/17 15:03:22 - mmengine - INFO - Epoch(train) [23][4650/6751]  lr: 2.6867e-06  eta: 22:48:00  time: 0.9069  data_time: 0.0047  memory: 6172  grad_norm: 1.8921  loss: 0.1632  loss_rpn_cls: 0.0093  loss_rpn_bbox: 0.0534  loss_cls: 0.0750  acc: 98.0469  loss_bbox: 0.0256
+11/17 15:04:08 - mmengine - INFO - Epoch(train) [23][4700/6751]  lr: 2.6867e-06  eta: 22:47:11  time: 0.9023  data_time: 0.0046  memory: 6067  grad_norm: 1.8762  loss: 0.1892  loss_rpn_cls: 0.0084  loss_rpn_bbox: 0.0507  loss_cls: 0.1023  acc: 92.9688  loss_bbox: 0.0279
+11/17 15:04:52 - mmengine - INFO - Epoch(train) [23][4750/6751]  lr: 2.6867e-06  eta: 22:46:18  time: 0.8984  data_time: 0.0045  memory: 5896  grad_norm: 1.8648  loss: 0.1875  loss_rpn_cls: 0.0100  loss_rpn_bbox: 0.0544  loss_cls: 0.0979  acc: 96.2891  loss_bbox: 0.0252
+11/17 15:05:38 - mmengine - INFO - Epoch(train) [23][4800/6751]  lr: 2.6867e-06  eta: 22:45:38  time: 0.9116  data_time: 0.0045  memory: 5780  grad_norm: 1.8869  loss: 0.1528  loss_rpn_cls: 0.0089  loss_rpn_bbox: 0.0371  loss_cls: 0.0840  acc: 91.4062  loss_bbox: 0.0229
+11/17 15:06:23 - mmengine - INFO - Epoch(train) [23][4850/6751]  lr: 2.6867e-06  eta: 22:44:48  time: 0.9005  data_time: 0.0046  memory: 6158  grad_norm: 1.8797  loss: 0.1840  loss_rpn_cls: 0.0112  loss_rpn_bbox: 0.0497  loss_cls: 0.0942  acc: 95.1172  loss_bbox: 0.0289
+11/17 15:07:09 - mmengine - INFO - Epoch(train) [23][4900/6751]  lr: 2.6867e-06  eta: 22:44:05  time: 0.9087  data_time: 0.0048  memory: 6013  grad_norm: 1.9485  loss: 0.2219  loss_rpn_cls: 0.0070  loss_rpn_bbox: 0.0943  loss_cls: 0.0912  acc: 93.7500  loss_bbox: 0.0294
+11/17 15:07:54 - mmengine - INFO - Epoch(train) [23][4950/6751]  lr: 2.6867e-06  eta: 22:43:20  time: 0.9064  data_time: 0.0048  memory: 5955  grad_norm: 1.9141  loss: 0.1589  loss_rpn_cls: 0.0058  loss_rpn_bbox: 0.0567  loss_cls: 0.0738  acc: 96.8750  loss_bbox: 0.0227
+11/17 15:08:39 - mmengine - INFO - Epoch(train) [23][5000/6751]  lr: 2.6867e-06  eta: 22:42:38  time: 0.9093  data_time: 0.0047  memory: 6078  grad_norm: 1.9475  loss: 0.1744  loss_rpn_cls: 0.0091  loss_rpn_bbox: 0.0592  loss_cls: 0.0812  acc: 94.5312  loss_bbox: 0.0249
+11/17 15:09:25 - mmengine - INFO - Epoch(train) [23][5050/6751]  lr: 2.6867e-06  eta: 22:41:55  time: 0.9087  data_time: 0.0047  memory: 5797  grad_norm: 1.9239  loss: 0.1508  loss_rpn_cls: 0.0082  loss_rpn_bbox: 0.0344  loss_cls: 0.0806  acc: 95.8984  loss_bbox: 0.0276
+11/17 15:10:11 - mmengine - INFO - Epoch(train) [23][5100/6751]  lr: 2.6867e-06  eta: 22:41:17  time: 0.9144  data_time: 0.0048  memory: 6186  grad_norm: 1.8614  loss: 0.1832  loss_rpn_cls: 0.0101  loss_rpn_bbox: 0.0371  loss_cls: 0.1074  acc: 98.2422  loss_bbox: 0.0286
+11/17 15:10:56 - mmengine - INFO - Epoch(train) [23][5150/6751]  lr: 2.6867e-06  eta: 22:40:31  time: 0.9048  data_time: 0.0047  memory: 5778  grad_norm: 1.9606  loss: 0.1700  loss_rpn_cls: 0.0100  loss_rpn_bbox: 0.0518  loss_cls: 0.0826  acc: 95.8984  loss_bbox: 0.0257
+11/17 15:11:41 - mmengine - INFO - Epoch(train) [23][5200/6751]  lr: 2.6867e-06  eta: 22:39:51  time: 0.9128  data_time: 0.0047  memory: 6115  grad_norm: 1.8392  loss: 0.1384  loss_rpn_cls: 0.0107  loss_rpn_bbox: 0.0419  loss_cls: 0.0656  acc: 98.6328  loss_bbox: 0.0202
+11/17 15:12:00 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 15:12:27 - mmengine - INFO - Epoch(train) [23][5250/6751]  lr: 2.6867e-06  eta: 22:39:11  time: 0.9124  data_time: 0.0047  memory: 7223  grad_norm: 1.8914  loss: 0.1719  loss_rpn_cls: 0.0054  loss_rpn_bbox: 0.0480  loss_cls: 0.0909  acc: 95.1172  loss_bbox: 0.0275
+11/17 15:13:12 - mmengine - INFO - Epoch(train) [23][5300/6751]  lr: 2.6867e-06  eta: 22:38:23  time: 0.9028  data_time: 0.0047  memory: 5717  grad_norm: 1.9523  loss: 0.1499  loss_rpn_cls: 0.0054  loss_rpn_bbox: 0.0369  loss_cls: 0.0850  acc: 95.8984  loss_bbox: 0.0225
+11/17 15:13:57 - mmengine - INFO - Epoch(train) [23][5350/6751]  lr: 2.6867e-06  eta: 22:37:35  time: 0.9026  data_time: 0.0046  memory: 5955  grad_norm: 1.8333  loss: 0.1562  loss_rpn_cls: 0.0048  loss_rpn_bbox: 0.0417  loss_cls: 0.0843  acc: 99.0234  loss_bbox: 0.0253
+11/17 15:14:43 - mmengine - INFO - Epoch(train) [23][5400/6751]  lr: 2.6867e-06  eta: 22:36:50  time: 0.9068  data_time: 0.0046  memory: 6103  grad_norm: 1.8857  loss: 0.1511  loss_rpn_cls: 0.0059  loss_rpn_bbox: 0.0420  loss_cls: 0.0791  acc: 99.6094  loss_bbox: 0.0241
+11/17 15:15:28 - mmengine - INFO - Epoch(train) [23][5450/6751]  lr: 2.6867e-06  eta: 22:36:11  time: 0.9136  data_time: 0.0048  memory: 6842  grad_norm: 1.9359  loss: 0.1927  loss_rpn_cls: 0.0115  loss_rpn_bbox: 0.0640  loss_cls: 0.0890  acc: 95.8984  loss_bbox: 0.0282
+11/17 15:16:14 - mmengine - INFO - Epoch(train) [23][5500/6751]  lr: 2.6867e-06  eta: 22:35:29  time: 0.9098  data_time: 0.0047  memory: 5955  grad_norm: 1.8586  loss: 0.1478  loss_rpn_cls: 0.0084  loss_rpn_bbox: 0.0302  loss_cls: 0.0848  acc: 93.3594  loss_bbox: 0.0244
+11/17 15:16:59 - mmengine - INFO - Epoch(train) [23][5550/6751]  lr: 2.6867e-06  eta: 22:34:43  time: 0.9061  data_time: 0.0047  memory: 5838  grad_norm: 1.9033  loss: 0.1783  loss_rpn_cls: 0.0117  loss_rpn_bbox: 0.0374  loss_cls: 0.1017  acc: 94.3359  loss_bbox: 0.0274
+11/17 15:17:45 - mmengine - INFO - Epoch(train) [23][5600/6751]  lr: 2.6867e-06  eta: 22:34:00  time: 0.9086  data_time: 0.0046  memory: 6013  grad_norm: 1.8659  loss: 0.1549  loss_rpn_cls: 0.0078  loss_rpn_bbox: 0.0366  loss_cls: 0.0831  acc: 97.6562  loss_bbox: 0.0273
+11/17 15:18:29 - mmengine - INFO - Epoch(train) [23][5650/6751]  lr: 2.6867e-06  eta: 22:33:06  time: 0.8954  data_time: 0.0047  memory: 5778  grad_norm: 1.8046  loss: 0.1540  loss_rpn_cls: 0.0071  loss_rpn_bbox: 0.0379  loss_cls: 0.0842  acc: 96.0938  loss_bbox: 0.0248
+11/17 15:19:15 - mmengine - INFO - Epoch(train) [23][5700/6751]  lr: 2.6867e-06  eta: 22:32:24  time: 0.9099  data_time: 0.0046  memory: 6414  grad_norm: 1.8153  loss: 0.1683  loss_rpn_cls: 0.0088  loss_rpn_bbox: 0.0431  loss_cls: 0.0897  acc: 98.6328  loss_bbox: 0.0267
+11/17 15:20:01 - mmengine - INFO - Epoch(train) [23][5750/6751]  lr: 2.6867e-06  eta: 22:31:45  time: 0.9146  data_time: 0.0048  memory: 6715  grad_norm: 1.7493  loss: 0.1645  loss_rpn_cls: 0.0110  loss_rpn_bbox: 0.0436  loss_cls: 0.0858  acc: 98.4375  loss_bbox: 0.0241
+11/17 15:20:46 - mmengine - INFO - Epoch(train) [23][5800/6751]  lr: 2.6867e-06  eta: 22:31:05  time: 0.9139  data_time: 0.0049  memory: 5955  grad_norm: 1.8236  loss: 0.1627  loss_rpn_cls: 0.0056  loss_rpn_bbox: 0.0408  loss_cls: 0.0900  acc: 94.7266  loss_bbox: 0.0263
+11/17 15:21:32 - mmengine - INFO - Epoch(train) [23][5850/6751]  lr: 2.6867e-06  eta: 22:30:21  time: 0.9080  data_time: 0.0048  memory: 5780  grad_norm: 1.7922  loss: 0.1629  loss_rpn_cls: 0.0069  loss_rpn_bbox: 0.0414  loss_cls: 0.0887  acc: 93.5547  loss_bbox: 0.0259
+11/17 15:22:18 - mmengine - INFO - Epoch(train) [23][5900/6751]  lr: 2.6867e-06  eta: 22:29:43  time: 0.9154  data_time: 0.0049  memory: 6063  grad_norm: 1.7853  loss: 0.1523  loss_rpn_cls: 0.0093  loss_rpn_bbox: 0.0382  loss_cls: 0.0802  acc: 95.8984  loss_bbox: 0.0245
+11/17 15:23:03 - mmengine - INFO - Epoch(train) [23][5950/6751]  lr: 2.6867e-06  eta: 22:28:59  time: 0.9080  data_time: 0.0046  memory: 5896  grad_norm: 1.8325  loss: 0.1513  loss_rpn_cls: 0.0098  loss_rpn_bbox: 0.0330  loss_cls: 0.0836  acc: 99.4141  loss_bbox: 0.0249
+11/17 15:23:48 - mmengine - INFO - Epoch(train) [23][6000/6751]  lr: 2.6867e-06  eta: 22:28:13  time: 0.9064  data_time: 0.0050  memory: 6009  grad_norm: 1.8128  loss: 0.1259  loss_rpn_cls: 0.0055  loss_rpn_bbox: 0.0227  loss_cls: 0.0760  acc: 98.8281  loss_bbox: 0.0218
+11/17 15:24:34 - mmengine - INFO - Epoch(train) [23][6050/6751]  lr: 2.6867e-06  eta: 22:27:32  time: 0.9114  data_time: 0.0051  memory: 5834  grad_norm: 1.9265  loss: 0.1677  loss_rpn_cls: 0.0066  loss_rpn_bbox: 0.0494  loss_cls: 0.0850  acc: 99.8047  loss_bbox: 0.0268
+11/17 15:25:20 - mmengine - INFO - Epoch(train) [23][6100/6751]  lr: 2.6867e-06  eta: 22:26:53  time: 0.9154  data_time: 0.0051  memory: 5953  grad_norm: 2.0011  loss: 0.1677  loss_rpn_cls: 0.0083  loss_rpn_bbox: 0.0598  loss_cls: 0.0781  acc: 95.5078  loss_bbox: 0.0215
+11/17 15:26:05 - mmengine - INFO - Epoch(train) [23][6150/6751]  lr: 2.6867e-06  eta: 22:26:06  time: 0.9044  data_time: 0.0051  memory: 5780  grad_norm: 2.0145  loss: 0.1615  loss_rpn_cls: 0.0070  loss_rpn_bbox: 0.0326  loss_cls: 0.0952  acc: 89.0625  loss_bbox: 0.0267
+11/17 15:26:51 - mmengine - INFO - Epoch(train) [23][6200/6751]  lr: 2.6867e-06  eta: 22:25:27  time: 0.9158  data_time: 0.0049  memory: 5953  grad_norm: 2.0189  loss: 0.1581  loss_rpn_cls: 0.0085  loss_rpn_bbox: 0.0410  loss_cls: 0.0843  acc: 89.2578  loss_bbox: 0.0243
+11/17 15:27:09 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 15:27:36 - mmengine - INFO - Epoch(train) [23][6250/6751]  lr: 2.6867e-06  eta: 22:24:42  time: 0.9070  data_time: 0.0047  memory: 5780  grad_norm: 1.9057  loss: 0.1805  loss_rpn_cls: 0.0104  loss_rpn_bbox: 0.0456  loss_cls: 0.0936  acc: 90.6250  loss_bbox: 0.0309
+11/17 15:28:21 - mmengine - INFO - Epoch(train) [23][6300/6751]  lr: 2.6867e-06  eta: 22:23:56  time: 0.9048  data_time: 0.0045  memory: 5951  grad_norm: 1.8242  loss: 0.2091  loss_rpn_cls: 0.0099  loss_rpn_bbox: 0.0711  loss_cls: 0.0983  acc: 97.2656  loss_bbox: 0.0297
+11/17 15:29:07 - mmengine - INFO - Epoch(train) [23][6350/6751]  lr: 2.6867e-06  eta: 22:23:13  time: 0.9099  data_time: 0.0046  memory: 5938  grad_norm: 1.8586  loss: 0.1713  loss_rpn_cls: 0.0086  loss_rpn_bbox: 0.0464  loss_cls: 0.0896  acc: 98.0469  loss_bbox: 0.0267
+11/17 15:29:52 - mmengine - INFO - Epoch(train) [23][6400/6751]  lr: 2.6867e-06  eta: 22:22:25  time: 0.9034  data_time: 0.0047  memory: 5955  grad_norm: 1.8329  loss: 0.1803  loss_rpn_cls: 0.0137  loss_rpn_bbox: 0.0425  loss_cls: 0.0987  acc: 96.2891  loss_bbox: 0.0254
+11/17 15:30:37 - mmengine - INFO - Epoch(train) [23][6450/6751]  lr: 2.6867e-06  eta: 22:21:36  time: 0.9018  data_time: 0.0045  memory: 5896  grad_norm: 1.9237  loss: 0.1548  loss_rpn_cls: 0.0087  loss_rpn_bbox: 0.0342  loss_cls: 0.0879  acc: 99.0234  loss_bbox: 0.0241
+11/17 15:31:22 - mmengine - INFO - Epoch(train) [23][6500/6751]  lr: 2.6867e-06  eta: 22:20:48  time: 0.9013  data_time: 0.0047  memory: 5838  grad_norm: 1.9097  loss: 0.1474  loss_rpn_cls: 0.0047  loss_rpn_bbox: 0.0427  loss_cls: 0.0754  acc: 97.6562  loss_bbox: 0.0245
+11/17 15:32:07 - mmengine - INFO - Epoch(train) [23][6550/6751]  lr: 2.6867e-06  eta: 22:19:59  time: 0.9024  data_time: 0.0047  memory: 5780  grad_norm: 1.9360  loss: 0.1665  loss_rpn_cls: 0.0069  loss_rpn_bbox: 0.0457  loss_cls: 0.0868  acc: 96.6797  loss_bbox: 0.0272
+11/17 15:32:53 - mmengine - INFO - Epoch(train) [23][6600/6751]  lr: 2.6867e-06  eta: 22:19:16  time: 0.9094  data_time: 0.0046  memory: 5951  grad_norm: 2.0232  loss: 0.1848  loss_rpn_cls: 0.0127  loss_rpn_bbox: 0.0495  loss_cls: 0.0945  acc: 99.8047  loss_bbox: 0.0281
+11/17 15:33:38 - mmengine - INFO - Epoch(train) [23][6650/6751]  lr: 2.6867e-06  eta: 22:18:31  time: 0.9065  data_time: 0.0046  memory: 5838  grad_norm: 1.9607  loss: 0.1706  loss_rpn_cls: 0.0081  loss_rpn_bbox: 0.0408  loss_cls: 0.0925  acc: 94.3359  loss_bbox: 0.0293
+11/17 15:34:24 - mmengine - INFO - Epoch(train) [23][6700/6751]  lr: 2.6867e-06  eta: 22:17:50  time: 0.9134  data_time: 0.0049  memory: 6013  grad_norm: 2.0258  loss: 0.1857  loss_rpn_cls: 0.0105  loss_rpn_bbox: 0.0526  loss_cls: 0.0947  acc: 99.0234  loss_bbox: 0.0279
+11/17 15:35:09 - mmengine - INFO - Epoch(train) [23][6750/6751]  lr: 2.6867e-06  eta: 22:17:07  time: 0.9096  data_time: 0.0047  memory: 5780  grad_norm: 1.9039  loss: 0.1123  loss_rpn_cls: 0.0054  loss_rpn_bbox: 0.0178  loss_cls: 0.0686  acc: 96.4844  loss_bbox: 0.0205
+11/17 15:35:10 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 15:35:10 - mmengine - INFO - Saving checkpoint at 23 epochs
+11/17 15:35:15 - mmengine - INFO - Saving checkpoint at 23 epochs
+11/17 15:36:05 - mmengine - INFO - Epoch(train) [24][  50/6751]  lr: 1.4235e-06  eta: 22:16:33  time: 0.9261  data_time: 0.0066  memory: 6009  grad_norm: 1.8509  loss: 0.1612  loss_rpn_cls: 0.0071  loss_rpn_bbox: 0.0463  loss_cls: 0.0845  acc: 99.8047  loss_bbox: 0.0233
+11/17 15:36:50 - mmengine - INFO - Epoch(train) [24][ 100/6751]  lr: 1.4235e-06  eta: 22:15:44  time: 0.9009  data_time: 0.0048  memory: 6072  grad_norm: 1.8593  loss: 0.1475  loss_rpn_cls: 0.0064  loss_rpn_bbox: 0.0298  loss_cls: 0.0903  acc: 97.0703  loss_bbox: 0.0210
+11/17 15:37:35 - mmengine - INFO - Epoch(train) [24][ 150/6751]  lr: 1.4235e-06  eta: 22:15:04  time: 0.9150  data_time: 0.0050  memory: 6074  grad_norm: 1.8171  loss: 0.2166  loss_rpn_cls: 0.0101  loss_rpn_bbox: 0.0784  loss_cls: 0.0982  acc: 92.3828  loss_bbox: 0.0299
+11/17 15:38:21 - mmengine - INFO - Epoch(train) [24][ 200/6751]  lr: 1.4235e-06  eta: 22:14:24  time: 0.9152  data_time: 0.0049  memory: 6371  grad_norm: 1.8643  loss: 0.1695  loss_rpn_cls: 0.0097  loss_rpn_bbox: 0.0415  loss_cls: 0.0914  acc: 90.0391  loss_bbox: 0.0269
+11/17 15:39:06 - mmengine - INFO - Epoch(train) [24][ 250/6751]  lr: 1.4235e-06  eta: 22:13:37  time: 0.9046  data_time: 0.0049  memory: 5896  grad_norm: 1.8440  loss: 0.1653  loss_rpn_cls: 0.0067  loss_rpn_bbox: 0.0364  loss_cls: 0.0946  acc: 99.2188  loss_bbox: 0.0276
+11/17 15:39:52 - mmengine - INFO - Epoch(train) [24][ 300/6751]  lr: 1.4235e-06  eta: 22:12:52  time: 0.9079  data_time: 0.0049  memory: 5838  grad_norm: 1.8353  loss: 0.1698  loss_rpn_cls: 0.0088  loss_rpn_bbox: 0.0388  loss_cls: 0.0950  acc: 95.7031  loss_bbox: 0.0273
+11/17 15:40:37 - mmengine - INFO - Epoch(train) [24][ 350/6751]  lr: 1.4235e-06  eta: 22:12:05  time: 0.9034  data_time: 0.0049  memory: 5780  grad_norm: 1.7576  loss: 0.1636  loss_rpn_cls: 0.0063  loss_rpn_bbox: 0.0424  loss_cls: 0.0888  acc: 92.5781  loss_bbox: 0.0261
+11/17 15:41:22 - mmengine - INFO - Epoch(train) [24][ 400/6751]  lr: 1.4235e-06  eta: 22:11:14  time: 0.8969  data_time: 0.0049  memory: 5892  grad_norm: 1.8086  loss: 0.1512  loss_rpn_cls: 0.0080  loss_rpn_bbox: 0.0304  loss_cls: 0.0899  acc: 89.8438  loss_bbox: 0.0230
+11/17 15:42:07 - mmengine - INFO - Epoch(train) [24][ 450/6751]  lr: 1.4235e-06  eta: 22:10:30  time: 0.9102  data_time: 0.0049  memory: 5896  grad_norm: 1.8106  loss: 0.1677  loss_rpn_cls: 0.0080  loss_rpn_bbox: 0.0445  loss_cls: 0.0905  acc: 98.2422  loss_bbox: 0.0247
+11/17 15:42:25 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 15:42:53 - mmengine - INFO - Epoch(train) [24][ 500/6751]  lr: 1.4235e-06  eta: 22:09:48  time: 0.9121  data_time: 0.0049  memory: 7454  grad_norm: 1.7907  loss: 0.1893  loss_rpn_cls: 0.0099  loss_rpn_bbox: 0.0569  loss_cls: 0.0942  acc: 91.6016  loss_bbox: 0.0284
+11/17 15:43:39 - mmengine - INFO - Epoch(train) [24][ 550/6751]  lr: 1.4235e-06  eta: 22:09:05  time: 0.9103  data_time: 0.0049  memory: 6099  grad_norm: 1.8799  loss: 0.1756  loss_rpn_cls: 0.0105  loss_rpn_bbox: 0.0397  loss_cls: 0.0965  acc: 98.8281  loss_bbox: 0.0289
+11/17 15:44:24 - mmengine - INFO - Epoch(train) [24][ 600/6751]  lr: 1.4235e-06  eta: 22:08:21  time: 0.9096  data_time: 0.0049  memory: 5896  grad_norm: 1.9069  loss: 0.1875  loss_rpn_cls: 0.0087  loss_rpn_bbox: 0.0421  loss_cls: 0.1043  acc: 99.2188  loss_bbox: 0.0324
+11/17 15:45:09 - mmengine - INFO - Epoch(train) [24][ 650/6751]  lr: 1.4235e-06  eta: 22:07:37  time: 0.9090  data_time: 0.0050  memory: 5780  grad_norm: 1.9069  loss: 0.1556  loss_rpn_cls: 0.0070  loss_rpn_bbox: 0.0335  loss_cls: 0.0884  acc: 88.2812  loss_bbox: 0.0266
+11/17 15:45:55 - mmengine - INFO - Epoch(train) [24][ 700/6751]  lr: 1.4235e-06  eta: 22:06:59  time: 0.9188  data_time: 0.0050  memory: 6067  grad_norm: 1.9591  loss: 0.1555  loss_rpn_cls: 0.0088  loss_rpn_bbox: 0.0389  loss_cls: 0.0833  acc: 99.0234  loss_bbox: 0.0245
+11/17 15:46:41 - mmengine - INFO - Epoch(train) [24][ 750/6751]  lr: 1.4235e-06  eta: 22:06:17  time: 0.9125  data_time: 0.0049  memory: 5955  grad_norm: 1.9368  loss: 0.1368  loss_rpn_cls: 0.0077  loss_rpn_bbox: 0.0273  loss_cls: 0.0811  acc: 97.2656  loss_bbox: 0.0207
+11/17 15:47:27 - mmengine - INFO - Epoch(train) [24][ 800/6751]  lr: 1.4235e-06  eta: 22:05:33  time: 0.9090  data_time: 0.0049  memory: 5780  grad_norm: 1.8265  loss: 0.1344  loss_rpn_cls: 0.0077  loss_rpn_bbox: 0.0320  loss_cls: 0.0727  acc: 99.6094  loss_bbox: 0.0221
+11/17 15:48:12 - mmengine - INFO - Epoch(train) [24][ 850/6751]  lr: 1.4235e-06  eta: 22:04:53  time: 0.9167  data_time: 0.0049  memory: 6013  grad_norm: 1.7671  loss: 0.1445  loss_rpn_cls: 0.0097  loss_rpn_bbox: 0.0360  loss_cls: 0.0757  acc: 96.2891  loss_bbox: 0.0231
+11/17 15:48:58 - mmengine - INFO - Epoch(train) [24][ 900/6751]  lr: 1.4235e-06  eta: 22:04:09  time: 0.9089  data_time: 0.0048  memory: 5896  grad_norm: 1.7503  loss: 0.2101  loss_rpn_cls: 0.0126  loss_rpn_bbox: 0.0561  loss_cls: 0.1105  acc: 99.8047  loss_bbox: 0.0309
+11/17 15:49:44 - mmengine - INFO - Epoch(train) [24][ 950/6751]  lr: 1.4235e-06  eta: 22:03:27  time: 0.9137  data_time: 0.0049  memory: 5955  grad_norm: 1.7638  loss: 0.1447  loss_rpn_cls: 0.0069  loss_rpn_bbox: 0.0308  loss_cls: 0.0823  acc: 99.4141  loss_bbox: 0.0247
+11/17 15:50:29 - mmengine - INFO - Epoch(train) [24][1000/6751]  lr: 1.4235e-06  eta: 22:02:45  time: 0.9125  data_time: 0.0051  memory: 5955  grad_norm: 1.8362  loss: 0.1815  loss_rpn_cls: 0.0084  loss_rpn_bbox: 0.0430  loss_cls: 0.0988  acc: 98.4375  loss_bbox: 0.0313
+11/17 15:51:15 - mmengine - INFO - Epoch(train) [24][1050/6751]  lr: 1.4235e-06  eta: 22:02:02  time: 0.9106  data_time: 0.0049  memory: 5955  grad_norm: 1.9164  loss: 0.1579  loss_rpn_cls: 0.0072  loss_rpn_bbox: 0.0392  loss_cls: 0.0844  acc: 93.5547  loss_bbox: 0.0271
+11/17 15:52:00 - mmengine - INFO - Epoch(train) [24][1100/6751]  lr: 1.4235e-06  eta: 22:01:19  time: 0.9115  data_time: 0.0049  memory: 6310  grad_norm: 1.9425  loss: 0.1973  loss_rpn_cls: 0.0130  loss_rpn_bbox: 0.0517  loss_cls: 0.1023  acc: 89.2578  loss_bbox: 0.0303
+11/17 15:52:46 - mmengine - INFO - Epoch(train) [24][1150/6751]  lr: 1.4235e-06  eta: 22:00:32  time: 0.9040  data_time: 0.0049  memory: 5722  grad_norm: 1.9163  loss: 0.1432  loss_rpn_cls: 0.0054  loss_rpn_bbox: 0.0357  loss_cls: 0.0805  acc: 95.8984  loss_bbox: 0.0216
+11/17 15:53:31 - mmengine - INFO - Epoch(train) [24][1200/6751]  lr: 1.4235e-06  eta: 21:59:49  time: 0.9124  data_time: 0.0048  memory: 6691  grad_norm: 1.9705  loss: 0.1901  loss_rpn_cls: 0.0110  loss_rpn_bbox: 0.0564  loss_cls: 0.0931  acc: 96.4844  loss_bbox: 0.0296
+11/17 15:54:17 - mmengine - INFO - Epoch(train) [24][1250/6751]  lr: 1.4235e-06  eta: 21:59:04  time: 0.9072  data_time: 0.0048  memory: 5720  grad_norm: 1.9285  loss: 0.1347  loss_rpn_cls: 0.0068  loss_rpn_bbox: 0.0312  loss_cls: 0.0743  acc: 99.2188  loss_bbox: 0.0224
+11/17 15:55:02 - mmengine - INFO - Epoch(train) [24][1300/6751]  lr: 1.4235e-06  eta: 21:58:18  time: 0.9072  data_time: 0.0049  memory: 5776  grad_norm: 1.9027  loss: 0.1723  loss_rpn_cls: 0.0126  loss_rpn_bbox: 0.0402  loss_cls: 0.0907  acc: 92.7734  loss_bbox: 0.0287
+11/17 15:55:48 - mmengine - INFO - Epoch(train) [24][1350/6751]  lr: 1.4235e-06  eta: 21:57:38  time: 0.9154  data_time: 0.0050  memory: 5955  grad_norm: 1.9479  loss: 0.1735  loss_rpn_cls: 0.0068  loss_rpn_bbox: 0.0541  loss_cls: 0.0849  acc: 99.4141  loss_bbox: 0.0277
+11/17 15:56:33 - mmengine - INFO - Epoch(train) [24][1400/6751]  lr: 1.4235e-06  eta: 21:56:56  time: 0.9135  data_time: 0.0049  memory: 6595  grad_norm: 1.8703  loss: 0.1710  loss_rpn_cls: 0.0094  loss_rpn_bbox: 0.0468  loss_cls: 0.0852  acc: 95.8984  loss_bbox: 0.0296
+11/17 15:57:19 - mmengine - INFO - Epoch(train) [24][1450/6751]  lr: 1.4235e-06  eta: 21:56:10  time: 0.9064  data_time: 0.0050  memory: 5776  grad_norm: 1.9060  loss: 0.1424  loss_rpn_cls: 0.0051  loss_rpn_bbox: 0.0332  loss_cls: 0.0782  acc: 93.5547  loss_bbox: 0.0260
+11/17 15:57:36 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 15:58:05 - mmengine - INFO - Epoch(train) [24][1500/6751]  lr: 1.4235e-06  eta: 21:55:30  time: 0.9186  data_time: 0.0049  memory: 6009  grad_norm: 1.9218  loss: 0.1654  loss_rpn_cls: 0.0095  loss_rpn_bbox: 0.0483  loss_cls: 0.0839  acc: 97.6562  loss_bbox: 0.0236
+11/17 15:58:50 - mmengine - INFO - Epoch(train) [24][1550/6751]  lr: 1.4235e-06  eta: 21:54:48  time: 0.9134  data_time: 0.0049  memory: 6279  grad_norm: 1.8894  loss: 0.1852  loss_rpn_cls: 0.0084  loss_rpn_bbox: 0.0491  loss_cls: 0.0979  acc: 92.7734  loss_bbox: 0.0297
+11/17 15:59:36 - mmengine - INFO - Epoch(train) [24][1600/6751]  lr: 1.4235e-06  eta: 21:54:05  time: 0.9108  data_time: 0.0050  memory: 6828  grad_norm: 1.9243  loss: 0.1710  loss_rpn_cls: 0.0049  loss_rpn_bbox: 0.0431  loss_cls: 0.0967  acc: 94.7266  loss_bbox: 0.0263
+11/17 16:00:21 - mmengine - INFO - Epoch(train) [24][1650/6751]  lr: 1.4235e-06  eta: 21:53:20  time: 0.9098  data_time: 0.0050  memory: 5776  grad_norm: 1.9487  loss: 0.1973  loss_rpn_cls: 0.0079  loss_rpn_bbox: 0.0657  loss_cls: 0.0939  acc: 93.1641  loss_bbox: 0.0298
+11/17 16:01:07 - mmengine - INFO - Epoch(train) [24][1700/6751]  lr: 1.4235e-06  eta: 21:52:34  time: 0.9052  data_time: 0.0050  memory: 5768  grad_norm: 1.9228  loss: 0.1840  loss_rpn_cls: 0.0098  loss_rpn_bbox: 0.0435  loss_cls: 0.0986  acc: 94.7266  loss_bbox: 0.0322
+11/17 16:01:52 - mmengine - INFO - Epoch(train) [24][1750/6751]  lr: 1.4235e-06  eta: 21:51:49  time: 0.9091  data_time: 0.0049  memory: 5747  grad_norm: 1.9545  loss: 0.2274  loss_rpn_cls: 0.0119  loss_rpn_bbox: 0.0723  loss_cls: 0.1118  acc: 92.9688  loss_bbox: 0.0315
+11/17 16:02:38 - mmengine - INFO - Epoch(train) [24][1800/6751]  lr: 1.4235e-06  eta: 21:51:09  time: 0.9163  data_time: 0.0048  memory: 5722  grad_norm: 1.8958  loss: 0.1409  loss_rpn_cls: 0.0050  loss_rpn_bbox: 0.0286  loss_cls: 0.0838  acc: 94.7266  loss_bbox: 0.0235
+11/17 16:03:23 - mmengine - INFO - Epoch(train) [24][1850/6751]  lr: 1.4235e-06  eta: 21:50:25  time: 0.9100  data_time: 0.0048  memory: 5751  grad_norm: 1.9112  loss: 0.1708  loss_rpn_cls: 0.0059  loss_rpn_bbox: 0.0383  loss_cls: 0.0988  acc: 98.2422  loss_bbox: 0.0277
+11/17 16:04:09 - mmengine - INFO - Epoch(train) [24][1900/6751]  lr: 1.4235e-06  eta: 21:49:39  time: 0.9077  data_time: 0.0050  memory: 5838  grad_norm: 1.8777  loss: 0.1507  loss_rpn_cls: 0.0056  loss_rpn_bbox: 0.0394  loss_cls: 0.0825  acc: 92.1875  loss_bbox: 0.0232
+11/17 16:04:55 - mmengine - INFO - Epoch(train) [24][1950/6751]  lr: 1.4235e-06  eta: 21:48:58  time: 0.9159  data_time: 0.0049  memory: 5955  grad_norm: 1.7937  loss: 0.1574  loss_rpn_cls: 0.0099  loss_rpn_bbox: 0.0429  loss_cls: 0.0799  acc: 96.8750  loss_bbox: 0.0247
+11/17 16:05:40 - mmengine - INFO - Epoch(train) [24][2000/6751]  lr: 1.4235e-06  eta: 21:48:13  time: 0.9088  data_time: 0.0049  memory: 5780  grad_norm: 1.7865  loss: 0.1330  loss_rpn_cls: 0.0048  loss_rpn_bbox: 0.0318  loss_cls: 0.0736  acc: 97.8516  loss_bbox: 0.0228
+11/17 16:06:26 - mmengine - INFO - Epoch(train) [24][2050/6751]  lr: 1.4235e-06  eta: 21:47:29  time: 0.9101  data_time: 0.0050  memory: 5780  grad_norm: 1.6817  loss: 0.1674  loss_rpn_cls: 0.0070  loss_rpn_bbox: 0.0506  loss_cls: 0.0825  acc: 93.3594  loss_bbox: 0.0272
+11/17 16:07:11 - mmengine - INFO - Epoch(train) [24][2100/6751]  lr: 1.4235e-06  eta: 21:46:45  time: 0.9104  data_time: 0.0049  memory: 6013  grad_norm: 1.7193  loss: 0.1518  loss_rpn_cls: 0.0104  loss_rpn_bbox: 0.0312  loss_cls: 0.0830  acc: 99.2188  loss_bbox: 0.0272
+11/17 16:07:57 - mmengine - INFO - Epoch(train) [24][2150/6751]  lr: 1.4235e-06  eta: 21:46:03  time: 0.9146  data_time: 0.0049  memory: 5631  grad_norm: 1.7470  loss: 0.1467  loss_rpn_cls: 0.0071  loss_rpn_bbox: 0.0300  loss_cls: 0.0826  acc: 97.6562  loss_bbox: 0.0269
+11/17 16:08:42 - mmengine - INFO - Epoch(train) [24][2200/6751]  lr: 1.4235e-06  eta: 21:45:18  time: 0.9086  data_time: 0.0050  memory: 6551  grad_norm: 1.7976  loss: 0.1726  loss_rpn_cls: 0.0072  loss_rpn_bbox: 0.0532  loss_cls: 0.0854  acc: 97.2656  loss_bbox: 0.0268
+11/17 16:09:28 - mmengine - INFO - Epoch(train) [24][2250/6751]  lr: 1.4235e-06  eta: 21:44:39  time: 0.9189  data_time: 0.0049  memory: 6013  grad_norm: 1.8475  loss: 0.1928  loss_rpn_cls: 0.0085  loss_rpn_bbox: 0.0541  loss_cls: 0.1026  acc: 87.6953  loss_bbox: 0.0276
+11/17 16:10:14 - mmengine - INFO - Epoch(train) [24][2300/6751]  lr: 1.4235e-06  eta: 21:43:54  time: 0.9086  data_time: 0.0048  memory: 5955  grad_norm: 1.8647  loss: 0.1964  loss_rpn_cls: 0.0158  loss_rpn_bbox: 0.0626  loss_cls: 0.0904  acc: 97.8516  loss_bbox: 0.0276
+11/17 16:10:59 - mmengine - INFO - Epoch(train) [24][2350/6751]  lr: 1.4235e-06  eta: 21:43:11  time: 0.9126  data_time: 0.0050  memory: 6639  grad_norm: 1.8608  loss: 0.1678  loss_rpn_cls: 0.0090  loss_rpn_bbox: 0.0367  loss_cls: 0.0921  acc: 95.3125  loss_bbox: 0.0300
+11/17 16:11:45 - mmengine - INFO - Epoch(train) [24][2400/6751]  lr: 1.4235e-06  eta: 21:42:26  time: 0.9096  data_time: 0.0048  memory: 5834  grad_norm: 1.7897  loss: 0.1571  loss_rpn_cls: 0.0105  loss_rpn_bbox: 0.0337  loss_cls: 0.0872  acc: 98.8281  loss_bbox: 0.0256
+11/17 16:12:30 - mmengine - INFO - Epoch(train) [24][2450/6751]  lr: 1.4235e-06  eta: 21:41:42  time: 0.9105  data_time: 0.0049  memory: 5838  grad_norm: 1.7283  loss: 0.1429  loss_rpn_cls: 0.0062  loss_rpn_bbox: 0.0410  loss_cls: 0.0726  acc: 95.5078  loss_bbox: 0.0231
+11/17 16:12:48 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 16:13:16 - mmengine - INFO - Epoch(train) [24][2500/6751]  lr: 1.4235e-06  eta: 21:40:59  time: 0.9137  data_time: 0.0049  memory: 5951  grad_norm: 1.7136  loss: 0.1962  loss_rpn_cls: 0.0119  loss_rpn_bbox: 0.0497  loss_cls: 0.1040  acc: 99.2188  loss_bbox: 0.0306
+11/17 16:14:02 - mmengine - INFO - Epoch(train) [24][2550/6751]  lr: 1.4235e-06  eta: 21:40:16  time: 0.9122  data_time: 0.0050  memory: 5896  grad_norm: 1.7277  loss: 0.1488  loss_rpn_cls: 0.0083  loss_rpn_bbox: 0.0289  loss_cls: 0.0848  acc: 94.9219  loss_bbox: 0.0268
+11/17 16:14:47 - mmengine - INFO - Epoch(train) [24][2600/6751]  lr: 1.4235e-06  eta: 21:39:29  time: 0.9032  data_time: 0.0048  memory: 5837  grad_norm: 1.7922  loss: 0.1627  loss_rpn_cls: 0.0082  loss_rpn_bbox: 0.0428  loss_cls: 0.0852  acc: 99.8047  loss_bbox: 0.0264
+11/17 16:15:32 - mmengine - INFO - Epoch(train) [24][2650/6751]  lr: 1.4235e-06  eta: 21:38:44  time: 0.9094  data_time: 0.0049  memory: 5892  grad_norm: 1.8947  loss: 0.1601  loss_rpn_cls: 0.0073  loss_rpn_bbox: 0.0413  loss_cls: 0.0838  acc: 95.7031  loss_bbox: 0.0277
+11/17 16:16:18 - mmengine - INFO - Epoch(train) [24][2700/6751]  lr: 1.4235e-06  eta: 21:37:58  time: 0.9077  data_time: 0.0048  memory: 5951  grad_norm: 1.9391  loss: 0.1762  loss_rpn_cls: 0.0103  loss_rpn_bbox: 0.0515  loss_cls: 0.0896  acc: 100.0000  loss_bbox: 0.0248
+11/17 16:17:04 - mmengine - INFO - Epoch(train) [24][2750/6751]  lr: 1.4235e-06  eta: 21:37:16  time: 0.9140  data_time: 0.0049  memory: 5887  grad_norm: 2.0233  loss: 0.2011  loss_rpn_cls: 0.0122  loss_rpn_bbox: 0.0462  loss_cls: 0.1122  acc: 94.1406  loss_bbox: 0.0306
+11/17 16:17:49 - mmengine - INFO - Epoch(train) [24][2800/6751]  lr: 1.4235e-06  eta: 21:36:30  time: 0.9056  data_time: 0.0049  memory: 5789  grad_norm: 1.9780  loss: 0.1608  loss_rpn_cls: 0.0086  loss_rpn_bbox: 0.0363  loss_cls: 0.0894  acc: 96.2891  loss_bbox: 0.0265
+11/17 16:18:34 - mmengine - INFO - Epoch(train) [24][2850/6751]  lr: 1.4235e-06  eta: 21:35:45  time: 0.9095  data_time: 0.0049  memory: 5896  grad_norm: 1.9388  loss: 0.1734  loss_rpn_cls: 0.0093  loss_rpn_bbox: 0.0500  loss_cls: 0.0891  acc: 97.0703  loss_bbox: 0.0250
+11/17 16:19:20 - mmengine - INFO - Epoch(train) [24][2900/6751]  lr: 1.4235e-06  eta: 21:35:03  time: 0.9153  data_time: 0.0049  memory: 5800  grad_norm: 1.8904  loss: 0.1516  loss_rpn_cls: 0.0086  loss_rpn_bbox: 0.0361  loss_cls: 0.0847  acc: 96.6797  loss_bbox: 0.0223
+11/17 16:20:06 - mmengine - INFO - Epoch(train) [24][2950/6751]  lr: 1.4235e-06  eta: 21:34:24  time: 0.9225  data_time: 0.0048  memory: 7391  grad_norm: 1.8432  loss: 0.1566  loss_rpn_cls: 0.0054  loss_rpn_bbox: 0.0407  loss_cls: 0.0864  acc: 99.6094  loss_bbox: 0.0241
+11/17 16:20:52 - mmengine - INFO - Epoch(train) [24][3000/6751]  lr: 1.4235e-06  eta: 21:33:39  time: 0.9096  data_time: 0.0048  memory: 6013  grad_norm: 1.9020  loss: 0.1745  loss_rpn_cls: 0.0104  loss_rpn_bbox: 0.0407  loss_cls: 0.0936  acc: 94.1406  loss_bbox: 0.0299
+11/17 16:21:37 - mmengine - INFO - Epoch(train) [24][3050/6751]  lr: 1.4235e-06  eta: 21:32:57  time: 0.9151  data_time: 0.0048  memory: 6199  grad_norm: 1.8776  loss: 0.1493  loss_rpn_cls: 0.0068  loss_rpn_bbox: 0.0372  loss_cls: 0.0820  acc: 97.0703  loss_bbox: 0.0234
+11/17 16:22:23 - mmengine - INFO - Epoch(train) [24][3100/6751]  lr: 1.4235e-06  eta: 21:32:12  time: 0.9088  data_time: 0.0048  memory: 5780  grad_norm: 1.8388  loss: 0.2100  loss_rpn_cls: 0.0121  loss_rpn_bbox: 0.0628  loss_cls: 0.1061  acc: 97.4609  loss_bbox: 0.0290
+11/17 16:23:08 - mmengine - INFO - Epoch(train) [24][3150/6751]  lr: 1.4235e-06  eta: 21:31:27  time: 0.9080  data_time: 0.0048  memory: 5747  grad_norm: 1.7973  loss: 0.1342  loss_rpn_cls: 0.0025  loss_rpn_bbox: 0.0387  loss_cls: 0.0720  acc: 96.2891  loss_bbox: 0.0210
+11/17 16:23:54 - mmengine - INFO - Epoch(train) [24][3200/6751]  lr: 1.4235e-06  eta: 21:30:43  time: 0.9121  data_time: 0.0048  memory: 7255  grad_norm: 1.8040  loss: 0.1904  loss_rpn_cls: 0.0119  loss_rpn_bbox: 0.0522  loss_cls: 0.0958  acc: 94.3359  loss_bbox: 0.0305
+11/17 16:24:40 - mmengine - INFO - Epoch(train) [24][3250/6751]  lr: 1.4235e-06  eta: 21:30:00  time: 0.9134  data_time: 0.0049  memory: 6295  grad_norm: 1.8005  loss: 0.1311  loss_rpn_cls: 0.0065  loss_rpn_bbox: 0.0300  loss_cls: 0.0736  acc: 94.3359  loss_bbox: 0.0210
+11/17 16:25:25 - mmengine - INFO - Epoch(train) [24][3300/6751]  lr: 1.4235e-06  eta: 21:29:15  time: 0.9101  data_time: 0.0048  memory: 5915  grad_norm: 1.8769  loss: 0.1819  loss_rpn_cls: 0.0087  loss_rpn_bbox: 0.0420  loss_cls: 0.1038  acc: 96.2891  loss_bbox: 0.0273
+11/17 16:26:11 - mmengine - INFO - Epoch(train) [24][3350/6751]  lr: 1.4235e-06  eta: 21:28:30  time: 0.9073  data_time: 0.0048  memory: 5838  grad_norm: 1.8610  loss: 0.1627  loss_rpn_cls: 0.0083  loss_rpn_bbox: 0.0415  loss_cls: 0.0879  acc: 93.5547  loss_bbox: 0.0250
+11/17 16:26:56 - mmengine - INFO - Epoch(train) [24][3400/6751]  lr: 1.4235e-06  eta: 21:27:44  time: 0.9061  data_time: 0.0048  memory: 5951  grad_norm: 1.7718  loss: 0.1115  loss_rpn_cls: 0.0056  loss_rpn_bbox: 0.0191  loss_cls: 0.0668  acc: 96.0938  loss_bbox: 0.0200
+11/17 16:27:41 - mmengine - INFO - Epoch(train) [24][3450/6751]  lr: 1.4235e-06  eta: 21:26:56  time: 0.9028  data_time: 0.0049  memory: 5955  grad_norm: 1.7598  loss: 0.1750  loss_rpn_cls: 0.0070  loss_rpn_bbox: 0.0506  loss_cls: 0.0905  acc: 89.4531  loss_bbox: 0.0269
+11/17 16:27:58 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 16:28:27 - mmengine - INFO - Epoch(train) [24][3500/6751]  lr: 1.4235e-06  eta: 21:26:13  time: 0.9142  data_time: 0.0049  memory: 5955  grad_norm: 1.6679  loss: 0.1657  loss_rpn_cls: 0.0074  loss_rpn_bbox: 0.0392  loss_cls: 0.0938  acc: 94.7266  loss_bbox: 0.0254
+11/17 16:29:12 - mmengine - INFO - Epoch(train) [24][3550/6751]  lr: 1.4235e-06  eta: 21:25:28  time: 0.9087  data_time: 0.0050  memory: 5800  grad_norm: 1.6543  loss: 0.1301  loss_rpn_cls: 0.0072  loss_rpn_bbox: 0.0320  loss_cls: 0.0689  acc: 95.3125  loss_bbox: 0.0220
+11/17 16:29:58 - mmengine - INFO - Epoch(train) [24][3600/6751]  lr: 1.4235e-06  eta: 21:24:47  time: 0.9181  data_time: 0.0048  memory: 5955  grad_norm: 1.6940  loss: 0.1924  loss_rpn_cls: 0.0133  loss_rpn_bbox: 0.0530  loss_cls: 0.0971  acc: 94.7266  loss_bbox: 0.0289
+11/17 16:30:43 - mmengine - INFO - Epoch(train) [24][3650/6751]  lr: 1.4235e-06  eta: 21:23:58  time: 0.9004  data_time: 0.0048  memory: 5721  grad_norm: 1.7371  loss: 0.1588  loss_rpn_cls: 0.0090  loss_rpn_bbox: 0.0411  loss_cls: 0.0830  acc: 98.8281  loss_bbox: 0.0256
+11/17 16:31:29 - mmengine - INFO - Epoch(train) [24][3700/6751]  lr: 1.4235e-06  eta: 21:23:14  time: 0.9114  data_time: 0.0050  memory: 6115  grad_norm: 1.7821  loss: 0.1351  loss_rpn_cls: 0.0047  loss_rpn_bbox: 0.0299  loss_cls: 0.0768  acc: 90.2344  loss_bbox: 0.0238
+11/17 16:32:14 - mmengine - INFO - Epoch(train) [24][3750/6751]  lr: 1.4235e-06  eta: 21:22:29  time: 0.9087  data_time: 0.0048  memory: 5951  grad_norm: 1.8103  loss: 0.1507  loss_rpn_cls: 0.0047  loss_rpn_bbox: 0.0287  loss_cls: 0.0884  acc: 95.7031  loss_bbox: 0.0289
+11/17 16:32:59 - mmengine - INFO - Epoch(train) [24][3800/6751]  lr: 1.4235e-06  eta: 21:21:42  time: 0.9043  data_time: 0.0049  memory: 5780  grad_norm: 1.7917  loss: 0.1832  loss_rpn_cls: 0.0075  loss_rpn_bbox: 0.0501  loss_cls: 0.0971  acc: 87.6953  loss_bbox: 0.0284
+11/17 16:33:45 - mmengine - INFO - Epoch(train) [24][3850/6751]  lr: 1.4235e-06  eta: 21:20:58  time: 0.9102  data_time: 0.0048  memory: 5892  grad_norm: 1.8401  loss: 0.2246  loss_rpn_cls: 0.0117  loss_rpn_bbox: 0.0784  loss_cls: 0.1042  acc: 89.0625  loss_bbox: 0.0303
+11/17 16:34:30 - mmengine - INFO - Epoch(train) [24][3900/6751]  lr: 1.4235e-06  eta: 21:20:13  time: 0.9087  data_time: 0.0049  memory: 5896  grad_norm: 1.8339  loss: 0.1762  loss_rpn_cls: 0.0057  loss_rpn_bbox: 0.0508  loss_cls: 0.0942  acc: 98.2422  loss_bbox: 0.0254
+11/17 16:35:16 - mmengine - INFO - Epoch(train) [24][3950/6751]  lr: 1.4235e-06  eta: 21:19:27  time: 0.9068  data_time: 0.0048  memory: 6012  grad_norm: 1.9401  loss: 0.1929  loss_rpn_cls: 0.0094  loss_rpn_bbox: 0.0637  loss_cls: 0.0928  acc: 97.2656  loss_bbox: 0.0270
+11/17 16:36:01 - mmengine - INFO - Epoch(train) [24][4000/6751]  lr: 1.4235e-06  eta: 21:18:41  time: 0.9070  data_time: 0.0049  memory: 5780  grad_norm: 2.0401  loss: 0.1554  loss_rpn_cls: 0.0062  loss_rpn_bbox: 0.0434  loss_cls: 0.0811  acc: 97.4609  loss_bbox: 0.0246
+11/17 16:36:46 - mmengine - INFO - Epoch(train) [24][4050/6751]  lr: 1.4235e-06  eta: 21:17:55  time: 0.9075  data_time: 0.0049  memory: 5772  grad_norm: 1.9895  loss: 0.1589  loss_rpn_cls: 0.0069  loss_rpn_bbox: 0.0362  loss_cls: 0.0878  acc: 99.0234  loss_bbox: 0.0280
+11/17 16:37:32 - mmengine - INFO - Epoch(train) [24][4100/6751]  lr: 1.4235e-06  eta: 21:17:14  time: 0.9194  data_time: 0.0049  memory: 5955  grad_norm: 1.9584  loss: 0.1498  loss_rpn_cls: 0.0064  loss_rpn_bbox: 0.0292  loss_cls: 0.0869  acc: 91.0156  loss_bbox: 0.0273
+11/17 16:38:18 - mmengine - INFO - Epoch(train) [24][4150/6751]  lr: 1.4235e-06  eta: 21:16:30  time: 0.9101  data_time: 0.0049  memory: 5780  grad_norm: 1.8281  loss: 0.1438  loss_rpn_cls: 0.0074  loss_rpn_bbox: 0.0323  loss_cls: 0.0807  acc: 93.9453  loss_bbox: 0.0234
+11/17 16:39:03 - mmengine - INFO - Epoch(train) [24][4200/6751]  lr: 1.4235e-06  eta: 21:15:42  time: 0.9020  data_time: 0.0048  memory: 6086  grad_norm: 1.7209  loss: 0.1655  loss_rpn_cls: 0.0112  loss_rpn_bbox: 0.0449  loss_cls: 0.0832  acc: 96.8750  loss_bbox: 0.0262
+11/17 16:39:48 - mmengine - INFO - Epoch(train) [24][4250/6751]  lr: 1.4235e-06  eta: 21:14:56  time: 0.9054  data_time: 0.0050  memory: 5780  grad_norm: 1.6519  loss: 0.1672  loss_rpn_cls: 0.0084  loss_rpn_bbox: 0.0366  loss_cls: 0.0937  acc: 98.0469  loss_bbox: 0.0285
+11/17 16:40:34 - mmengine - INFO - Epoch(train) [24][4300/6751]  lr: 1.4235e-06  eta: 21:14:09  time: 0.9064  data_time: 0.0049  memory: 5896  grad_norm: 1.7257  loss: 0.1604  loss_rpn_cls: 0.0067  loss_rpn_bbox: 0.0394  loss_cls: 0.0838  acc: 99.4141  loss_bbox: 0.0305
+11/17 16:41:19 - mmengine - INFO - Epoch(train) [24][4350/6751]  lr: 1.4235e-06  eta: 21:13:22  time: 0.9034  data_time: 0.0049  memory: 5780  grad_norm: 1.7724  loss: 0.1486  loss_rpn_cls: 0.0070  loss_rpn_bbox: 0.0295  loss_cls: 0.0854  acc: 95.8984  loss_bbox: 0.0267
+11/17 16:42:05 - mmengine - INFO - Epoch(train) [24][4400/6751]  lr: 1.4235e-06  eta: 21:12:39  time: 0.9147  data_time: 0.0049  memory: 5896  grad_norm: 1.8012  loss: 0.1955  loss_rpn_cls: 0.0077  loss_rpn_bbox: 0.0497  loss_cls: 0.1095  acc: 94.9219  loss_bbox: 0.0286
+11/17 16:42:50 - mmengine - INFO - Epoch(train) [24][4450/6751]  lr: 1.4235e-06  eta: 21:11:54  time: 0.9079  data_time: 0.0050  memory: 6672  grad_norm: 1.8776  loss: 0.1791  loss_rpn_cls: 0.0130  loss_rpn_bbox: 0.0381  loss_cls: 0.1019  acc: 99.0234  loss_bbox: 0.0261
+11/17 16:43:07 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 16:43:35 - mmengine - INFO - Epoch(train) [24][4500/6751]  lr: 1.4235e-06  eta: 21:11:09  time: 0.9093  data_time: 0.0048  memory: 5896  grad_norm: 1.8326  loss: 0.1882  loss_rpn_cls: 0.0105  loss_rpn_bbox: 0.0583  loss_cls: 0.0911  acc: 97.2656  loss_bbox: 0.0283
+11/17 16:44:21 - mmengine - INFO - Epoch(train) [24][4550/6751]  lr: 1.4235e-06  eta: 21:10:25  time: 0.9116  data_time: 0.0048  memory: 6166  grad_norm: 1.8483  loss: 0.1763  loss_rpn_cls: 0.0094  loss_rpn_bbox: 0.0415  loss_cls: 0.0983  acc: 95.3125  loss_bbox: 0.0271
+11/17 16:45:07 - mmengine - INFO - Epoch(train) [24][4600/6751]  lr: 1.4235e-06  eta: 21:09:43  time: 0.9173  data_time: 0.0050  memory: 6211  grad_norm: 1.9014  loss: 0.1561  loss_rpn_cls: 0.0081  loss_rpn_bbox: 0.0410  loss_cls: 0.0836  acc: 99.0234  loss_bbox: 0.0234
+11/17 16:45:53 - mmengine - INFO - Epoch(train) [24][4650/6751]  lr: 1.4235e-06  eta: 21:09:02  time: 0.9198  data_time: 0.0049  memory: 5955  grad_norm: 1.8529  loss: 0.1708  loss_rpn_cls: 0.0097  loss_rpn_bbox: 0.0410  loss_cls: 0.0921  acc: 95.8984  loss_bbox: 0.0279
+11/17 16:46:38 - mmengine - INFO - Epoch(train) [24][4700/6751]  lr: 1.4235e-06  eta: 21:08:17  time: 0.9094  data_time: 0.0048  memory: 5955  grad_norm: 1.8302  loss: 0.1810  loss_rpn_cls: 0.0110  loss_rpn_bbox: 0.0471  loss_cls: 0.0916  acc: 98.4375  loss_bbox: 0.0314
+11/17 16:47:24 - mmengine - INFO - Epoch(train) [24][4750/6751]  lr: 1.4235e-06  eta: 21:07:30  time: 0.9051  data_time: 0.0049  memory: 5837  grad_norm: 1.7716  loss: 0.1685  loss_rpn_cls: 0.0065  loss_rpn_bbox: 0.0441  loss_cls: 0.0896  acc: 97.8516  loss_bbox: 0.0283
+11/17 16:48:09 - mmengine - INFO - Epoch(train) [24][4800/6751]  lr: 1.4235e-06  eta: 21:06:47  time: 0.9133  data_time: 0.0048  memory: 6071  grad_norm: 1.7807  loss: 0.1821  loss_rpn_cls: 0.0075  loss_rpn_bbox: 0.0502  loss_cls: 0.0965  acc: 91.7969  loss_bbox: 0.0280
+11/17 16:48:55 - mmengine - INFO - Epoch(train) [24][4850/6751]  lr: 1.4235e-06  eta: 21:06:01  time: 0.9069  data_time: 0.0049  memory: 5776  grad_norm: 1.7949  loss: 0.1515  loss_rpn_cls: 0.0053  loss_rpn_bbox: 0.0369  loss_cls: 0.0831  acc: 93.7500  loss_bbox: 0.0261
+11/17 16:49:40 - mmengine - INFO - Epoch(train) [24][4900/6751]  lr: 1.4235e-06  eta: 21:05:15  time: 0.9061  data_time: 0.0050  memory: 5955  grad_norm: 1.8047  loss: 0.1498  loss_rpn_cls: 0.0082  loss_rpn_bbox: 0.0334  loss_cls: 0.0833  acc: 92.9688  loss_bbox: 0.0250
+11/17 16:50:26 - mmengine - INFO - Epoch(train) [24][4950/6751]  lr: 1.4235e-06  eta: 21:04:31  time: 0.9117  data_time: 0.0048  memory: 7234  grad_norm: 1.8696  loss: 0.1351  loss_rpn_cls: 0.0087  loss_rpn_bbox: 0.0328  loss_cls: 0.0729  acc: 99.4141  loss_bbox: 0.0207
+11/17 16:51:11 - mmengine - INFO - Epoch(train) [24][5000/6751]  lr: 1.4235e-06  eta: 21:03:46  time: 0.9095  data_time: 0.0050  memory: 5717  grad_norm: 1.8096  loss: 0.1576  loss_rpn_cls: 0.0060  loss_rpn_bbox: 0.0462  loss_cls: 0.0787  acc: 99.4141  loss_bbox: 0.0267
+11/17 16:51:57 - mmengine - INFO - Epoch(train) [24][5050/6751]  lr: 1.4235e-06  eta: 21:03:00  time: 0.9076  data_time: 0.0049  memory: 6027  grad_norm: 1.8301  loss: 0.2062  loss_rpn_cls: 0.0093  loss_rpn_bbox: 0.0630  loss_cls: 0.1020  acc: 99.2188  loss_bbox: 0.0319
+11/17 16:52:42 - mmengine - INFO - Epoch(train) [24][5100/6751]  lr: 1.4235e-06  eta: 21:02:15  time: 0.9081  data_time: 0.0048  memory: 5896  grad_norm: 1.7683  loss: 0.1498  loss_rpn_cls: 0.0073  loss_rpn_bbox: 0.0379  loss_cls: 0.0806  acc: 99.0234  loss_bbox: 0.0239
+11/17 16:53:28 - mmengine - INFO - Epoch(train) [24][5150/6751]  lr: 1.4235e-06  eta: 21:01:31  time: 0.9126  data_time: 0.0049  memory: 6114  grad_norm: 1.8106  loss: 0.1856  loss_rpn_cls: 0.0073  loss_rpn_bbox: 0.0514  loss_cls: 0.0975  acc: 94.7266  loss_bbox: 0.0295
+11/17 16:54:13 - mmengine - INFO - Epoch(train) [24][5200/6751]  lr: 1.4235e-06  eta: 21:00:45  time: 0.9076  data_time: 0.0049  memory: 6009  grad_norm: 1.8437  loss: 0.1739  loss_rpn_cls: 0.0148  loss_rpn_bbox: 0.0445  loss_cls: 0.0881  acc: 95.3125  loss_bbox: 0.0265
+11/17 16:54:58 - mmengine - INFO - Epoch(train) [24][5250/6751]  lr: 1.4235e-06  eta: 20:59:59  time: 0.9052  data_time: 0.0047  memory: 5721  grad_norm: 1.8370  loss: 0.1836  loss_rpn_cls: 0.0068  loss_rpn_bbox: 0.0486  loss_cls: 0.0990  acc: 98.6328  loss_bbox: 0.0292
+11/17 16:55:44 - mmengine - INFO - Epoch(train) [24][5300/6751]  lr: 1.4235e-06  eta: 20:59:14  time: 0.9099  data_time: 0.0048  memory: 6414  grad_norm: 1.9172  loss: 0.1576  loss_rpn_cls: 0.0059  loss_rpn_bbox: 0.0377  loss_cls: 0.0864  acc: 97.6562  loss_bbox: 0.0276
+11/17 16:56:30 - mmengine - INFO - Epoch(train) [24][5350/6751]  lr: 1.4235e-06  eta: 20:58:32  time: 0.9174  data_time: 0.0049  memory: 6013  grad_norm: 1.8755  loss: 0.2003  loss_rpn_cls: 0.0144  loss_rpn_bbox: 0.0550  loss_cls: 0.1027  acc: 96.4844  loss_bbox: 0.0282
+11/17 16:57:15 - mmengine - INFO - Epoch(train) [24][5400/6751]  lr: 1.4235e-06  eta: 20:57:47  time: 0.9108  data_time: 0.0048  memory: 5953  grad_norm: 1.8664  loss: 0.1763  loss_rpn_cls: 0.0097  loss_rpn_bbox: 0.0417  loss_cls: 0.0981  acc: 96.0938  loss_bbox: 0.0267
+11/17 16:58:01 - mmengine - INFO - Epoch(train) [24][5450/6751]  lr: 1.4235e-06  eta: 20:57:03  time: 0.9106  data_time: 0.0049  memory: 6552  grad_norm: 1.9380  loss: 0.2052  loss_rpn_cls: 0.0117  loss_rpn_bbox: 0.0598  loss_cls: 0.1034  acc: 95.1172  loss_bbox: 0.0303
+11/17 16:58:18 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 16:58:47 - mmengine - INFO - Epoch(train) [24][5500/6751]  lr: 1.4235e-06  eta: 20:56:20  time: 0.9151  data_time: 0.0048  memory: 6018  grad_norm: 1.9599  loss: 0.1644  loss_rpn_cls: 0.0080  loss_rpn_bbox: 0.0409  loss_cls: 0.0865  acc: 97.6562  loss_bbox: 0.0291
+11/17 16:59:32 - mmengine - INFO - Epoch(train) [24][5550/6751]  lr: 1.4235e-06  eta: 20:55:35  time: 0.9120  data_time: 0.0048  memory: 6238  grad_norm: 1.9206  loss: 0.1630  loss_rpn_cls: 0.0076  loss_rpn_bbox: 0.0415  loss_cls: 0.0865  acc: 96.2891  loss_bbox: 0.0274
+11/17 17:00:17 - mmengine - INFO - Epoch(train) [24][5600/6751]  lr: 1.4235e-06  eta: 20:54:49  time: 0.9056  data_time: 0.0049  memory: 5780  grad_norm: 1.9241  loss: 0.1731  loss_rpn_cls: 0.0119  loss_rpn_bbox: 0.0464  loss_cls: 0.0873  acc: 99.2188  loss_bbox: 0.0275
+11/17 17:01:03 - mmengine - INFO - Epoch(train) [24][5650/6751]  lr: 1.4235e-06  eta: 20:54:04  time: 0.9081  data_time: 0.0048  memory: 5780  grad_norm: 1.8230  loss: 0.1303  loss_rpn_cls: 0.0044  loss_rpn_bbox: 0.0377  loss_cls: 0.0674  acc: 93.1641  loss_bbox: 0.0208
+11/17 17:01:48 - mmengine - INFO - Epoch(train) [24][5700/6751]  lr: 1.4235e-06  eta: 20:53:17  time: 0.9057  data_time: 0.0048  memory: 5864  grad_norm: 1.8561  loss: 0.1727  loss_rpn_cls: 0.0092  loss_rpn_bbox: 0.0382  loss_cls: 0.0972  acc: 94.3359  loss_bbox: 0.0282
+11/17 17:02:34 - mmengine - INFO - Epoch(train) [24][5750/6751]  lr: 1.4235e-06  eta: 20:52:32  time: 0.9094  data_time: 0.0049  memory: 5780  grad_norm: 1.8284  loss: 0.1632  loss_rpn_cls: 0.0070  loss_rpn_bbox: 0.0355  loss_cls: 0.0920  acc: 94.1406  loss_bbox: 0.0287
+11/17 17:03:19 - mmengine - INFO - Epoch(train) [24][5800/6751]  lr: 1.4235e-06  eta: 20:51:46  time: 0.9061  data_time: 0.0047  memory: 5780  grad_norm: 1.8170  loss: 0.1487  loss_rpn_cls: 0.0072  loss_rpn_bbox: 0.0322  loss_cls: 0.0848  acc: 93.9453  loss_bbox: 0.0245
+11/17 17:04:05 - mmengine - INFO - Epoch(train) [24][5850/6751]  lr: 1.4235e-06  eta: 20:51:03  time: 0.9155  data_time: 0.0048  memory: 6870  grad_norm: 1.9202  loss: 0.1500  loss_rpn_cls: 0.0096  loss_rpn_bbox: 0.0364  loss_cls: 0.0817  acc: 97.4609  loss_bbox: 0.0222
+11/17 17:04:50 - mmengine - INFO - Epoch(train) [24][5900/6751]  lr: 1.4235e-06  eta: 20:50:18  time: 0.9099  data_time: 0.0050  memory: 5896  grad_norm: 1.9303  loss: 0.2168  loss_rpn_cls: 0.0100  loss_rpn_bbox: 0.0684  loss_cls: 0.1037  acc: 90.8203  loss_bbox: 0.0347
+11/17 17:05:36 - mmengine - INFO - Epoch(train) [24][5950/6751]  lr: 1.4235e-06  eta: 20:49:35  time: 0.9139  data_time: 0.0049  memory: 5896  grad_norm: 1.9512  loss: 0.1888  loss_rpn_cls: 0.0132  loss_rpn_bbox: 0.0503  loss_cls: 0.0979  acc: 98.6328  loss_bbox: 0.0274
+11/17 17:06:21 - mmengine - INFO - Epoch(train) [24][6000/6751]  lr: 1.4235e-06  eta: 20:48:48  time: 0.9059  data_time: 0.0049  memory: 5838  grad_norm: 1.9754  loss: 0.1708  loss_rpn_cls: 0.0083  loss_rpn_bbox: 0.0502  loss_cls: 0.0862  acc: 95.7031  loss_bbox: 0.0261
+11/17 17:07:06 - mmengine - INFO - Epoch(train) [24][6050/6751]  lr: 1.4235e-06  eta: 20:48:01  time: 0.9016  data_time: 0.0049  memory: 5776  grad_norm: 1.8832  loss: 0.1473  loss_rpn_cls: 0.0061  loss_rpn_bbox: 0.0301  loss_cls: 0.0855  acc: 99.0234  loss_bbox: 0.0256
+11/17 17:07:52 - mmengine - INFO - Epoch(train) [24][6100/6751]  lr: 1.4235e-06  eta: 20:47:16  time: 0.9103  data_time: 0.0049  memory: 6346  grad_norm: 1.8451  loss: 0.1416  loss_rpn_cls: 0.0039  loss_rpn_bbox: 0.0345  loss_cls: 0.0802  acc: 97.0703  loss_bbox: 0.0230
+11/17 17:08:37 - mmengine - INFO - Epoch(train) [24][6150/6751]  lr: 1.4235e-06  eta: 20:46:31  time: 0.9108  data_time: 0.0049  memory: 5896  grad_norm: 1.8208  loss: 0.1335  loss_rpn_cls: 0.0053  loss_rpn_bbox: 0.0266  loss_cls: 0.0747  acc: 99.8047  loss_bbox: 0.0269
+11/17 17:09:23 - mmengine - INFO - Epoch(train) [24][6200/6751]  lr: 1.4235e-06  eta: 20:45:47  time: 0.9117  data_time: 0.0048  memory: 5951  grad_norm: 1.7924  loss: 0.1773  loss_rpn_cls: 0.0138  loss_rpn_bbox: 0.0413  loss_cls: 0.0958  acc: 93.3594  loss_bbox: 0.0264
+11/17 17:10:09 - mmengine - INFO - Epoch(train) [24][6250/6751]  lr: 1.4235e-06  eta: 20:45:03  time: 0.9120  data_time: 0.0049  memory: 6378  grad_norm: 1.8832  loss: 0.1525  loss_rpn_cls: 0.0063  loss_rpn_bbox: 0.0372  loss_cls: 0.0854  acc: 99.6094  loss_bbox: 0.0237
+11/17 17:10:55 - mmengine - INFO - Epoch(train) [24][6300/6751]  lr: 1.4235e-06  eta: 20:44:21  time: 0.9208  data_time: 0.0049  memory: 6179  grad_norm: 1.8482  loss: 0.1406  loss_rpn_cls: 0.0060  loss_rpn_bbox: 0.0428  loss_cls: 0.0715  acc: 96.4844  loss_bbox: 0.0203
+11/17 17:11:40 - mmengine - INFO - Epoch(train) [24][6350/6751]  lr: 1.4235e-06  eta: 20:43:35  time: 0.9058  data_time: 0.0048  memory: 5834  grad_norm: 1.8851  loss: 0.1460  loss_rpn_cls: 0.0049  loss_rpn_bbox: 0.0362  loss_cls: 0.0798  acc: 93.3594  loss_bbox: 0.0251
+11/17 17:12:26 - mmengine - INFO - Epoch(train) [24][6400/6751]  lr: 1.4235e-06  eta: 20:42:51  time: 0.9122  data_time: 0.0050  memory: 5838  grad_norm: 1.9445  loss: 0.1727  loss_rpn_cls: 0.0103  loss_rpn_bbox: 0.0470  loss_cls: 0.0874  acc: 94.9219  loss_bbox: 0.0280
+11/17 17:13:11 - mmengine - INFO - Epoch(train) [24][6450/6751]  lr: 1.4235e-06  eta: 20:42:07  time: 0.9130  data_time: 0.0049  memory: 6174  grad_norm: 1.8361  loss: 0.1622  loss_rpn_cls: 0.0060  loss_rpn_bbox: 0.0405  loss_cls: 0.0879  acc: 94.3359  loss_bbox: 0.0278
+11/17 17:13:29 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 17:13:57 - mmengine - INFO - Epoch(train) [24][6500/6751]  lr: 1.4235e-06  eta: 20:41:22  time: 0.9096  data_time: 0.0050  memory: 5896  grad_norm: 1.8264  loss: 0.1750  loss_rpn_cls: 0.0138  loss_rpn_bbox: 0.0418  loss_cls: 0.0901  acc: 99.6094  loss_bbox: 0.0293
+11/17 17:14:42 - mmengine - INFO - Epoch(train) [24][6550/6751]  lr: 1.4235e-06  eta: 20:40:38  time: 0.9137  data_time: 0.0049  memory: 5953  grad_norm: 1.7826  loss: 0.1690  loss_rpn_cls: 0.0069  loss_rpn_bbox: 0.0528  loss_cls: 0.0845  acc: 95.1172  loss_bbox: 0.0248
+11/17 17:15:28 - mmengine - INFO - Epoch(train) [24][6600/6751]  lr: 1.4235e-06  eta: 20:39:51  time: 0.9040  data_time: 0.0049  memory: 6013  grad_norm: 1.7269  loss: 0.1742  loss_rpn_cls: 0.0100  loss_rpn_bbox: 0.0530  loss_cls: 0.0862  acc: 99.8047  loss_bbox: 0.0251
+11/17 17:16:13 - mmengine - INFO - Epoch(train) [24][6650/6751]  lr: 1.4235e-06  eta: 20:39:06  time: 0.9088  data_time: 0.0048  memory: 5955  grad_norm: 1.8055  loss: 0.1784  loss_rpn_cls: 0.0078  loss_rpn_bbox: 0.0525  loss_cls: 0.0913  acc: 91.6016  loss_bbox: 0.0268
+11/17 17:16:59 - mmengine - INFO - Epoch(train) [24][6700/6751]  lr: 1.4235e-06  eta: 20:38:21  time: 0.9108  data_time: 0.0049  memory: 5834  grad_norm: 1.8432  loss: 0.1653  loss_rpn_cls: 0.0079  loss_rpn_bbox: 0.0411  loss_cls: 0.0903  acc: 95.7031  loss_bbox: 0.0259
+11/17 17:17:44 - mmengine - INFO - Epoch(train) [24][6750/6751]  lr: 1.4235e-06  eta: 20:37:37  time: 0.9121  data_time: 0.0049  memory: 7358  grad_norm: 1.8433  loss: 0.1306  loss_rpn_cls: 0.0069  loss_rpn_bbox: 0.0346  loss_cls: 0.0685  acc: 99.2188  loss_bbox: 0.0206
+11/17 17:17:45 - mmengine - INFO - Exp name: train_cfg_ep23_24_20261117_135241
+11/17 17:17:45 - mmengine - INFO - Saving checkpoint at 24 epochs
+11/17 17:17:50 - mmengine - INFO - Saving checkpoint at 24 epochs
+11/17 17:19:15 - mmengine - INFO - Epoch(val) [24][ 50/891]    eta: 0:22:57  time: 1.6376  data_time: 0.0184  memory: 5587  
+11/17 17:20:37 - mmengine - INFO - Epoch(val) [24][100/891]    eta: 0:21:29  time: 1.6223  data_time: 0.0082  memory: 2497  
+11/17 17:21:58 - mmengine - INFO - Epoch(val) [24][150/891]    eta: 0:20:05  time: 1.6212  data_time: 0.0081  memory: 2497  
+11/17 17:23:19 - mmengine - INFO - Epoch(val) [24][200/891]    eta: 0:18:43  time: 1.6216  data_time: 0.0084  memory: 2495  
+11/17 17:24:40 - mmengine - INFO - Epoch(val) [24][250/891]    eta: 0:17:21  time: 1.6251  data_time: 0.0084  memory: 2497  
+11/17 17:26:01 - mmengine - INFO - Epoch(val) [24][300/891]    eta: 0:16:00  time: 1.6282  data_time: 0.0083  memory: 2497  
+11/17 17:27:23 - mmengine - INFO - Epoch(val) [24][350/891]    eta: 0:14:40  time: 1.6322  data_time: 0.0082  memory: 2496  
+11/17 17:28:44 - mmengine - INFO - Epoch(val) [24][400/891]    eta: 0:13:18  time: 1.6153  data_time: 0.0081  memory: 2498  
+11/17 17:30:05 - mmengine - INFO - Epoch(val) [24][450/891]    eta: 0:11:56  time: 1.6280  data_time: 0.0079  memory: 2495  
+11/17 17:31:26 - mmengine - INFO - Epoch(val) [24][500/891]    eta: 0:10:35  time: 1.6167  data_time: 0.0079  memory: 2495  
+11/17 17:32:47 - mmengine - INFO - Epoch(val) [24][550/891]    eta: 0:09:14  time: 1.6273  data_time: 0.0081  memory: 2496  
+11/17 17:34:09 - mmengine - INFO - Epoch(val) [24][600/891]    eta: 0:07:53  time: 1.6329  data_time: 0.0082  memory: 2496  
+11/17 17:35:31 - mmengine - INFO - Epoch(val) [24][650/891]    eta: 0:06:31  time: 1.6297  data_time: 0.0082  memory: 2499  
+11/17 17:36:52 - mmengine - INFO - Epoch(val) [24][700/891]    eta: 0:05:10  time: 1.6257  data_time: 0.0079  memory: 2496  
+11/17 17:38:13 - mmengine - INFO - Epoch(val) [24][750/891]    eta: 0:03:49  time: 1.6226  data_time: 0.0084  memory: 2498  
+11/17 17:39:34 - mmengine - INFO - Epoch(val) [24][800/891]    eta: 0:02:27  time: 1.6278  data_time: 0.0081  memory: 2495  
+11/17 17:40:55 - mmengine - INFO - Epoch(val) [24][850/891]    eta: 0:01:06  time: 1.6065  data_time: 0.0079  memory: 2495  
+11/17 17:42:03 - mmengine - INFO - 
+---------------iou_thr: 0.5---------------
+11/17 17:42:41 - mmengine - INFO - 
++--------------------+-------+-------+--------+-------+
+| class              | gts   | dets  | recall | ap    |
++--------------------+-------+-------+--------+-------+
+| plane              | 4859  | 5499  | 0.928  | 0.897 |
+| baseball-diamond   | 436   | 802   | 0.906  | 0.756 |
+| bridge             | 893   | 2302  | 0.725  | 0.551 |
+| ground-track-field | 265   | 632   | 0.917  | 0.791 |
+| small-vehicle      | 82824 | 65199 | 0.538  | 0.503 |
+| large-vehicle      | 10620 | 17412 | 0.870  | 0.779 |
+| ship               | 26347 | 28233 | 0.883  | 0.813 |
+| tennis-court       | 1539  | 1724  | 0.949  | 0.908 |
+| basketball-court   | 292   | 476   | 0.842  | 0.735 |
+| storage-tank       | 5117  | 4326  | 0.638  | 0.615 |
+| soccer-ball-field  | 247   | 516   | 0.802  | 0.664 |
+| roundabout         | 338   | 516   | 0.763  | 0.658 |
+| harbor             | 4689  | 6454  | 0.843  | 0.763 |
+| swimming-pool      | 1375  | 1974  | 0.721  | 0.613 |
+| helicopter         | 128   | 317   | 0.797  | 0.623 |
+| container-crane    | 28    | 74    | 0.071  | 0.030 |
+| airport            | 102   | 141   | 0.716  | 0.610 |
+| helipad            | 4     | 15    | 0.500  | 0.455 |
++--------------------+-------+-------+--------+-------+
+| mAP                |       |       |        | 0.653 |
++--------------------+-------+-------+--------+-------+
+11/17 17:42:42 - mmengine - INFO - Epoch(val) [24][891/891]    dota/mAP: 0.6535  dota/AP50: 0.6530  data_time: 0.0087  time: 1.6218
