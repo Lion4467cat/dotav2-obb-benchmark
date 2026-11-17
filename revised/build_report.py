@@ -356,7 +356,7 @@ def front_matter(doc):
     p.paragraph_format.space_after = Pt(6)
     r = p.add_run("Submitted by"); set_run_font(r, size=11, bold=True)
 
-    for name in ("S S Gokula Swamy", "Roshanth V", "Somanath S.D.", "Aryan Kumar"):
+    for name in ("S S Gokula Swamy",):
         p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p.paragraph_format.space_after = Pt(2)
         r = p.add_run(name); set_run_font(r, size=12.5, bold=True)
@@ -1122,7 +1122,7 @@ def appendix(doc):
     ], [1.55, 2.25, 2.4], size=8.5, align_center_from=2)
     caption(doc, "Table A.1. Full configuration reference for both tracks.")
 
-    h1(doc, "Appendix B  Full per-class tables")
+    h1(doc, "Appendix B  Full per-class tables", new_page=True)
     para(doc, "Tables A2 and A3 give every per-class value produced by the evaluator, including the "
               "precision, recall and F1 at each track's own F1-optimal threshold. These are the "
               "numbers behind Table 7.3 and Table 7.4.")
