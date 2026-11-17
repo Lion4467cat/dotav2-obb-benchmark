@@ -132,53 +132,113 @@ def generate_all_figures(
     f1_opt = ext_b.get("micro_prf", {}).get("f1_optimal", {})
     CONF = f1_opt.get("conf_threshold", 0.834)
 
-    # 0. Figure 4.1: Workflow diagram (regenerated; report theme)
+    # 0. Figure 4.1: modern 4-stage architecture flowchart (300 DPI, report palette)
     def fig_pipeline():
-        from matplotlib.patches import FancyBboxPatch
-        import matplotlib.patheffects as pe
+        from matplotlib.patches import FancyBboxPatch, Rectangle
 
-        fig, ax = plt.subplots(figsize=(6.4, 3.6), dpi=300)
-        ax.set_xlim(0, 100); ax.set_ylim(0, 58); ax.axis("off")
+        SANS = "Liberation Sans"
+        with plt.rc_context({"font.family": SANS}):
+            fig, ax = plt.subplots(figsize=(10.4, 4.7), dpi=300)
+            ax.set_xlim(0, 100); ax.set_ylim(0, 66); ax.axis("off")
 
-        def box(x, y, w, h, lines, fc, ec, fs_head=10, fs_body=7.8):
-            ax.add_patch(FancyBboxPatch((x, y), w, h,
-                                        boxstyle="round,pad=0.45,rounding_size=1.5",
-                                        linewidth=1.3, edgecolor=ec, facecolor=fc, zorder=3))
-            ax.text(x + w / 2, y + h * 0.70, lines[0], ha="center", va="center",
-                    fontsize=fs_head, fontweight="bold", color=NAVY, zorder=4)
-            body = lines[1:]
-            step = h * 0.17
-            y0 = y + h * 0.42 - (len(body) - 1) * step / 2
-            for j, line in enumerate(body):
-                ax.text(x + w / 2, y0 - j * step, line, ha="center", va="center",
-                        fontsize=fs_body, color=NAVY, zorder=4)
+            def shadow_box(x, y, w, h, fc, ec, lw=1.5, rs=1.8, z=3):
+                ax.add_patch(FancyBboxPatch((x + 0.45, y - 0.45), w, h,
+                                            boxstyle=f"round,pad=0.35,rounding_size={rs}",
+                                            linewidth=0, facecolor="#d7dde6", zorder=1))
+                ax.add_patch(FancyBboxPatch((x, y), w, h,
+                                            boxstyle=f"round,pad=0.35,rounding_size={rs}",
+                                            linewidth=lw, edgecolor=ec, facecolor=fc, zorder=z))
 
-        def arrow(x0, y0, x1, y1):
-            ax.annotate("", xy=(x1, y1), xytext=(x0, y0),
-                        arrowprops=dict(arrowstyle="-|>", mutation_scale=14,
-                                        lw=1.4, color=NAVY, shrinkA=1, shrinkB=1),
-                        zorder=2)
+            def stage_badge(x, w, text):
+                ax.add_patch(FancyBboxPatch((x, 57.4), w, 6.4,
+                                            boxstyle="round,pad=0.3,rounding_size=3.0",
+                                            linewidth=0, facecolor=NAVY, zorder=3))
+                ax.text(x + w / 2, 60.6, text, ha="center", va="center",
+                        fontsize=7.3, fontweight="bold", color="white", zorder=4)
 
-        box(1, 18, 17.5, 22, ("DOTA v2.0", "18 oriented", "classes"), "#eef2f7", NAVY)
-        box(26, 18, 17.5, 22, ("Prepare", "1,024² patches", "200 px overlap"), "#edf7ef", NAVY)
-        box(51.5, 34, 23, 18, ("Track A", "Rotated Faster R-CNN", "ResNet-50 + FPN"),
-            "#fdf3e0", "#c8861f", fs_head=9.6, fs_body=7.6)
-        box(51.5, 5, 23, 18, ("Track B", "Oriented R-CNN", "ConvNeXt-S + PAFPN"),
-            "#fbeff2", "#b04a63", fs_head=9.6, fs_body=7.6)
-        box(81.5, 18, 17, 22, ("Evaluate", "MMRotate dota/mAP", "+ extended OBB metrics"),
-            "#efeaf5", NAVY, fs_head=10, fs_body=7.4)
+            def small_pill(x, y, w, text, fc):
+                ax.add_patch(FancyBboxPatch((x, y), w, 4.9,
+                                            boxstyle="round,pad=0.22,rounding_size=2.45",
+                                            linewidth=0, facecolor=fc, zorder=4))
+                ax.text(x + w / 2, y + 2.45, text, ha="center", va="center",
+                        fontsize=6.6, fontweight="bold", color="white", zorder=5)
 
-        arrow(19, 29, 25.5, 29)
-        arrow(44, 33, 51, 41.5)
-        arrow(44, 25, 51, 15.5)
-        arrow(74.9, 42.6, 81.2, 33.6)
-        arrow(74.9, 15.2, 81.2, 24.4)
+            def arrow(x0, y0, x1, y1):
+                ax.annotate("", xy=(x1, y1), xytext=(x0, y0),
+                            arrowprops=dict(arrowstyle="-|>", mutation_scale=15,
+                                            lw=1.6, color=NAVY, shrinkA=1.5, shrinkB=1.5),
+                            zorder=2)
 
-        fig.tight_layout(pad=0.15)
-        for d in out_dirs:
-            fig.savefig(d / "pipeline.png", bbox_inches="tight")
-        plt.close(fig)
-        print("  -> pipeline.png ok")
+            # --- stage badges
+            stage_badge(0.5, 18.5, "STAGE 1 · INPUT")
+            stage_badge(24, 18.5, "STAGE 2 · PREPROCESSING")
+            stage_badge(47.5, 26.5, "STAGE 3 · DETECTOR TRACKS")
+            stage_badge(79, 20.5, "STAGE 4 · EVALUATION")
+
+            # --- stage 1: DOTA v2.0 dataset
+            shadow_box(0.5, 4, 18.5, 47, "#eef2f7", NAVY, lw=1.6)
+            ax.text(9.75, 40, "DOTA v2.0 Dataset", ha="center", va="center",
+                    fontsize=9.2, fontweight="bold", color=NAVY, zorder=4)
+            ax.text(9.75, 27.5, "18 oriented classes", ha="center", va="center",
+                    fontsize=7.6, color=NAVY, zorder=4)
+            ax.text(9.75, 20.5, "1,830 train / 593 val images", ha="center", va="center",
+                    fontsize=7.6, color=NAVY, zorder=4)
+
+            # --- stage 2: split-isolated tiling
+            shadow_box(24, 4, 18.5, 47, "#edf7ef", NAVY, lw=1.6)
+            ax.text(33.25, 40, "Split-Isolated Tiling", ha="center", va="center",
+                    fontsize=9.2, fontweight="bold", color=NAVY, zorder=4)
+            ax.text(33.25, 27.5, "1024×1024 patches", ha="center", va="center",
+                    fontsize=7.6, color=NAVY, zorder=4)
+            ax.text(33.25, 20.5, "200 px overlap • IoF ≥ 0.70", ha="center", va="center",
+                    fontsize=7.6, color=NAVY, zorder=4)
+
+            # --- stage 3: parallel tracks (two stacked cards)
+            # Track A card (muted slate / amber accent)
+            shadow_box(47.5, 26.5, 26.5, 25, "#f6f1e7", "#b0893f", lw=1.6)
+            small_pill(49.1, 46.4, 6.9, "BASELINE", "#6f7c8c")
+            ax.text(60.75, 39.2, "Track A: Rotated Faster R-CNN", ha="center", va="center",
+                    fontsize=8.5, fontweight="bold", color=NAVY, zorder=4)
+            ax.text(60.75, 33.6, "ResNet-50 + FPN", ha="center", va="center",
+                    fontsize=7.6, color=NAVY, zorder=4)
+            ax.text(60.75, 29.0, "Smooth-L1 Loss · 12 Epochs", ha="center", va="center",
+                    fontsize=7.6, color=NAVY, zorder=4)
+            # Track B card (deep teal / navy accent)
+            shadow_box(47.5, 4, 26.5, 19, "#edf5f3", "#0f5e63", lw=1.6)
+            small_pill(49.1, 17.5, 7.9, "PROPOSED", "#0f5e63")
+            ax.text(60.75, 13.9, "Track B: Oriented R-CNN", ha="center", va="center",
+                    fontsize=8.5, fontweight="bold", color=NAVY, zorder=4)
+            ax.text(60.75, 9.9, "ConvNeXt-Small + PAFPN", ha="center", va="center",
+                    fontsize=7.6, color=NAVY, zorder=4)
+            ax.text(60.75, 6.2, "Gaussian KLD · Class-Balanced · 24 Epochs", ha="center", va="center",
+                    fontsize=6.9, color=NAVY, zorder=4)
+
+            # --- stage 4: unified evaluation
+            shadow_box(79, 4, 20.5, 47, "#efeaf5", NAVY, lw=1.6)
+            ax.text(89.25, 40, "Unified OBB Evaluation", ha="center", va="center",
+                    fontsize=9.2, fontweight="bold", color=NAVY, zorder=4)
+            ax.text(89.25, 33.5, "MMRotate dota/mAP +", ha="center", va="center",
+                    fontsize=7.5, color=NAVY, zorder=4)
+            ax.text(89.25, 26.5, "Extended Rotated-IoU", ha="center", va="center",
+                    fontsize=7.5, color=NAVY, zorder=4)
+            ax.text(89.25, 19.5, "Evaluator (PRF, AP75,", ha="center", va="center",
+                    fontsize=7.5, color=NAVY, zorder=4)
+            ax.text(89.25, 12.5, "Scale, Angle Error)", ha="center", va="center",
+                    fontsize=7.5, color=NAVY, zorder=4)
+
+            # --- arrows
+            arrow(19.5, 27.5, 23.5, 27.5)
+            arrow(43, 27.5, 46.7, 38.7)
+            arrow(43, 27.5, 46.7, 13.2)
+            arrow(74.5, 38.7, 78.6, 28.5)
+            arrow(74.5, 13.2, 78.6, 21.5)
+
+            fig.savefig(out_dirs[0] / "pipeline.png", bbox_inches="tight")
+            for d in out_dirs[1:]:
+                import shutil
+                shutil.copy2(out_dirs[0] / "pipeline.png", d / "pipeline.png")
+            plt.close(fig)
+            print("  -> pipeline.png ok")
 
     # 1. Figure 1: Dataset Profile
     def fig_dataset_profile():

@@ -213,6 +213,61 @@ def table(doc, headers, rows, widths, size=9, align_center_from=1, first_col_bol
                 p.paragraph_format.space_after = Pt(1)
     return t
 
+def index_table(doc, headers, rows, widths, size=9):
+    t = doc.add_table(rows=1, cols=3)
+    t.style = "Table Grid"
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    t.autofit = False
+    tblpr = t._tbl.tblPr
+    layout = OxmlElement("w:tblLayout")
+    layout.set(qn("w:type"), "fixed")
+    tblpr.append(layout)
+    tblw = OxmlElement("w:tblW")
+    tblw.set(qn("w:type"), "dxa")
+    tblw.set(qn("w:w"), str(int(sum(widths) * 1440)))
+    tblpr.append(tblw)
+    for i, w in enumerate(widths):
+        t.columns[i].width = Inches(w)
+    hdr = t.rows[0]
+    trpr = hdr._tr.get_or_add_trPr()
+    th = OxmlElement("w:tblHeader"); th.set(qn("w:val"), "true"); trpr.append(th)
+    for i, h in enumerate(headers):
+        c = hdr.cells[i]
+        c.width = Inches(widths[i])
+        shade(c, "D9D9D9")
+        cell_text(c, h, size=size, bold=True,
+                  align=WD_ALIGN_PARAGRAPH.LEFT if i < 2 else WD_ALIGN_PARAGRAPH.RIGHT)
+    for row in rows:
+        tr = t.add_row()
+        cant = OxmlElement("w:cantSplit"); tr._tr.get_or_add_trPr().append(cant)
+        for i, val in enumerate(row):
+            c = tr.cells[i]
+            c.width = Inches(widths[i])
+            cell_text(c, val, size=size, bold=(i == 0),
+                      align=WD_ALIGN_PARAGRAPH.LEFT if i < 2 else WD_ALIGN_PARAGRAPH.RIGHT)
+    for row in t.rows:
+        for c in row.cells:
+            for cell_p in c.paragraphs:
+                cell_p.paragraph_format.keep_with_next = True
+                cell_p.paragraph_format.space_before = Pt(3)
+                cell_p.paragraph_format.space_after = Pt(3)
+    return t
+
+def caption_key(text):
+    m = re.match(r"^(Figure|Table)\s+[0-9A-Z.]+\.\s*", text)
+    return text[m.end():].strip() if m else text
+
+
+def index_rows(captions, pages):
+    rows = []
+    for text in captions:
+        m = re.match(r"^(Figure|Table)\s+([0-9A-Z.]+)\.\s*", text)
+        label = f"{m.group(1)} {m.group(2)}"
+        caption = text[m.end():].strip()
+        rows.append((label, caption, str(pages.get(text) or "—")))
+    return rows
+
+
 def boxed_note(doc, title, body):
     t = doc.add_table(rows=1, cols=1)
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -388,13 +443,13 @@ def front_matter(doc):
 
     # ---- list of figures
     h1(doc, "List of Figures", new_page=True)
-    for text in FIG_CAPTIONS:
-        toc_entry(doc, text, PAGES.get(text), 1)
+    index_table(doc, ["Figure", "Caption", "Page"], index_rows(FIG_CAPTIONS, PAGES),
+                 [1.15, 4.45, 0.6], size=9)
 
     # ---- list of tables
     h1(doc, "List of Tables", new_page=True)
-    for text in TAB_CAPTIONS:
-        toc_entry(doc, text, PAGES.get(text), 1)
+    index_table(doc, ["Table", "Caption", "Page"], index_rows(TAB_CAPTIONS, PAGES),
+                 [1.15, 4.45, 0.6], size=9)
 
     # ---- abbreviations
     h1(doc, "Abbreviations", new_page=True)
@@ -1224,7 +1279,7 @@ def resolve_pages(pages, needles):
             break
     out = {}
     for n in needles:
-        target = norm(n)
+        target = norm(caption_key(n))
         for i in range(start, len(pages)):
             if target in pages[i]:
                 out[n] = i + 1
@@ -1262,7 +1317,7 @@ def main():
     # confirm the page map still holds after the numbers were inserted
     bad = []
     for n, pg in PAGES.items():
-        if pg - 1 >= len(pages2) or norm(n) not in pages2[pg - 1]:
+        if pg - 1 >= len(pages2) or norm(caption_key(n)) not in pages2[pg - 1]:
             bad.append(n)
     print("page-map mismatches:", len(bad))
     for b in bad:
