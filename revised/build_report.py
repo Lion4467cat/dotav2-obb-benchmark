@@ -8,7 +8,7 @@ from pathlib import Path
 from docx import Document
 from docx.enum.section import WD_SECTION
 from docx.enum.table import WD_TABLE_ALIGNMENT
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_COLOR_INDEX, WD_TAB_ALIGNMENT, WD_TAB_LEADER
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_TAB_ALIGNMENT, WD_TAB_LEADER
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
@@ -143,15 +143,6 @@ def caption(doc, text, keep_next=False):
             p.paragraph_format.keep_with_next = True
             p.paragraph_format.space_before = Pt(8)
             p.paragraph_format.space_after = Pt(3)
-    return p
-
-def author_note(doc, text):
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.paragraph_format.space_after = Pt(6)
-    r = p.add_run(f"[AUTHOR TO CONFIRM: {text}]")
-    set_run_font(r, size=10.5, italic=True)
-    r.font.highlight_color = WD_COLOR_INDEX.YELLOW
     return p
 
 def figure(doc, name, width, cap, break_before=False):
@@ -310,7 +301,6 @@ TOC_ENTRIES = [
     ("10  Applications and future work", 0, 1), ("10.1  Applications", 1, 2), ("10.2  Future work", 1, 2),
     ("11  Conclusion", 0, 1), ("References", 0, 1),
     ("Appendix A  Configuration reference", 0, 1), ("Appendix B  Full per-class tables", 0, 1),
-    ("Author confirmations", 0, 1),
 ]
 
 FIG_CAPTIONS = [
@@ -321,7 +311,10 @@ FIG_CAPTIONS = [
     "Figure 7.1. Headline validation metrics for both tracks on the official tiling.",
     "Figure 7.2. Per-class AP50 for both tracks, sorted by gain.",
     "Figure 7.3. Track B AP50 per class against class support.",
-    "Figure 8.1. Track B predictions on two validation tiles at the F1-optimal threshold of 0.834.",
+    ("Figure 8.1. Track B predictions on two validation tiles side by side at the F1-optimal "
+     "threshold of 0.834: P2242 (airfield — plane | small-vehicle | large-vehicle) left, "
+     "P10090 (marina — ship | harbor | small-vehicle) right. Cyan: non-difficult ground "
+     "truth; dotted grey: difficulty-flagged ground truth; dashed orange: Track B predictions."),
     "Figure 8.2. Validation examples for plane, baseball-diamond, bridge, ground-track-field, small-vehicle and large-vehicle.",
     "Figure 8.3. Validation examples for ship, tennis-court, basketball-court, storage-tank, soccer-ball-field and roundabout",
     "Figure 8.4. Validation examples for harbor, swimming-pool, helicopter, container-crane, airport and helipad",
@@ -359,55 +352,33 @@ def front_matter(doc):
     p.paragraph_format.line_spacing = 1.15
 
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(48)
-    r = p.add_run("Submitted by\nS S Gokula Swamy"); set_run_font(r, size=12, bold=True)
+    p.paragraph_format.space_before = Pt(40)
+    p.paragraph_format.space_after = Pt(6)
+    r = p.add_run("Submitted by"); set_run_font(r, size=11, bold=True)
 
-    for line in (
-        "Department of Artificial Intelligence and Machine Learning",
-        "B.M.S. College of Engineering",
-        "Internship Organisation: Aeronautical Development Agency (ADA)",
+    for name in ("S S Gokula Swamy", "Roshanth V", "Somanath S.D.", "Aryan Kumar"):
+        p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.space_after = Pt(2)
+        r = p.add_run(name); set_run_font(r, size=12.5, bold=True)
+
+    p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_before = Pt(28)
+    p.paragraph_format.space_after = Pt(4)
+    for label, value in (
+        ("Department", "Artificial Intelligence and Machine Learning"),
+        ("Institution", "B.M.S. College of Engineering"),
+        ("Internship organisation", "Aeronautical Development Agency (ADA)"),
+        ("Guide", "[Guide Name]"),
+        ("TD (ATD)", "[TD Name]"),
     ):
         p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p.paragraph_format.space_after = Pt(2)
-        r = p.add_run(line); set_run_font(r, size=11)
+        r = p.add_run(f"{label}:  "); set_run_font(r, size=11, bold=True)
+        r = p.add_run(value); set_run_font(r, size=11)
 
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(36)
-    r = p.add_run("Guide: [Guide Name]\nTD (ATD): [TD Name]"); set_run_font(r, size=11)
-    p.paragraph_format.line_spacing = 1.4
-
-    p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(60)
     r = p.add_run("Project duration: 15 September 2026 – 15 November 2026"); set_run_font(r, size=10.5)
-
-    # ---- certificate
-    h1(doc, "Certificate", new_page=True)
-    para(doc, "This is to certify that the internship project entitled “Deep Learning-Based Aerial "
-              "Object Detection Using Oriented Faster R-CNN on the DOTA Dataset” was carried out by "
-              "S S Gokula Swamy at the Aeronautical Development Agency (ADA) during the period "
-              "15 September 2026 to 15 November 2026, in partial fulfilment of the requirements of the "
-              "B.E. programme in Artificial Intelligence and Machine Learning at B.M.S. College of Engineering.")
-    para(doc, "The work reported here was completed under the guidance of the project guide and the "
-              "technical director named below. The report is a record of work performed during the internship.")
-    author_note(doc, "insert certificate wording required by the college, signature blocks, seal and date")
-
-    # ---- acknowledgements
-    h1(doc, "Acknowledgements", new_page=True)
-    para(doc, "I thank the Aeronautical Development Agency for hosting this internship and for providing "
-              "the problem setting and technical direction. I am grateful to my project guide and to the "
-              "technical director for their review of the work, and to the Department of Artificial "
-              "Intelligence and Machine Learning at B.M.S. College of Engineering for academic support.")
-    author_note(doc, "add named acknowledgements (guide, TD, department, colleagues) once approved for publication")
-
-    # ---- organisation profile + role
-    h1(doc, "Organisation Profile and Intern Role", new_page=True)
-    para(doc, "The Aeronautical Development Agency is a defence research and development organisation "
-              "responsible for the design and development of combat aircraft and their associated systems. "
-              "Its work spans airframe design, avionics, flight control, simulation and mission systems.")
-    author_note(doc, "insert the official organisation profile text and the intern's role, team and reporting line")
-    para(doc, "During the internship the work reported here covered dataset preparation for DOTA v2.0, "
-              "training and evaluation of two oriented detectors under MMRotate, and the analysis of the "
-              "resulting measurements. All quantitative results in this report are from that work.")
 
     # ---- contents
     contents_heading = h1(doc, "Contents", new_page=True)
@@ -939,15 +910,16 @@ def body_sections_b(doc):
     # ---------------- 8 Qualitative analysis
     h1(doc, "8  Qualitative analysis")
     h2(doc, "8.1  Prediction examples")
-    para(doc, "Figure 8.1 shows Track B output on two validation tiles at the F1-optimal threshold "
-              "(0.834). Non-difficult ground truth is drawn in cyan, difficulty-flagged ground truth as "
-              "a dotted grey outline, and predictions in dashed orange. Oriented boxes follow the headings "
-              "of parked aircraft, ships and vehicles, and dense rows of docked boats and apron vehicles "
-              "are separated rather than merged.")
-    figure(doc, "track_b_demo_predictions.png", 4.9,
-           "Figure 8.1. Track B predictions on two validation tiles at the F1-optimal threshold of "
-           "0.834. Cyan: non-difficult ground truth; dotted grey: difficulty-flagged ground truth; "
-           "dashed orange: Track B predictions.")
+    para(doc, "Figure 8.1 shows Track B output on two validation tiles side by side at the "
+              "F1-optimal threshold (0.834). Non-difficult ground truth is drawn in cyan, "
+              "difficulty-flagged ground truth as a dotted grey outline, and predictions in dashed "
+              "orange. Oriented boxes follow the headings of parked aircraft, ships and vehicles, and "
+              "dense rows of docked boats and apron vehicles are separated rather than merged.")
+    figure(doc, "track_b_demo_predictions.png", 6.0,
+           "Figure 8.1. Track B predictions on two validation tiles side by side at the F1-optimal "
+           "threshold of 0.834: P2242 (airfield — plane | small-vehicle | large-vehicle) left, "
+           "P10090 (marina — ship | harbor | small-vehicle) right. Cyan: non-difficult ground "
+           "truth; dotted grey: difficulty-flagged ground truth; dashed orange: Track B predictions.")
     para(doc, "The panels also show the cost of operating at the F1-optimal threshold. The "
               "non-difficult ground truth is almost fully tiled by dashed orange predictions, while the "
               "difficult outlines are mostly left unmatched — which is expected, because the "
@@ -1118,14 +1090,15 @@ def references(doc):
         p = doc.add_paragraph()
         p.paragraph_format.left_indent = Inches(0.32)
         p.paragraph_format.first_line_indent = Inches(-0.32)
-        p.paragraph_format.space_after = Pt(6)
+        p.paragraph_format.space_after = Pt(2)
+        p.paragraph_format.line_spacing = 1.05
         p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
         r = p.add_run(it)
-        set_run_font(r, size=10.5)
+        set_run_font(r, size=9.5)
 
 
 def appendix(doc):
-    h1(doc, "Appendix A  Configuration reference")
+    h1(doc, "Appendix A  Configuration reference", new_page=True)
     para(doc, "Table A.1 records the full configuration of both tracks as used for the runs reported "
               "here. Values are taken from the training configurations; the seeds were not recorded "
               "in the artifacts.")
@@ -1172,25 +1145,6 @@ def appendix(doc):
                      f"7,122-patch tiling. P, R and F1 are measured at the {label} F1-optimal "
                      f"threshold. Means are unweighted across the 18 classes.")
 
-    # ---------------- author confirmations
-    h1(doc, "Author confirmations", new_page=True)
-    para(doc, "The following items could not be resolved from the project artifacts. Each appears in "
-              "the body as a highlighted note or as a bracketed placeholder at the point where the "
-              "information belongs. They are collected here so that the report can be completed in "
-              "one pass.")
-    notes = [
-        ("Certificate", "insert the certificate wording required by the college, the signature "
-         "blocks, the seal and the date."),
-        ("Acknowledgements", "add named acknowledgements for the guide, the technical director, the "
-         "department and colleagues, once approved for publication."),
-        ("Organisation profile", "insert the official ADA profile text and the intern's role, team "
-         "and reporting line."),
-        ("Guide and TD names", "the title page and certificate carry placeholders because the names "
-         "were not provided."),
-        ("Submission date", "add the submission date and the programme reference on the title page."),
-    ]
-    for lead, text in notes:
-        bullet(doc, text, lead=lead + ": ")
 import re
 import subprocess
 

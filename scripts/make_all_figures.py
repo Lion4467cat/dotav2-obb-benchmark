@@ -39,6 +39,35 @@ PR_C = "#ff6d00"    # orange — Track B prediction
 
 TILE_RE = re.compile(r"^(?P<img>.+)__(?P<size>\d+)__(?P<x>\d+)___(?P<y>\d+)$")
 
+plt.rcParams["font.family"] = "Liberation Serif"
+
+TIER_COLORS = {
+    "ge90": "#117A65",   # AP >= 0.90 — deep green
+    "ge70": "#D4A017",   # 0.70-0.90  — mustard gold
+    "ge40": "#E67E22",   # 0.40-0.70  — burnt orange
+    "lt40": "#C0392B",   # < 0.40     — brick red
+}
+
+def tier_of(ap: float) -> str:
+    if ap >= 0.90:
+        return "ge90"
+    if ap >= 0.70:
+        return "ge70"
+    if ap >= 0.40:
+        return "ge40"
+    return "lt40"
+
+def tier_legend(ax, frameon=False):
+    import matplotlib.patches as mpatches
+    handles = [
+        mpatches.Patch(color=TIER_COLORS["ge90"], label="AP ≥ 0.90"),
+        mpatches.Patch(color=TIER_COLORS["ge70"], label="0.70–0.90"),
+        mpatches.Patch(color=TIER_COLORS["ge40"], label="0.40–0.70"),
+        mpatches.Patch(color=TIER_COLORS["lt40"], label="< 0.40"),
+    ]
+    ax.legend(handles=handles, loc="lower right", fontsize=6.8, frameon=frameon,
+              title="AP50 tier", title_fontsize=7.2)
+
 def class_idx(name: str) -> int:
     return DOTA_V2_CLASSES.index(name)
 
@@ -102,6 +131,54 @@ def generate_all_figures(
     preds_by_id = {p["img_id"]: p for p in preds_list}
     f1_opt = ext_b.get("micro_prf", {}).get("f1_optimal", {})
     CONF = f1_opt.get("conf_threshold", 0.834)
+
+    # 0. Figure 4.1: Workflow diagram (regenerated; report theme)
+    def fig_pipeline():
+        from matplotlib.patches import FancyBboxPatch
+        import matplotlib.patheffects as pe
+
+        fig, ax = plt.subplots(figsize=(6.4, 3.6), dpi=300)
+        ax.set_xlim(0, 100); ax.set_ylim(0, 58); ax.axis("off")
+
+        def box(x, y, w, h, lines, fc, ec, fs_head=10, fs_body=7.8):
+            ax.add_patch(FancyBboxPatch((x, y), w, h,
+                                        boxstyle="round,pad=0.45,rounding_size=1.5",
+                                        linewidth=1.3, edgecolor=ec, facecolor=fc, zorder=3))
+            ax.text(x + w / 2, y + h * 0.70, lines[0], ha="center", va="center",
+                    fontsize=fs_head, fontweight="bold", color=NAVY, zorder=4)
+            body = lines[1:]
+            step = h * 0.17
+            y0 = y + h * 0.42 - (len(body) - 1) * step / 2
+            for j, line in enumerate(body):
+                ax.text(x + w / 2, y0 - j * step, line, ha="center", va="center",
+                        fontsize=fs_body, color=NAVY, zorder=4)
+
+        def arrow(x0, y0, x1, y1):
+            ax.annotate("", xy=(x1, y1), xytext=(x0, y0),
+                        arrowprops=dict(arrowstyle="-|>", mutation_scale=14,
+                                        lw=1.4, color=NAVY, shrinkA=1, shrinkB=1),
+                        zorder=2)
+
+        box(1, 18, 17.5, 22, ("DOTA v2.0", "18 oriented", "classes"), "#eef2f7", NAVY)
+        box(26, 18, 17.5, 22, ("Prepare", "1,024² patches", "200 px overlap"), "#edf7ef", NAVY)
+        box(51.5, 34, 23, 18, ("Track A", "Rotated Faster R-CNN", "ResNet-50 + FPN"),
+            "#fdf3e0", "#c8861f", fs_head=9.6, fs_body=7.6)
+        box(51.5, 5, 23, 18, ("Track B", "Oriented R-CNN", "ConvNeXt-S + PAFPN"),
+            "#fbeff2", "#b04a63", fs_head=9.6, fs_body=7.6)
+        box(81.5, 18, 17, 22, ("Evaluate", "MMRotate dota/mAP", "+ extended OBB metrics"),
+            "#efeaf5", NAVY, fs_head=10, fs_body=7.4)
+
+        arrow(19, 29, 25.5, 29)
+        arrow(44, 33, 51, 41.5)
+        arrow(44, 25, 51, 15.5)
+        arrow(74.9, 42.6, 81.2, 33.6)
+        arrow(74.9, 15.2, 81.2, 24.4)
+
+        fig.tight_layout(pad=0.15)
+        for d in out_dirs:
+            fig.savefig(d / "pipeline.png", bbox_inches="tight")
+        plt.close(fig)
+        print("  -> pipeline.png ok")
 
     # 1. Figure 1: Dataset Profile
     def fig_dataset_profile():
@@ -170,24 +247,34 @@ def generate_all_figures(
             f1_opt.get("recall", 0.8335),
             f1_opt.get("f1", 0.8511),
         ]
+        # one high-contrast base hue per metric category; A = soft tint, B = saturated shade
+        base_hues = ["#c0392b", "#d35400", "#b7950b", "#1e8449", "#148f77", "#7d3c98", "#1f618d"]
+
+        def tint(hex_rgb, f=0.62):
+            import matplotlib.colors as mcolors
+            r, g, b = mcolors.to_rgb(hex_rgb)
+            return tuple(c + (1 - c) * f for c in (r, g, b))
+
         x = np.arange(len(metrics))
         w = 0.38
-        fig, ax = plt.subplots(figsize=(9.6, 4.9), dpi=300)
+        fig, ax = plt.subplots(figsize=(9.8, 5.2), dpi=300)
         ax.grid(axis="y", color="#9aa7bd", alpha=0.55, lw=0.7)
-        ax.bar(x - w / 2, track_a, w, color="#9fb3c8", label="Track A · Rotated Faster R-CNN (R50-FPN)")
-        ax.bar(x + w / 2, track_b, w, color=NAVY, label="Track B · Oriented R-CNN (ConvNeXt-S + PAFPN + KLD)")
+        ax.bar(x - w / 2, track_a, w, color=[tint(h) for h in base_hues],
+               edgecolor=NAVY, linewidth=0.7, label="Track A · Rotated Faster R-CNN (R50-FPN)")
+        ax.bar(x + w / 2, track_b, w, color=base_hues,
+               edgecolor=NAVY, linewidth=0.7, label="Track B · Oriented R-CNN (ConvNeXt-S + PAFPN + KLD)")
         for xi, a, b in zip(x, track_a, track_b):
-            ax.text(xi - w / 2, a + 0.016, f"{a:.3f}", ha="center", fontsize=7.6, color=NAVY, fontweight="bold")
-            ax.text(xi + w / 2, b + 0.016, f"{b:.3f}", ha="center", fontsize=7.6, color=NAVY, fontweight="bold")
-        ax.set_ylim(0, 1.13)
-        ax.set_ylabel("Score / proportion", fontsize=10, color=NAVY)
+            ax.text(xi - w / 2, a + 0.016, f"{a:.3f}", ha="center", fontsize=7.4, color=NAVY, fontweight="bold")
+            ax.text(xi + w / 2, b + 0.016, f"{b:.3f}", ha="center", fontsize=7.4, color=NAVY, fontweight="bold")
+        ax.set_ylim(0, 1.3)
+        ax.set_ylabel("Score / proportion", fontsize=9.5, color=NAVY)
         ax.set_xticks(x)
-        ax.set_xticklabels(metrics, fontsize=8.6, color=NAVY)
+        ax.set_xticklabels(metrics, fontsize=8.2, color=NAVY)
         ax.tick_params(axis="y", labelsize=9)
         ax.set_title("Track A vs Track B on official DOTA v2.0 validation split (7,122 patches)",
-                     fontsize=10, fontweight="bold", color=NAVY, loc="left", pad=7)
+                     fontsize=9.6, fontweight="bold", color=NAVY, loc="left", pad=7)
         ax.spines[["top", "right", "left"]].set_visible(False)
-        ax.legend(loc="upper left", fontsize=8, frameon=False)
+        ax.legend(loc="upper left", fontsize=7.4, frameon=False, ncol=2)
         fig.tight_layout()
         for d in out_dirs:
             fig.savefig(d / "metrics_comparison.png", bbox_inches="tight")
@@ -202,24 +289,34 @@ def generate_all_figures(
         ns = [pc_a[c]["num_gt"] for c in classes]
         d = [pc_b[c]["ap50"] - pc_a[c]["ap50"] for c in classes]
 
-        fig, ax = plt.subplots(figsize=(8.6, 6.4), dpi=300)
+        b_colors = [TIER_COLORS[tier_of(v)] for v in b]
+        fig, ax = plt.subplots(figsize=(8.8, 6.6), dpi=300)
         y = np.arange(len(classes))
         h = 0.38
-        ax.barh(y + h / 2, a, h, color="#9fb3c8", label="Track A (Rotated Faster R-CNN, R50-FPN)")
-        ax.barh(y - h / 2, b, h, color=NAVY, label="Track B (Oriented R-CNN, ConvNeXt-S + PAFPN)")
+        ax.barh(y + h / 2, a, h, color="#a9b4c2", edgecolor=NAVY, linewidth=0.6,
+                label="Track A (Rotated Faster R-CNN, R50-FPN)")
+        ax.barh(y - h / 2, b, h, color=b_colors, edgecolor=NAVY, linewidth=0.6,
+                label="Track B (Oriented R-CNN, ConvNeXt-S + PAFPN), tier-coded")
         for yi, av, bv, dv, n in zip(y, a, b, d, ns):
             ax.text(max(av, bv) + 0.018, yi, f"{av:.3f} → {bv:.3f}  ({dv:+.3f})   n={n:,}",
-                    va="center", fontsize=6.9, color="black")
+                    va="center", fontsize=6.7, color="black")
         ax.set_yticks(y)
-        ax.set_yticklabels(classes, fontsize=7.6)
+        ax.set_yticklabels(classes, fontsize=7.5)
         ax.tick_params(axis="x", labelsize=8)
         ax.axvline(0.5, color=NAVY, lw=1.1, ls=":", alpha=0.7)
-        ax.set_xlim(0, 1.58)
-        ax.set_xlabel("AP50 (rotated IoU ≥ 0.50, non-difficult GT)", fontsize=8.6, color=NAVY)
+        ax.set_xlim(0, 1.62)
+        ax.set_xlabel("AP50 (rotated IoU ≥ 0.50, non-difficult GT)", fontsize=8.4, color=NAVY)
         ax.set_title("Per-class AP50: Track A → Track B · official 7,122-patch val split",
-                     fontsize=10, fontweight="bold", color=NAVY, loc="left", pad=7)
+                     fontsize=9.6, fontweight="bold", color=NAVY, loc="left", pad=7)
         style_ax(ax, "x")
-        ax.legend(fontsize=7.6, loc="lower right", frameon=False)
+        import matplotlib.patches as mpatches
+        handles = [
+            mpatches.Patch(facecolor="#a9b4c2", edgecolor=NAVY, label="Track A"),
+        ] + [mpatches.Patch(facecolor=TIER_COLORS[k], edgecolor=NAVY, label=lab)
+             for k, lab in [("ge90", "B ≥ 0.90"), ("ge70", "B 0.70–0.90"),
+                            ("ge40", "B 0.40–0.70"), ("lt40", "B < 0.40")]]
+        ax.legend(handles=handles, fontsize=6.8, loc="lower right", frameon=True,
+                  ncol=5, title="AP50 tier (Track B)", title_fontsize=6.9)
         fig.tight_layout()
         for d in out_dirs:
             fig.savefig(d / "fig_per_class_delta.png", bbox_inches="tight")
@@ -232,21 +329,22 @@ def generate_all_figures(
         classes = sorted(pc_b, key=lambda c: pc_b[c]["ap50"])
         aps = [pc_b[c]["ap50"] for c in classes]
         ns = [pc_b[c]["num_gt"] for c in classes]
-        colors = ["#9fb3c8" if n >= 100 else "#c0703c" for n in ns]
+        colors = [TIER_COLORS[tier_of(ap)] for ap in aps]
 
-        fig, ax = plt.subplots(figsize=(7.6, 5.9), dpi=300)
-        bars = ax.barh(classes, aps, color=colors, height=0.72)
+        fig, ax = plt.subplots(figsize=(7.8, 6.1), dpi=300)
+        bars = ax.barh(classes, aps, color=colors, edgecolor=NAVY, linewidth=0.6, height=0.72)
         ax.axvline(0.5, color=NAVY, lw=1.1, ls=":", alpha=0.6)
         for b, ap, n in zip(bars, aps, ns):
             ax.text(ap + 0.015, b.get_y() + b.get_height() / 2, f"{ap:.3f} · n={n:,}",
-                    va="center", fontsize=7.6, color=NAVY, fontweight="bold")
-        ax.set_xlim(0, 1.28)
-        ax.tick_params(axis="y", labelsize=8)
+                    va="center", fontsize=7.4, color=NAVY, fontweight="bold")
+        ax.set_xlim(0, 1.3)
+        ax.tick_params(axis="y", labelsize=7.6)
         ax.tick_params(axis="x", labelsize=8)
-        ax.set_xlabel("AP50 (non-difficult ground truth)", fontsize=9, color=NAVY)
+        ax.set_xlabel("AP50 (non-difficult ground truth)", fontsize=8.6, color=NAVY)
         ax.set_title("Track B AP50 by class, with validation support",
-                     fontsize=10, fontweight="bold", color=NAVY, loc="left", pad=7)
+                     fontsize=9.6, fontweight="bold", color=NAVY, loc="left", pad=7)
         style_ax(ax, "x")
+        tier_legend(ax)
         fig.tight_layout()
         for d in out_dirs:
             fig.savefig(d / "class_ap.png", bbox_inches="tight")
@@ -379,11 +477,11 @@ def generate_all_figures(
         scenes = ["P2242__1024__824___142", "P10090__1024__0___0"]
         titles = ["P2242 · plane | small-vehicle | large-vehicle",
                   "P10090 · ship | harbor | small-vehicle"]
-        fig = plt.figure(figsize=(8.4, 8.6), dpi=300)
-        gs = fig.add_gridspec(2, 1, height_ratios=[1.0, 1.0], hspace=0.22)
+        fig = plt.figure(figsize=(9.6, 4.9), dpi=300)
+        gs = fig.add_gridspec(1, 2, wspace=0.08)
 
-        for row, (img_id, title) in enumerate(zip(scenes, titles)):
-            ax = fig.add_subplot(gs[row])
+        for col, (img_id, title) in enumerate(zip(scenes, titles)):
+            ax = fig.add_subplot(gs[col])
             img_file = val_images_dir / f"{img_id}.png"
             if not img_file.is_file():
                 continue
@@ -405,18 +503,19 @@ def generate_all_figures(
                 q = np.vstack([qb, qb[0]])
                 ax.plot(q[:, 0], q[:, 1], color=PR_C, lw=1.0, ls="--")
             ax.axis("off")
-            ax.set_title(title, fontsize=9.5, fontweight="bold", color=NAVY, loc="left", pad=4)
-        handles = [plt.Line2D([0], [0], color=GT_C, lw=1.4, label="GT (non-difficult)"),
-                   plt.Line2D([0], [0], color=GTD_C, lw=1.4, ls=":", label="GT (difficult)"),
-                   plt.Line2D([0], [0], color=PR_C, lw=1.4, ls="--",
+            ax.set_title(title, fontsize=8.6, fontweight="bold", color=NAVY, loc="left", pad=4)
+        handles = [plt.Line2D([0], [0], color=GT_C, lw=1.6, label="GT (non-difficult)"),
+                   plt.Line2D([0], [0], color=GTD_C, lw=1.6, ls=":", label="GT (difficult)"),
+                   plt.Line2D([0], [0], color=PR_C, lw=1.6, ls="--",
                                label=f"Track B prediction (conf ≥ {CONF:.3f})")]
-        fig.legend(handles=handles, loc="lower center", ncol=3, fontsize=8, frameon=False)
-        fig.tight_layout(rect=(0, 0.045, 1, 1))
+        fig.legend(handles=handles, loc="lower center", ncol=3, fontsize=7.6, frameon=False)
+        fig.tight_layout(rect=(0, 0.10, 1, 1))
         for d in out_dirs:
             fig.savefig(d / "track_b_demo_predictions.png", bbox_inches="tight")
         plt.close(fig)
         print("  -> track_b_demo_predictions.png ok")
 
+    fig_pipeline()
     fig_dataset_profile()
     fig_metrics_comparison()
     fig_per_class_delta()
